@@ -43,6 +43,9 @@ _REFORMAT_PROMPT = """Convert the analysis below into a single JSON object with 
 - what_worked: array of objects {topic, detail, evidence}
 - what_didnt: array of objects {topic, detail, evidence}
 - adjustments: array of strings (advisory suggestions)
+- memory_decisions: array of objects, one per durable LESSON worth remembering. Each is either
+  {"reinforce": "<existing lesson id like L-001>", "evidence": "..."} when today repeats a known
+  lesson, OR {"new_text": "the lesson", "category": "equity-trend|options-structure|regime|risk|execution|other", "evidence": "..."} for a new one.
 - confidence: one of "low" | "medium" | "high"
 - caveats: string
 
@@ -99,30 +102,52 @@ def _preloaded_request(provider: DataProvider) -> str:
     return report_request() + "\n\nHere is the data:\n\n" + data_text
 
 
+def _lessons_context(lessons_path: str | None) -> str:
+    """Render the active lessons memory for the prompt (so the agent can reinforce by id)."""
+    if not lessons_path:
+        return ""
+    from .memory import active, load_lessons
+    ls = active(load_lessons(lessons_path))
+    if not ls:
+        return ("\n\nThe lessons memory is EMPTY. Do NOT use 'reinforce' (there is nothing to "
+                "reinforce). For each durable lesson from today's data, emit a memory_decision "
+                "with 'new_text' (the lesson) and 'category'. Aim for 1-3 concrete lessons.")
+    lines = [f"- {l.id} [{l.category}] (seen {l.occurrences}x): {l.text}" for l in ls]
+    return (
+        "\n\nExisting lessons memory (reinforce by id if today repeats one, else add new):\n"
+        + "\n".join(lines)
+    )
+
+
 def run_panel(provider: DataProvider, model: str = "qwen2.5:7b",
               base_url: str = "http://localhost:11434",
               out_path: str = "options_insights.jsonl",
               subagent_settings: dict | None = None,
-              mode: str = "simple") -> dict:
-    """Generate one insight from `provider`'s data via the local agent; append to out_path.
+              mode: str = "simple",
+              lessons_path: str | None = None,
+              stale_days: int = 30) -> dict:
+    """Generate one insight + curate the lessons memory via the local agent; append to out_path.
 
     mode="simple" (default): one deep agent with the compact data pre-loaded — fast and
-    reliable on local hardware. mode="panel": the full sub-agent research panel (opt-in;
-    deeper but much slower on small local models).
+    reliable on local hardware. mode="panel": the full sub-agent research panel (opt-in).
+
+    If lessons_path is set, the agent reads the durable lessons memory and decides, per
+    observation, to reinforce an existing lesson (by id) or add a new one; the result is
+    folded back in (occurrences++ / append) and stale lessons retire — the learning loop.
 
     Returns the recorded record. Raises OllamaUnavailable if the local LLM is down.
     """
     chat = build_model(model=model, base_url=base_url)  # raises OllamaUnavailable if down
-    tools = make_tools(provider)
+    tools = make_tools(provider, lessons_path=lessons_path)
 
     if mode == "panel":
         agent = build_insight_panel(chat, tools, subagent_model_settings=subagent_settings)
-        request = report_request()
+        request = report_request() + _lessons_context(lessons_path)
     else:
         # structured=False — we structure the output via a deterministic reformat call
         # (local models are weak at structured-output tool-calling).
         agent = build_simple_agent(chat, tools, structured=False)
-        request = _preloaded_request(provider)
+        request = _preloaded_request(provider) + _lessons_context(lessons_path)
 
     result = agent.invoke(
         {"messages": [{"role": "user", "content": request}]},
@@ -130,22 +155,49 @@ def run_panel(provider: DataProvider, model: str = "qwen2.5:7b",
     )
     text = _final_text(result)
 
-    # Structure the free-form analysis into InsightReport. Local models reliably emit
-    # the analysis as prose but are weak at structured-output tool-calling, so we use a
-    # deterministic reformat call (a simple text→JSON conversion they handle well), then
-    # fall back to text extraction if even that is imperfect.
+    # Structure the free-form analysis into InsightReport (incl. memory_decisions). Local
+    # models are weak at structured-output tool-calling, so use a deterministic reformat call.
     report = _structure_via_reformat(chat, text) or _coerce_report(_extract_json(text), text)
+
+    # ── Learning loop: fold the agent's curation into the lessons memory ──
+    reinforced: list[str] = []
+    if lessons_path:
+        from datetime import date as _date
+        from .memory import apply_curation, decay, load_lessons, save_lessons
+        today = _date.today().isoformat()
+        decisions = [d.model_dump() if hasattr(d, "model_dump") else d for d in (report.memory_decisions or [])]
+        # normalize MemoryDecision → apply_curation's expected shape
+        existing_ids = {l.id for l in load_lessons(lessons_path)}
+        norm = []
+        for d in decisions:
+            rid = d.get("reinforce")
+            new_text = (d.get("new_text") or "").strip()
+            ev = d.get("evidence", "")
+            if rid and rid in existing_ids:
+                norm.append({"reinforce": rid, "evidence": ev})
+            elif new_text:
+                norm.append({"new": {"text": new_text, "category": d.get("category", "other")}, "evidence": ev})
+            elif ev:
+                # model referenced a non-existent lesson with no new_text — salvage the
+                # observation as a new lesson from its evidence rather than dropping it.
+                norm.append({"new": {"text": ev, "category": d.get("category", "other")}, "evidence": ev})
+        lessons = load_lessons(lessons_path)
+        lessons, reinforced = apply_curation(lessons, norm, today)
+        lessons = decay(lessons, today, stale_days=stale_days)
+        save_lessons(lessons_path, lessons)
 
     record = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "provider": provider.name(),
         "model": model,
         "report": report.model_dump(),
+        "reinforced_lessons": reinforced,
     }
     os.makedirs(os.path.dirname(out_path) or ".", exist_ok=True)
     with open(out_path, "a", encoding="utf-8") as f:
         f.write(json.dumps(record) + "\n")
-    log.info(f"Insight written → {out_path} (confidence {report.confidence})")
+    log.info(f"Insight written → {out_path} (confidence {report.confidence}; "
+             f"{len(reinforced)} lessons reinforced)")
     return record
 
 

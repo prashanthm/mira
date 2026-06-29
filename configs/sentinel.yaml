@@ -16,7 +16,7 @@ provider:
     recommendations: logs/options_intelligence_history.jsonl
     grades: logs/options_grades.jsonl
     scorecard: logs/options_scorecard.json
-    equity_trades: logs/trade_journal.jsonl
+    equity_trades: logs/paper_history.jsonl   # the agent's REAL live closed trades
     equity_actions: logs/decisions.jsonl
 
 llm:
@@ -26,5 +26,6 @@ llm:
     model: ollama:qwen2.5:7b
     temperature: 0.2
 
-# Written into Sentinel's logs dir so the read-only dashboard can surface it.
+# Written into Sentinel's logs dir so the read-only dashboard can surface them.
 output: /Users/pmuniraju/personal/sentinel/logs/options_insights.jsonl
+lessons: /Users/pmuniraju/personal/sentinel/logs/mira_lessons.json

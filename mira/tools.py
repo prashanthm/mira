@@ -25,8 +25,8 @@ def _summarize(rows, max_rows: int = 40) -> str:
     return json.dumps(tail, default=str)[:6000]
 
 
-def make_tools(provider: DataProvider) -> list:
-    """Build the tool list bound to `provider`. One generic read tool + a catalog."""
+def make_tools(provider: DataProvider, lessons_path: str | None = None) -> list:
+    """Build the tool list bound to `provider`. Generic read tools + (optional) lessons memory."""
 
     @tool
     def list_resources() -> str:
@@ -43,4 +43,19 @@ def make_tools(provider: DataProvider) -> list:
             return f"ERROR: {e}"
         return _summarize(rows, max_rows=limit)
 
-    return [list_resources, read_resource]
+    tools = [list_resources, read_resource]
+
+    if lessons_path is not None:
+        @tool
+        def read_lessons() -> str:
+            """Read Mira's durable lessons memory (the learnings accumulated over past runs),
+            so you can decide whether today's observations reinforce an existing lesson (by id)
+            or are new."""
+            import json as _j
+            from .memory import active, load_lessons
+            ls = active(load_lessons(lessons_path))
+            return _j.dumps([{"id": l.id, "text": l.text, "category": l.category,
+                              "occurrences": l.occurrences, "last_seen": l.last_seen} for l in ls])
+        tools.append(read_lessons)
+
+    return tools

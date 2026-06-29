@@ -39,10 +39,12 @@ def cmd_insights(args: argparse.Namespace) -> int:
         return 3
 
     mode = args.mode or cfg.get("mode", "simple")
+    lessons_path = cfg.get("lessons")  # enables the learning-memory loop when set
     provider = _build_provider(cfg)
     try:
         rec = run_panel(provider, model=model, base_url=base_url, out_path=out_path,
-                        subagent_settings=llm.get("subagent_settings"), mode=mode)
+                        subagent_settings=llm.get("subagent_settings"), mode=mode,
+                        lessons_path=lessons_path)
     except OllamaUnavailable as e:
         print(f"Ollama unavailable: {e}", file=sys.stderr)
         return 3
@@ -54,6 +56,11 @@ def cmd_insights(args: argparse.Namespace) -> int:
         print("  Adjustments (advisory):")
         for a in rep["adjustments"]:
             print(f"    - {a}")
+    if lessons_path:
+        from .memory import active, load_lessons
+        ls = active(load_lessons(lessons_path))
+        print(f"  Lessons memory: {len(ls)} active "
+              f"({len(rec.get('reinforced_lessons', []))} reinforced today) → {lessons_path}")
     print(f"  → {out_path}")
     return 0
 
