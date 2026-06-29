@@ -38,10 +38,11 @@ def cmd_insights(args: argparse.Namespace) -> int:
               file=sys.stderr)
         return 3
 
+    mode = args.mode or cfg.get("mode", "simple")
     provider = _build_provider(cfg)
     try:
         rec = run_panel(provider, model=model, base_url=base_url, out_path=out_path,
-                        subagent_settings=llm.get("subagent_settings"))
+                        subagent_settings=llm.get("subagent_settings"), mode=mode)
     except OllamaUnavailable as e:
         print(f"Ollama unavailable: {e}", file=sys.stderr)
         return 3
@@ -76,6 +77,8 @@ def main(argv=None) -> int:
     p_ins.add_argument("--config", required=True, help="Path to a config YAML (e.g. configs/sentinel.yaml)")
     p_ins.add_argument("--model", default=None, help="Override the Ollama model")
     p_ins.add_argument("--out", default=None, help="Override the output JSONL path")
+    p_ins.add_argument("--mode", default=None, choices=["simple", "panel"],
+                       help="simple = one agent, fast/reliable (default); panel = sub-agent research panel (slower)")
     p_ins.set_defaults(func=cmd_insights)
 
     p_mod = sub.add_parser("models", help="List locally available Ollama models")

@@ -12,14 +12,17 @@ from langchain_core.tools import tool
 from .providers.base import DataProvider
 
 
-def _summarize(rows, max_rows: int = 60) -> str:
-    """Compact, token-bounded JSON for the model (tail of the data)."""
+def _summarize(rows, max_rows: int = 40) -> str:
+    """Compact, token-bounded JSON for the model (tail of the data).
+
+    Local models drown in big JSON, so this caps both row count and total chars.
+    """
     if isinstance(rows, dict):
-        return json.dumps(rows, default=str)[:8000]
+        return json.dumps(rows, default=str)[:4000]
     if not rows:
         return "[]"
     tail = rows[-max_rows:]
-    return json.dumps(tail, default=str)[:12000]
+    return json.dumps(tail, default=str)[:6000]
 
 
 def make_tools(provider: DataProvider) -> list:

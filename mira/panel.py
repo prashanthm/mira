@@ -80,6 +80,24 @@ def build_insight_panel(model, tools: list, subagent_model_settings: dict | None
     )
 
 
+def build_simple_agent(model, tools: list, structured: bool = True):
+    """A single deep agent (no sub-agent fan-out) — fast + reliable on local hardware.
+
+    Same deepagents harness and tools, but one agent does the analysis in a few round-trips
+    instead of orchestrating sub-agents. This is the default for local models; the full
+    sub-agent panel (build_insight_panel) is opt-in for bigger models / deeper analysis.
+
+    structured=True asks deepagents to coerce the final answer into an InsightReport
+    (exposed as `structured_response` on the result).
+    """
+    from deepagents import create_deep_agent
+
+    kwargs = dict(model=model, tools=tools, system_prompt=_ORCHESTRATOR_INSTRUCTIONS)
+    if structured:
+        kwargs["response_format"] = InsightReport
+    return create_deep_agent(**kwargs)
+
+
 def report_request() -> str:
     """The user message that drives the panel, including the schema to fill."""
     import json
