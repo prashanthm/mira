@@ -5,6 +5,10 @@
 
 name: sentinel
 
+# simple = one deep agent, compact data pre-loaded, ~90s on a local 7B (default).
+# panel  = full sub-agent research panel — deeper but much slower; use a bigger model.
+mode: simple
+
 provider:
   kind: jsonl
   base_dir: /Users/pmuniraju/personal/sentinel
