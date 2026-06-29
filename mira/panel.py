@@ -23,6 +23,11 @@ Rules:
   place a trade. Suggestions are advisory only.
 - Be honest about sample size: with few graded/final outcomes, say confidence is low.
 - Long options are negative-EV on average; don't claim a directional edge that isn't shown.
+- SETTLED DECISIONS: if a `decisions` resource is available, read it first. It lists ideas
+  already decided/rejected via backtest (ADRs). Do NOT propose, as a new adjustment, an idea
+  an ADR has already rejected. If today's data appears to REINFORCE a rejected idea, do not
+  recommend it — instead FLAG the tension in caveats ("today echoes X, but ADR-### rejected it
+  on IS/OOS evidence"). A single salient day does not override a backtested decision.
 
 Process:
 1. Use the `options-analyst` sub-agent to analyze the options recommendations, their A–D
@@ -104,6 +109,9 @@ def report_request() -> str:
     schema = json.dumps(InsightReport.model_json_schema()["properties"], indent=0)[:1500]
     return (
         "Evaluate the latest recommendations, grades, scorecard, and the agent's actions. "
+        "First check the `decisions` data (settled ADRs): do NOT propose an adjustment that an "
+        "ADR already rejected; if today's data echoes a rejected idea, flag that tension in "
+        "caveats instead of recommending it. "
         "Produce one InsightReport JSON object with keys: summary, what_worked, what_didnt, "
         "adjustments, confidence, caveats. "
         f"InsightReport fields: {schema}"

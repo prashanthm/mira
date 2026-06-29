@@ -18,6 +18,7 @@ provider:
     scorecard: logs/options_scorecard.json
     equity_trades: logs/paper_history.jsonl   # the agent's REAL live closed trades
     equity_actions: logs/decisions.jsonl
+    decisions: logs/decisions_digest.json     # settled ADRs — don't re-propose what's rejected
 
 llm:
   base_url: http://localhost:11434
