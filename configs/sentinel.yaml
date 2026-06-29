@@ -1,0 +1,26 @@
+# Mira application config: SENTINEL.
+# This is the ONLY place Sentinel-specific knowledge lives. The framework is generic;
+# this maps Mira's resource keys → Sentinel's log files, picks the local model, and sets
+# where the advisory insight is written (back into Sentinel's logs/ so its dashboard reads it).
+
+name: sentinel
+
+provider:
+  kind: jsonl
+  base_dir: /Users/pmuniraju/personal/sentinel
+  paths:
+    recommendations: logs/options_intelligence_history.jsonl
+    grades: logs/options_grades.jsonl
+    scorecard: logs/options_scorecard.json
+    equity_trades: logs/trade_journal.jsonl
+    equity_actions: logs/decisions.jsonl
+
+llm:
+  base_url: http://localhost:11434
+  model: qwen2.5:7b
+  subagent_settings:
+    model: ollama:qwen2.5:7b
+    temperature: 0.2
+
+# Written into Sentinel's logs dir so the read-only dashboard can surface it.
+output: /Users/pmuniraju/personal/sentinel/logs/options_insights.jsonl

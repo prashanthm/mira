@@ -1,0 +1,29 @@
+[project]
+name = "mira"
+version = "0.1.0"
+description = "Mira — Multi-agent Insight & Reasoning Architecture. A reusable, product-agnostic agentic-AI framework (LangChain + deepagents) driven by a local LLM."
+requires-python = ">=3.11"
+dependencies = [
+    "deepagents>=0.6,<1",
+    "langchain>=1,<2",
+    "langchain-ollama>=1,<2",
+    "pydantic>=2.6",
+    "pyyaml>=6",
+    "requests>=2.32",
+]
+
+[project.optional-dependencies]
+test = ["pytest>=8.0"]
+
+[project.scripts]
+mira = "mira.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["mira"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
