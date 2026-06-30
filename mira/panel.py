@@ -23,11 +23,20 @@ Rules:
   place a trade. Suggestions are advisory only.
 - Be honest about sample size: with few graded/final outcomes, say confidence is low.
 - Long options are negative-EV on average; don't claim a directional edge that isn't shown.
-- SETTLED DECISIONS: if a `decisions` resource is available, read it first. It lists ideas
-  already decided/rejected via backtest (ADRs). Do NOT propose, as a new adjustment, an idea
-  an ADR has already rejected. If today's data appears to REINFORCE a rejected idea, do not
-  recommend it — instead FLAG the tension in caveats ("today echoes X, but ADR-### rejected it
-  on IS/OOS evidence"). A single salient day does not override a backtested decision.
+- INTERIM vs FINAL (options): a FINAL grade (at expiry) is a verdict; a PROGRESS grade and
+  pnl_pct on an OPEN structure (dte_remaining > 0) are INTERIM — the position can reverse.
+  Report interim pnl_pct as an observation, never as a win/loss, and do not bank a lesson
+  that a strategy "wins" or "loses" from interim marks. Win-rate (scorecard) is FINAL-only;
+  if win_rate is null or win_rate_sufficient is false, say the sample is insufficient and
+  draw no win-rate conclusion.
+- SETTLED DECISIONS: if a `decisions` resource is available, read it first — but it is
+  read-only CONTEXT, NOT a source of lessons. It lists ideas already decided/rejected via
+  backtest (ADRs). Do NOT emit a memory_decision/lesson that just restates an ADR (the ADRs
+  are already recorded elsewhere). Use it only to (a) avoid proposing, as a new adjustment,
+  an idea an ADR already rejected, and (b) FLAG in caveats when today's data echoes a rejected
+  idea ("today echoes X, but ADR-### rejected it on IS/OOS evidence"). A single salient day
+  does not override a backtested decision. Lessons must come from the TRADE/GRADE data, never
+  from the decisions list.
 
 Process:
 1. Use the `options-analyst` sub-agent to analyze the options recommendations, their A–D
@@ -48,7 +57,17 @@ _OPTIONS_ANALYST = {
         "Analyze the options-intelligence data. Use read_resource on 'recommendations', "
         "'grades', and 'scorecard'. Identify which strategies/regime-states are grading well "
         "vs poorly, where grades diverge from the structure-quality score, and any notable "
-        "A/D patterns. Cite the actual counts and grades. Be concise."
+        "A/D patterns. Cite the actual counts and grades. Be concise.\n"
+        "CRITICAL — interim vs final:\n"
+        "- A FINAL grade (final_grade set, at expiry) is a real verdict. A PROGRESS grade and "
+        "pnl_pct on an OPEN structure (dte_remaining > 0) are INTERIM marks, not outcomes — "
+        "the position can still reverse before expiry.\n"
+        "- Report interim pnl_pct as an OBSERVATION ('marking red/green so far'), NOT as a "
+        "win or loss. Do NOT conclude a strategy 'works' or 'loses' from interim marks.\n"
+        "- Win-rate lives in the scorecard and is computed from FINAL grades only; when "
+        "win_rate is null or win_rate_sufficient is false, say the sample is insufficient and "
+        "draw no win-rate conclusion. Only treat a strategy's win-rate as real once "
+        "win_rate_sufficient is true."
     ),
 }
 
