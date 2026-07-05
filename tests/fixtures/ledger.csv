@@ -1,0 +1,9 @@
+# demo transaction ledger for the finance domain
+date,account,category,amount,currency
+2026-02-11,corp-card,travel,412.50,USD
+2026-02-19,corp-card,tools,89.00,USD
+2026-03-03,corp-card,travel,1250.00,USD
+2026-03-09,ap,cloud,3020.75,USD
+2026-03-17,corp-card,travel,86.40,USD
+2026-03-28,corp-card,tools,49.00,USD
+2026-04-02,ap,cloud,2980.10,USD
