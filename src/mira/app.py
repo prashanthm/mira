@@ -52,6 +52,9 @@ class App:
     # present, /turn routes supervisor-first (grounded specialist answers) and
     # falls back to the runtime turn only when no card matches.
     supervisor: Supervisor | None = None
+    # Optional decision-trace store (ADR-040): supervisor-routed turns are
+    # recorded under their correlation id so /explain can serve them (ADR-041).
+    trace_store: Any = None
 
     @property
     def wsgi_app(self) -> Any:
@@ -144,11 +147,30 @@ class App:
             if result.routed_domain is not None:
                 import uuid
 
-                yield from supervisor_to_events(result, correlation_id=str(uuid.uuid4()))
+                correlation_id = str(uuid.uuid4())
+                self._record_turn_trace(correlation_id, result)
+                yield from supervisor_to_events(result, correlation_id=correlation_id)
                 return
             # No card matched: the supervisor never guesses a domain — fall back
             # to the runtime turn (echo/model path).
             yield from self.stream_events(prompt, thread_id=thread_id)
+
+    def _record_turn_trace(self, correlation_id: str, result: Any) -> None:
+        """Record a supervisor-routed turn in the decision-trace store (ADR-040).
+
+        One record per specialist result, all under the turn's correlation id so
+        ``GET /explain?correlation_id=…`` reconstructs the whole answer. Best
+        effort: a trace failure must never break the user-facing stream.
+        """
+        if self.trace_store is None:
+            return
+        try:
+            for index, specialist_result in enumerate(result.results):
+                self.trace_store.record_from_result(
+                    f"{correlation_id}:{index}", correlation_id, specialist_result
+                )
+        except Exception:  # noqa: BLE001 — tracing is observability, not the answer path
+            pass
 
 
 def build_app(
@@ -213,11 +235,23 @@ def build_app(
         cards_registry = registry
         agent_cards = lambda: [card.to_dict() for card in cards_registry.cards()]  # noqa: E731
 
+    # ADR-040/041: supervisor-routed turns are recorded so /explain serves them.
+    # The composition root is where the real clock is injected (the store itself
+    # never defaults to wall time).
+    trace_store = None
+    if registry is not None:
+        import time
+
+        from mira.core.decision_trace import TraceStore
+
+        trace_store = TraceStore(clock=time.time)
+
     service = WarmService(
         deps_ready=lambda: True,
         turn_handler=_turn_handler,
         insights_provider=insights_provider,
         agent_cards=agent_cards,
+        trace_store=trace_store,
     )
     service.mark_startup_complete()
 
@@ -228,6 +262,7 @@ def build_app(
         runtime=runtime,
         service=service,
         supervisor=supervisor,
+        trace_store=trace_store,
     )
     app_holder.append(app)
     return app
