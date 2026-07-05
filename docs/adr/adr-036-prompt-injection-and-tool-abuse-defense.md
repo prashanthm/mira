@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -128,6 +128,39 @@ tool-abuse defense.
   work ADR-037 (Accepted) already reserves for Phase 3 (pipeline shape, latency budget, false-positive
   tuning, cost-ceiling accounting under ADR-013), and is not required to satisfy the MIRA-IDENTITY
   acceptance criterion, which is about tool *reachability*, not content classification.
+
+## Implemented Mechanism (Phase D)
+
+ADR-037 named this ADR the owner of injection-detector design within its guardrail-IN stage. With
+the Phase-D MIRA-SAFETY slice landed, that detector design is now implemented in
+`src/mira/core/guardrails.py`, running in the ADR-009 `guardrail_in` stage on top of the Phase-2
+dispatch-time allowlist and untrusted-content tagging decided above (which remain in force —
+`specialist_scaffold.filter_tools_by_domain` and `fabric/provenance.py`'s untrusted default):
+
+- **`InjectionDetector`** — a deterministic, case-insensitive, whitespace-tolerant pattern detector
+  for instruction-override shapes: "ignore (all) previous/prior/above instructions", "disregard
+  your/the (system) prompt", "you are now", "reveal your/the (system) prompt", "override (your)
+  rules/instructions", "forget … instructions". Patterns target *imperative override* phrasing, so
+  benign text that merely mentions "instructions" or "prompt" does not match (false-positive guard
+  asserted by the `evals/test_injection_corpus.py` green set). `extra_patterns` is the config hook
+  for tenant/domain-specific additions. `check(text)` returns a frozen `ViolationFinding`
+  (stable code, matched pattern, evidence snippet) for audit.
+- **`ToolAbuseDetector`** — validates every proposed tool call against the ADR-031 contract
+  registry, fail closed: unknown tool name → violation; arguments failing the contract's
+  `inputSchema` (jsonschema) → violation — closing the confused-deputy/argument-level gap this ADR
+  flagged as open for Phase 3; `destructiveHint` tools require an explicit per-call allow flag.
+- **`GuardrailInMiddleware`** — the `guardrail_in` stage: runs the pluggable detector list over
+  `ctx.attributes["query"]` and the optional `ctx.attributes["tool_calls"]`, records findings in
+  `ctx.attributes["guardrail_in_findings"]`, and raises `GuardrailViolation` on any finding — the
+  handler never runs. Fail-closed defaults: the injection detector is on unless explicitly
+  replaced, and tool calls presented without a configured contract registry are rejected.
+- **Corpus gate** — `evals/test_injection_corpus.py` (ADR-045) asserts a red corpus of injection,
+  prompt-reveal, role-hijack, tool-smuggling, and destructive-tool attempts is blocked, and a green
+  corpus of benign near-misses is not.
+
+Matched injection findings feed the ADR-039 risk policy (a finding classifies the action as
+high-risk → HITL hold) and land in the ADR-040 decision trace. An LLM-based classifier remains a
+deferred secondary layer behind the same detector seam (ADR-037's defense-in-depth slot).
 
 ## Consequences
 

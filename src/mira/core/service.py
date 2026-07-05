@@ -4,6 +4,11 @@ Health probe paths: ``/health`` (liveness) and ``/health/ready`` (readiness) per
 ADR-006, plus ``/health/startup`` — a Kubernetes startup probe for slow warmup
 (provider init / MCP warmup). The startup path is a Mira extension of the
 ADR-006 probe table; ops manifests should configure it as the K8s startupProbe.
+
+``/explain`` (ADR-041) serves decision-trace records from an optional
+:class:`~mira.core.decision_trace.TraceStore` — by ``trace_id`` (single record)
+or ``correlation_id`` (all records for a request), each annotated with a
+deterministic structural uncertainty summary.
 """
 
 from __future__ import annotations
@@ -13,9 +18,12 @@ import json
 import os
 import signal
 import threading
+import urllib.parse
 from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from typing import Any
+
+from mira.core.decision_trace import TraceRecord, TraceStore, uncertainty_for
 
 StartResponse = Callable[[str, list[tuple[str, str]]], Any]
 WSGIApp = Callable[[dict[str, Any], StartResponse], list[bytes]]
@@ -23,6 +31,7 @@ WSGIApp = Callable[[dict[str, Any], StartResponse], list[bytes]]
 LIVE_PATH = "/health"
 READY_PATH = "/health/ready"
 STARTUP_PATH = "/health/startup"
+EXPLAIN_PATH = "/explain"
 
 
 class ServiceDrainingError(RuntimeError):
@@ -37,9 +46,11 @@ class WarmService:
         *,
         deps_ready: Callable[[], bool] | None = None,
         drain_timeout: float = 30.0,
+        trace_store: TraceStore | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
+        self._trace_store = trace_store
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -139,13 +150,46 @@ class WarmService:
             if self.is_startup_complete():
                 return self._json_response(start_response, 200, {"status": "started"})
             return self._json_response(start_response, 503, {"status": "starting"})
+        if path == EXPLAIN_PATH:
+            return self._handle_explain(environ, start_response)
         return self._json_response(start_response, 404, {"error": "not_found"})
+
+    def _handle_explain(
+        self,
+        environ: dict[str, Any],
+        start_response: StartResponse,
+    ) -> list[bytes]:
+        """Serve decision-trace explanations (ADR-041) from the trace store."""
+        if self._trace_store is None:
+            return self._json_response(
+                start_response, 503, {"error": "explanations_unavailable"}
+            )
+        params = urllib.parse.parse_qs(environ.get("QUERY_STRING", ""))
+        trace_id = (params.get("trace_id") or [""])[0]
+        correlation_id = (params.get("correlation_id") or [""])[0]
+        if trace_id:
+            record = self._trace_store.get(trace_id)
+            if record is None:
+                return self._json_response(start_response, 404, {"error": "trace_not_found"})
+            return self._json_response(start_response, 200, _explain_payload(record))
+        if correlation_id:
+            records = self._trace_store.for_correlation(correlation_id)
+            return self._json_response(
+                start_response,
+                200,
+                {"records": [_explain_payload(record) for record in records]},
+            )
+        return self._json_response(
+            start_response,
+            400,
+            {"error": "missing_parameter", "detail": "trace_id or correlation_id required"},
+        )
 
     @staticmethod
     def _json_response(
         start_response: StartResponse,
         status_code: int,
-        payload: dict[str, str],
+        payload: dict[str, Any],
     ) -> list[bytes]:
         body = json.dumps(payload).encode("utf-8")
         reason = http.client.responses.get(status_code, "Unknown")
@@ -158,6 +202,17 @@ class WarmService:
         return [body]
 
 
-def create_app(*, deps_ready: Callable[[], bool] | None = None) -> WarmService:
-    """Build a warm service instance with health probe routes."""
-    return WarmService(deps_ready=deps_ready)
+def _explain_payload(record: TraceRecord) -> dict[str, Any]:
+    """Trace record as an /explain response body, with the uncertainty block."""
+    payload = record.to_dict()
+    payload["uncertainty"] = uncertainty_for(record)
+    return payload
+
+
+def create_app(
+    *,
+    deps_ready: Callable[[], bool] | None = None,
+    trace_store: TraceStore | None = None,
+) -> WarmService:
+    """Build a warm service instance with health probe and /explain routes."""
+    return WarmService(deps_ready=deps_ready, trace_store=trace_store)
