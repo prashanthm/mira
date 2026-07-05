@@ -9,6 +9,10 @@ ADR-006 probe table; ops manifests should configure it as the K8s startupProbe.
 :class:`~mira.core.decision_trace.TraceStore` — by ``trace_id`` (single record)
 or ``correlation_id`` (all records for a request), each annotated with a
 deterministic structural uncertainty summary.
+
+When an :class:`~mira.config.slos.SloTracker` is configured (ADR-043), the
+``/health`` liveness body additionally carries an ``"slos"`` summary for
+operators; liveness status itself never depends on SLO health.
 """
 
 from __future__ import annotations
@@ -23,6 +27,7 @@ from collections.abc import Callable, Iterator
 from contextlib import contextmanager
 from typing import Any
 
+from mira.config.slos import SloTracker, slo_health_payload
 from mira.core.decision_trace import TraceRecord, TraceStore, uncertainty_for
 
 StartResponse = Callable[[str, list[tuple[str, str]]], Any]
@@ -47,10 +52,12 @@ class WarmService:
         deps_ready: Callable[[], bool] | None = None,
         drain_timeout: float = 30.0,
         trace_store: TraceStore | None = None,
+        slo_tracker: SloTracker | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
         self._trace_store = trace_store
+        self._slo_tracker = slo_tracker
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -141,7 +148,12 @@ class WarmService:
     ) -> list[bytes]:
         path = environ.get("PATH_INFO", "")
         if path == LIVE_PATH:
-            return self._json_response(start_response, 200, {"status": "ok"})
+            payload: dict[str, Any] = {"status": "ok"}
+            # SLO burn is surfaced for operators but never flips liveness:
+            # a burning error budget must page (ADR-044), not restart pods.
+            if self._slo_tracker is not None:
+                payload["slos"] = slo_health_payload(self._slo_tracker)
+            return self._json_response(start_response, 200, payload)
         if path == READY_PATH:
             if self.is_ready():
                 return self._json_response(start_response, 200, {"status": "ready"})
@@ -213,6 +225,9 @@ def create_app(
     *,
     deps_ready: Callable[[], bool] | None = None,
     trace_store: TraceStore | None = None,
+    slo_tracker: SloTracker | None = None,
 ) -> WarmService:
     """Build a warm service instance with health probe and /explain routes."""
-    return WarmService(deps_ready=deps_ready, trace_store=trace_store)
+    return WarmService(
+        deps_ready=deps_ready, trace_store=trace_store, slo_tracker=slo_tracker
+    )
