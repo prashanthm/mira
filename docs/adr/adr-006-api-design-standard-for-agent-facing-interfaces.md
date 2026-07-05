@@ -94,3 +94,63 @@ Contract tests required before MIRA-RUNTIME Phase 1 sign-off (implementation spe
 - ADR file: `docs/adr/adr-006-api-design-standard-for-agent-facing-interfaces.md`
 - Catalog: [adr-list.md](./adr-list.md) — ADR-006
 - Hardening decisions: D3 HITL, D4 tracing — production-hardening spec set
+
+## Implemented Mechanism (Phase V1)
+
+The decision above is unchanged. This section records the Phase V1 slice of the
+HTTP/AI surface as built: one streamed-turn route, CORS for browser clients, and
+the dev-server posture.
+
+### `POST /turn` — streamed turn (SSE)
+
+`WarmService` (`src/mira/core/service.py`) routes `POST /turn` and delegates the
+response to an SSE handler factory the composition root (`mira.app.App`)
+supplies — the service stays transport-only (parse + validate + delegate,
+response never buffered). This is the Phase V1 realization of the
+`/invocations/stream` row in the endpoint table; the `/invocations` +
+`/v1/`-prefixed addressing lands with the full FastAPI surface.
+
+Request:
+
+```json
+{ "prompt": "<non-empty string>", "thread_id": "<optional string, default \"web\">" }
+```
+
+Responses:
+
+| Case | Status / body |
+|------|---------------|
+| Success | `200`, `Content-Type: text/event-stream` — frames stream unbuffered |
+| Missing/invalid `prompt` (or malformed body) | `400 {"error": "invalid_request", "detail": "..."}` |
+| Non-POST method on `/turn` | `405 {"error": "method_not_allowed"}` |
+| No turn handler configured | `503 {"error": "turns_unavailable"}` |
+
+Stream frames use the event types this ADR standardizes (`token`, `plan_step`,
+`tool_call`, `done`, `error`); each frame is `event: <kind>` + one JSON `data:`
+line (`src/mira/core/streaming_sse.py`). The turn source is supervisor-first
+when the app was built with an agent-card registry (ADR-014/035): a routed
+prompt streams the specialist's recorded `plan_step` events, one `token`
+carrying the attributed synthesis, then `done` with a correlation id; an
+unmatched prompt falls back to the default runtime turn. Guardrail-out runs
+per frame before emission (ADR-037).
+
+### CORS policy
+
+All routes (including the `/turn` SSE response) are served behind a small WSGI
+CORS wrapper (`src/mira/core/cors.py`):
+
+- `CORS_ALLOW_ORIGINS` env — comma-separated exact origins. Unset ⇒ default
+  policy: any `http://localhost[:PORT]` / `http://127.0.0.1[:PORT]` dev origin.
+- Allowed origins get their `Origin` echoed in `Access-Control-Allow-Origin`
+  (never `*`), plus `Access-Control-Allow-Methods: GET,POST,OPTIONS`,
+  `Access-Control-Allow-Headers: Content-Type`, and `Vary: Origin`.
+- `OPTIONS` preflight on a known route answers `204 No Content`.
+- Disallowed origins receive no CORS headers; the request is still served — the
+  browser enforces the block, the server never rejects on origin alone.
+
+### Server posture
+
+`python -m mira` serves the WSGI app over the stdlib `wsgiref` simple server —
+a development server. Selecting a production WSGI server (and the FastAPI
+migration this ADR decides) is deferred; the service/app split keeps that swap
+a composition-root change only.

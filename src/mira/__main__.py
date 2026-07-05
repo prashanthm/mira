@@ -11,10 +11,29 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from pathlib import Path
+from typing import Any
 from wsgiref.simple_server import make_server
 
 from mira.app import DEFAULT_PROFILE, build_app
 from mira.config.profiles import PROFILE_ENV
+
+
+def _default_registry() -> Any | None:
+    """Best-effort demo agent-card registry for supervisor-first /turn routing.
+
+    Uses the demo fixture corpus **only when the repo fixtures exist relative to
+    the current working directory** (a source checkout); an installed package
+    or a different cwd gets no registry, and /turn serves the plain runtime
+    turn instead — the ADR-006 Phase V1 default-off behavior.
+    """
+    handbook = Path("tests/fixtures/handbook.md")
+    ledger = Path("tests/fixtures/ledger.csv")
+    if not (handbook.is_file() and ledger.is_file()):
+        return None
+    from mira.orchestration.specialists.demo import build_demo_registry
+
+    return build_demo_registry(str(handbook), str(ledger))
 
 
 def _parse_args(argv: list[str]) -> argparse.Namespace:
@@ -45,7 +64,7 @@ def main(argv: list[str] | None = None) -> int:
     os.environ.setdefault("PLATFORM", "local")
     os.environ.setdefault(PROFILE_ENV, DEFAULT_PROFILE)
 
-    app = build_app(args.profile)
+    app = build_app(args.profile, registry=_default_registry())
 
     if args.check:
         print(f"mira: composed app on profile {app.profile.name!r}", file=sys.stderr)

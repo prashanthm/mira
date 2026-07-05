@@ -19,9 +19,12 @@ one place and callers only decide *whether* the run failed.
 from __future__ import annotations
 
 from collections.abc import Iterator, Mapping
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
 from mira.core.streaming import Done, Error, PlanStep, StreamEvent, Token
+
+if TYPE_CHECKING:  # avoid importing the langgraph-backed supervisor at runtime
+    from mira.orchestration.supervisor import SupervisorResult
 
 
 def run_to_events(result: Mapping[str, Any] | BaseException) -> Iterator[StreamEvent]:
@@ -48,6 +51,37 @@ def run_to_events(result: Mapping[str, Any] | BaseException) -> Iterator[StreamE
 
     correlation_id = result.get("correlation_id")
     yield Done(correlation_id=None if correlation_id is None else str(correlation_id))
+
+
+def supervisor_to_events(
+    result: SupervisorResult,
+    *,
+    correlation_id: str | None = None,
+) -> Iterator[StreamEvent]:
+    """Yield the typed event stream for one supervisor-routed turn (Phase V1).
+
+    Mapping mirrors :func:`run_to_events`: each specialist result's recorded
+    ``plan_steps`` → ordered :class:`PlanStep` events, the supervisor
+    ``synthesis`` → one :class:`Token` (specialist tool errors stay visible
+    inside the synthesis text, per the ADR-014 contract), then a terminal
+    :class:`Done` carrying ``correlation_id``. A supervisor-level ``error`` is
+    surfaced as one terminal :class:`Error` instead.
+
+    Langgraph-free on purpose: it consumes only the plain-data
+    ``SupervisorResult`` shape, so the SSE path never touches the graph.
+    """
+    if result.error:
+        yield Error(code="supervisor_failed", message=str(result.error))
+        return
+
+    for specialist in result.results:
+        for entry in specialist.get("plan_steps") or ():
+            yield PlanStep(step=str(entry.get("detail", "")), phase=str(entry.get("phase", "")))
+
+    if result.synthesis:
+        yield Token(text=str(result.synthesis))
+
+    yield Done(correlation_id=correlation_id)
 
 
 def _error(error: Any) -> Error:

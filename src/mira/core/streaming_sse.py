@@ -81,10 +81,12 @@ def make_sse_handler(
     """
 
     def handler(_environ: dict[str, Any], start_response: StartResponse) -> Iterator[bytes]:
+        # No ``Connection`` header: PEP 3333 forbids WSGI apps from setting
+        # hop-by-hop headers (the server owns connection persistence); wsgiref
+        # asserts on it, so /turn over the dev server would 500 mid-handshake.
         headers = [
             ("Content-Type", CONTENT_TYPE),
             ("Cache-Control", "no-cache"),
-            ("Connection", "keep-alive"),
         ]
         start_response("200 OK", headers)
         return sse_response(events, guard=guard)

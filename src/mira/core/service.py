@@ -15,6 +15,18 @@ A2A discovery from an optional ``agent_cards`` provider callable — 200 with
 ``{"cards": [...]}`` when configured, 503 ``discovery_unavailable`` otherwise
 (fail-closed, matching the ``/explain`` unconfigured behaviour).
 
+``POST /turn`` (ADR-006 Phase V1) runs one streamed agent turn: the JSON body
+``{"prompt": str, "thread_id"?: str}`` is delegated to an optional
+``turn_handler`` factory — ``(prompt, thread_id) -> SSE WSGI handler`` — that
+the composition root (:mod:`mira.app`) supplies. The service stays
+transport-only: it parses/validates the request and hands the response
+streaming to the handler, returning its iterable unbuffered. Unconfigured →
+503 ``turns_unavailable``; non-POST → 405.
+
+All routes are served behind the :mod:`mira.core.cors` middleware (ADR-006
+Phase V1): allowed origins get their ``Origin`` echoed, ``OPTIONS`` preflight
+on known paths answers 204.
+
 When an :class:`~mira.config.slos.SloTracker` is configured (ADR-043), the
 ``/health`` liveness body additionally carries an ``"slos"`` summary for
 operators; liveness status itself never depends on SLO health.
@@ -28,21 +40,35 @@ import os
 import signal
 import threading
 import urllib.parse
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from typing import Any
 
 from mira.config.slos import SloTracker, slo_health_payload
+from mira.core.cors import wrap_cors
 from mira.core.decision_trace import TraceRecord, TraceStore, uncertainty_for
 
 StartResponse = Callable[[str, list[tuple[str, str]]], Any]
-WSGIApp = Callable[[dict[str, Any], StartResponse], list[bytes]]
+WSGIApp = Callable[[dict[str, Any], StartResponse], Iterable[bytes]]
+# Opaque factory the composition root supplies: (prompt, thread_id) -> an SSE
+# WSGI handler for one streamed turn. Kept as a plain callable so this module
+# stays framework-free (the SSE machinery lives in mira.core.streaming_sse and
+# the turn semantics in mira.app).
+TurnHandlerFactory = Callable[[str, str], WSGIApp]
 
 LIVE_PATH = "/health"
 READY_PATH = "/health/ready"
 STARTUP_PATH = "/health/startup"
 EXPLAIN_PATH = "/explain"
 AGENT_CARDS_PATH = "/.well-known/agent-cards"
+TURN_PATH = "/turn"
+
+DEFAULT_TURN_THREAD_ID = "web"
+
+# Routes the CORS middleware answers OPTIONS preflight for.
+_ROUTE_PATHS = frozenset(
+    {LIVE_PATH, READY_PATH, STARTUP_PATH, EXPLAIN_PATH, AGENT_CARDS_PATH, TURN_PATH}
+)
 
 
 class ServiceDrainingError(RuntimeError):
@@ -60,12 +86,14 @@ class WarmService:
         trace_store: TraceStore | None = None,
         slo_tracker: SloTracker | None = None,
         agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
+        turn_handler: TurnHandlerFactory | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
         self._trace_store = trace_store
         self._slo_tracker = slo_tracker
         self._agent_cards = agent_cards
+        self._turn_handler = turn_handler
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -147,13 +175,15 @@ class WarmService:
 
     @property
     def wsgi_app(self) -> WSGIApp:
-        return self._handle_request
+        # CORS applies to every route, including the /turn SSE response
+        # (ADR-006 Phase V1); the wrapper answers OPTIONS preflight itself.
+        return wrap_cors(self._handle_request, preflight_paths=_ROUTE_PATHS)
 
     def _handle_request(
         self,
         environ: dict[str, Any],
         start_response: StartResponse,
-    ) -> list[bytes]:
+    ) -> Iterable[bytes]:
         path = environ.get("PATH_INFO", "")
         if path == LIVE_PATH:
             payload: dict[str, Any] = {"status": "ok"}
@@ -174,7 +204,53 @@ class WarmService:
             return self._handle_explain(environ, start_response)
         if path == AGENT_CARDS_PATH:
             return self._handle_agent_cards(start_response)
+        if path == TURN_PATH:
+            return self._handle_turn(environ, start_response)
         return self._json_response(start_response, 404, {"error": "not_found"})
+
+    def _handle_turn(
+        self,
+        environ: dict[str, Any],
+        start_response: StartResponse,
+    ) -> Iterable[bytes]:
+        """Run one streamed turn (ADR-006 Phase V1) via the configured factory.
+
+        Transport-only: parse/validate ``{"prompt", "thread_id"?}``, then
+        delegate to the SSE handler ``turn_handler(prompt, thread_id)`` builds —
+        its iterable is returned directly so frames stream unbuffered.
+        """
+        if environ.get("REQUEST_METHOD", "GET").upper() != "POST":
+            return self._json_response(start_response, 405, {"error": "method_not_allowed"})
+        if self._turn_handler is None:
+            return self._json_response(start_response, 503, {"error": "turns_unavailable"})
+
+        try:
+            body = _read_json_body(environ)
+        except ValueError as exc:
+            return self._json_response(
+                start_response, 400, {"error": "invalid_request", "detail": str(exc)}
+            )
+        if not isinstance(body, dict):
+            return self._json_response(
+                start_response, 400, {"error": "invalid_request", "detail": "body must be a JSON object"}
+            )
+        prompt = body.get("prompt")
+        if not isinstance(prompt, str) or not prompt.strip():
+            return self._json_response(
+                start_response,
+                400,
+                {"error": "invalid_request", "detail": "'prompt' must be a non-empty string"},
+            )
+        thread_id = body.get("thread_id", DEFAULT_TURN_THREAD_ID)
+        if not isinstance(thread_id, str) or not thread_id:
+            return self._json_response(
+                start_response,
+                400,
+                {"error": "invalid_request", "detail": "'thread_id' must be a non-empty string"},
+            )
+
+        handler = self._turn_handler(prompt, thread_id)
+        return handler(environ, start_response)
 
     def _handle_agent_cards(self, start_response: StartResponse) -> list[bytes]:
         """Serve the A2A discovery card set (ADR-035) from the cards provider."""
@@ -232,6 +308,24 @@ class WarmService:
         return [body]
 
 
+def _read_json_body(environ: dict[str, Any]) -> Any:
+    """Read and parse the JSON request body from ``CONTENT_LENGTH`` + ``wsgi.input``.
+
+    Raises :class:`ValueError` (which :class:`json.JSONDecodeError` subclasses)
+    on a missing, unreadable, or malformed body.
+    """
+    try:
+        length = int(environ.get("CONTENT_LENGTH") or 0)
+    except (TypeError, ValueError) as exc:
+        raise ValueError("invalid Content-Length") from exc
+    if length <= 0:
+        raise ValueError("request body required")
+    raw = environ["wsgi.input"].read(length)
+    if not raw:
+        raise ValueError("request body required")
+    return json.loads(raw.decode("utf-8"))
+
+
 def _explain_payload(record: TraceRecord) -> dict[str, Any]:
     """Trace record as an /explain response body, with the uncertainty block."""
     payload = record.to_dict()
@@ -245,11 +339,13 @@ def create_app(
     trace_store: TraceStore | None = None,
     slo_tracker: SloTracker | None = None,
     agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
+    turn_handler: TurnHandlerFactory | None = None,
 ) -> WarmService:
-    """Build a warm service with health probe, /explain, and agent-card discovery routes."""
+    """Build a warm service with health probe, /explain, discovery, and /turn routes."""
     return WarmService(
         deps_ready=deps_ready,
         trace_store=trace_store,
         slo_tracker=slo_tracker,
         agent_cards=agent_cards,
+        turn_handler=turn_handler,
     )

@@ -18,8 +18,10 @@ from mira.core.service import WarmService
 from mira.core.streaming import OutputGuard, StreamEvent
 from mira.core.streaming_sse import WSGIHandler, make_sse_handler
 from mira.model.gateway import Gateway
-from mira.orchestration.run_events import run_to_events
+from mira.orchestration.agent_cards import AgentCardRegistry
+from mira.orchestration.run_events import run_to_events, supervisor_to_events
 from mira.orchestration.runtime import AgentRuntime
+from mira.orchestration.supervisor import Supervisor
 from mira.providers.bundle import ProviderBundle
 from mira.providers.factory import get_providers
 
@@ -46,6 +48,10 @@ class App:
     gateway: Gateway
     runtime: AgentRuntime
     service: WarmService
+    # Optional supervisor (ADR-014) built from an agent-card registry: when
+    # present, /turn routes supervisor-first (grounded specialist answers) and
+    # falls back to the runtime turn only when no card matches.
+    supervisor: Supervisor | None = None
 
     @property
     def wsgi_app(self) -> Any:
@@ -108,11 +114,48 @@ class App:
         events = self.stream_events(prompt, thread_id=thread_id, runner=runner)
         return make_sse_handler(events, guard=guard)
 
+    def turn_handler(self, prompt: str, thread_id: str) -> WSGIHandler:
+        """The ``POST /turn`` factory the warm service delegates to (ADR-006 V1).
+
+        Supervisor-first when a registry was provided at build time; otherwise
+        (or when no agent card matches the prompt) the stream falls back to the
+        default runtime turn — the same event source :meth:`stream_turn` uses.
+        """
+        return make_sse_handler(self._turn_events(prompt, thread_id))
+
+    def _turn_events(self, prompt: str, thread_id: str) -> Iterator[StreamEvent]:
+        """Supervisor-first event source for one /turn request.
+
+        Bracketed by :meth:`WarmService.track_in_flight` (the nested entry taken
+        by the fallback :meth:`stream_events` counts as its own unit, matching
+        the drain semantics of a directly streamed turn). A supervisor failure
+        maps to a terminal ``error`` event rather than escaping mid-stream.
+        """
+        if self.supervisor is None:
+            yield from self.stream_events(prompt, thread_id=thread_id)
+            return
+
+        with self.service.track_in_flight():
+            try:
+                result = self.supervisor.invoke(prompt, thread_id=thread_id)
+            except Exception as exc:  # noqa: BLE001 — surfaced as a typed error event
+                yield from run_to_events(exc)
+                return
+            if result.routed_domain is not None:
+                import uuid
+
+                yield from supervisor_to_events(result, correlation_id=str(uuid.uuid4()))
+                return
+            # No card matched: the supervisor never guesses a domain — fall back
+            # to the runtime turn (echo/model path).
+            yield from self.stream_events(prompt, thread_id=thread_id)
+
 
 def build_app(
     profile: str | None = None,
     *,
     bundle: ProviderBundle | None = None,
+    registry: AgentCardRegistry | None = None,
 ) -> App:
     """Build the runtime-behind-gateway composition from the deployment profile.
 
@@ -121,6 +164,11 @@ def build_app(
     :data:`DEFAULT_PROFILE`. The provider bundle is resolved from the profile's
     ``platform`` unless an explicit ``bundle`` is injected (used by tests to
     supply a fake, network-free provider).
+
+    An optional agent-card ``registry`` (ADR-035) turns on supervisor-first
+    /turn routing (ADR-014): matched prompts are answered by the routed
+    specialist, unmatched prompts fall back to the runtime turn. Without a
+    registry the app behaves exactly as before.
     """
     resolved = load_profile(profile or _profile_name_or_default())
     if bundle is None:
@@ -133,16 +181,30 @@ def build_app(
     tools = _discover_mcp_tools(resolved)
     runtime = AgentRuntime(gateway, bundle.state_store, tools=tools)
 
-    service = WarmService(deps_ready=lambda: True)
+    supervisor = Supervisor(registry) if registry is not None else None
+
+    # The service needs the /turn factory at construction time, but the factory
+    # is a method of the App composed *around* the service — bind it through a
+    # late-filled holder so the ctor-param contract holds without mutating the
+    # frozen App.
+    app_holder: list[App] = []
+
+    def _turn_handler(prompt: str, thread_id: str) -> WSGIHandler:
+        return app_holder[0].turn_handler(prompt, thread_id)
+
+    service = WarmService(deps_ready=lambda: True, turn_handler=_turn_handler)
     service.mark_startup_complete()
 
-    return App(
+    app = App(
         profile=resolved,
         bundle=bundle,
         gateway=gateway,
         runtime=runtime,
         service=service,
+        supervisor=supervisor,
     )
+    app_holder.append(app)
+    return app
 
 
 def _discover_mcp_tools(profile: Profile) -> list[Any]:

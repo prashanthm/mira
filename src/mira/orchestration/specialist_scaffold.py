@@ -161,7 +161,16 @@ def _make_scoped_dispatcher(
                 raise PermissionError(
                     f"tool {name!r} not allowed for domain {domain_spec.domain_id!r}"
                 )
-            return json.dumps(registry[name].handler(payload), default=str)
+            try:
+                result = registry[name].handler(payload)
+            except PermissionError:
+                raise  # authorization failures stay fail-closed (surfaced as error)
+            except Exception as exc:  # noqa: BLE001 — fail-degraded, never crash the graph
+                # A failing handler (e.g. a remote MCP tool behind the bridge)
+                # becomes a structured observation the specialist can reason
+                # over / surface, instead of an exception escaping the graph.
+                return json.dumps({"status": "tool_error", "tool": name, "detail": str(exc)})
+            return json.dumps(result, default=str)
 
         inferred = infer(action, registry)
         if inferred is not None:
