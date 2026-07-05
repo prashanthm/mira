@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mira"
+version = "1.0.0"
+description = "Mira — Multi-agent Insight & Reasoning Architecture: a reference agentic-AI implementation"
+requires-python = ">=3.12"
+dependencies = [
+    "jsonschema>=4.0",
+    # Pin LangGraph 0.3.x: StateStoreCheckpointer relies on InMemorySaver private attrs (M1).
+    # Loose bounds (langgraph>=0.2 + langchain-core>=0.3) make pip backtrack for hours.
+    "langgraph>=0.3,<0.4",
+    "langchain-core>=0.3.36,<0.4",
+]
+
+[project.scripts]
+# One-step chatbot CLI. Needs the [llm,mcp] extras at runtime.
+mira-chat = "mira.chat:cli"
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0"]
+# OpenAI-compatible LLM provider (ADR-010): point LLM_BASE_URL at any /v1 endpoint
+# (Ollama/vLLM direct; AWS Bedrock via a LiteLLM proxy). Uses the plain ``openai`` SDK —
+# NOT langchain — so the framework stays contained to orchestration/ (ADR-007). Optional
+# so the core import path and the network-free echo-stub test path stay SDK-free (ADR-002).
+llm = ["openai>=1.40"]
+# Remote MCP tool ingestion (Task 2): declared MCP server registry consumed by
+# langchain-mcp-adapters' MultiServerMCPClient over Streamable HTTP.
+# 0.2+ imports langchain_core.messages.content (langchain-core 1.x only).
+mcp = ["mcp>=1.23", "langchain-mcp-adapters>=0.1.14,<0.2"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
