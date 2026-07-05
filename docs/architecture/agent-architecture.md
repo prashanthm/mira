@@ -35,13 +35,13 @@ the diagrams can stay complete without overstating what ships.
 | Connectors (docs, ledger) + MCP export + MCP server registry | **Implemented** | — | `mira.connectors.*` (ADR-020) |
 | Typed tool contracts, invoke, authz | **Implemented** | — | `mira.tools.*` (ADR-031) |
 | Deployment profiles (local, saas, standalone, kubernetes, outposts) | **Implemented** | — | `mira.config.profiles` (ADR-047) |
-| Supervisor routing across specialists | **Designed / planned** | **B** | ADR-014 |
-| Eval framework + CI safety gate | **Designed / planned** | **B** | ADR-045 |
-| Retrieval / RAG pipeline (hybrid, re-ranking, agentic RAG) | **Designed / planned** | **C** | ADR-028, ADR-029 |
-| Graph RAG (entity extraction, knowledge graph, graph+vector fusion) | **Designed / planned** | **C** | ADR-027, ADR-030 |
-| Safety-pipeline detectors (injection, jailbreak, hallucination, sycophancy, PII) | **Designed / planned** | **D** | ADR-036, ADR-037, ADR-038 |
-| XAI engine (explanations, uncertainty, `/explain` API) | **Designed / planned** | **D** | ADR-040, ADR-041 |
-| AgentOps (cost dashboards, SLOs, anomaly-triggered incidents) | **Designed / planned** | **E** | ADR-042, ADR-043, ADR-044 |
+| Supervisor routing across specialists | **Implemented** (`mira.orchestration.supervisor`, `agent_cards`) | **B** | ADR-014 |
+| Eval framework + CI safety gate | **Implemented** (`evals/`, `make eval`, CI-gated) | **B** | ADR-045 |
+| Retrieval / RAG pipeline (hybrid, re-ranking, agentic RAG) | **Implemented** (`mira.retrieval`: hybrid RRF + corrective loop; in-memory reference backends) | **C** | ADR-028, ADR-029 |
+| Graph RAG (entity extraction, knowledge graph, graph+vector fusion) | **Implemented** (`mira.semantic`: entities/KG/catalog/conflicts + fusion) | **C** | ADR-027, ADR-030 |
+| Safety-pipeline detectors (injection, tool abuse, groundedness, topic drift) | **Implemented** (`mira.core.guardrails`); model-graded detectors deferred | **D** | ADR-036, ADR-037, ADR-038 |
+| XAI engine (decision traces, uncertainty, `/explain` API) | **Implemented** (`mira.core.decision_trace`, `/explain`) | **D** | ADR-040, ADR-041 |
+| AgentOps (cost attribution, SLOs/error budgets, incidents) | **Implemented** (`mira.model.cost_attribution`, `mira.config.slos`, `mira.core.incidents`) | **E** | ADR-042, ADR-043, ADR-044 |
 | Dynamic workflow composition + agent scaffolding/generation | **Designed / planned** | **F** | ADR-015, ADR-016 |
 
 Phase letters: **B** supervisor + evals · **C** retrieval / RAG / graph · **D** safety / XAI ·
@@ -287,7 +287,7 @@ flowchart LR
     style reflector fill:#27ae60,stroke:#1e8449,color:#fff
 ```
 
-### 3.2 RAG Pipeline *(Phase C — designed)*
+### 3.2 RAG Pipeline *(Phase C — implemented in `mira.retrieval`)*
 
 Retrieval quality design per [ADR-028](../adr/adr-list.md) (hybrid retrieval) and
 [ADR-029](../adr/adr-list.md) (agentic RAG). The demo corpora are the research Markdown docs and
@@ -320,7 +320,7 @@ flowchart LR
     style assembler fill:#27ae60,stroke:#1e8449,color:#fff
 ```
 
-### 3.3 Graph RAG *(Phase C — designed)*
+### 3.3 Graph RAG *(Phase C — implemented in `mira.semantic`)*
 
 Graph + vector fusion per [ADR-030](../adr/adr-list.md) over the knowledge-graph spine of
 [ADR-027](../adr/adr-list.md). Entities are whatever the active domain defines — for the demo
@@ -389,7 +389,7 @@ flowchart TB
     style longterm fill:#27ae60,stroke:#1e8449,color:#fff
 ```
 
-### 3.5 Safety Pipeline *(stages implemented; detectors Phase D)*
+### 3.5 Safety Pipeline *(stages + Phase-D detectors implemented)*
 
 The guardrail-IN and guardrail-OUT **stages** exist today in the middleware pipeline
 ([ADR-009](../adr/adr-list.md), [ADR-037](../adr/adr-list.md)); the individual **detectors**
@@ -439,7 +439,7 @@ flowchart LR
     style halluc fill:#9b59b6,stroke:#8e44ad,color:#fff
 ```
 
-### 3.6 XAI Engine *(attribution implemented; explanations Phase D)*
+### 3.6 XAI Engine *(attribution, decision traces, and `/explain` implemented)*
 
 Trace capture and attribution ship today in `mira.core.attribution`; decision-trace audit and the
 `/explain` API with uncertainty quantification are [ADR-040](../adr/adr-list.md) and
@@ -943,7 +943,7 @@ flowchart TB
 
 End-to-end request path. Steps 2–5 and 10–12 are the middleware pipeline of
 [ADR-009](../adr/adr-list.md); step 6 is the ReAct loop of [ADR-013](../adr/adr-list.md); steps
-7a/7b are Phase C, 11 is Phase D, and escalation is Phase D — everything else ships today.
+All numbered flows ship today; model-graded detector variants and live-provider retrieval quality remain deferred (see the ADR Deferred sections).
 
 ```mermaid
 flowchart TB

@@ -19,6 +19,7 @@ make setup     # local venv + editable install
 make start     # warm service on 127.0.0.1:8080 (offline echo model)
 make smoke     # health + one streamed turn
 make test      # offline pytest suite
+make eval      # eval harness: goldens, adversarial corpus, trace scoring, gate
 make lint      # import-boundary lint + sanitize-check
 ```
 
@@ -59,11 +60,13 @@ mira-chat --llm-url http://my-vllm:8000/v1           # any OpenAI-compatible LLM
 |---|---|
 | `app.py`, `__main__.py` | composition root + `python -m mira` entrypoint |
 | `chat.py` | the `mira-chat` one-step chatbot CLI (LLM + MCP tools) |
-| `core/` | warm service (health/drain), typed streaming events + SSE, attribution, middleware pipeline, layered memory, resilience |
-| `orchestration/` | LangGraph runtime, ReAct reasoning loop with budget bounds, the specialist scaffold, MCP tool discovery — the only layer that may import langchain/langgraph |
-| `model/` | provider-agnostic gateway, fallback chain + circuit breaker, cost/quota routing, eval-gated versioning registry |
+| `core/` | warm service (health/drain/`/explain`), typed streaming events + SSE, attribution, middleware pipeline with guardrail detectors, escalation, decision traces, incidents, layered memory, resilience |
+| `orchestration/` | LangGraph runtime, ReAct reasoning loop with budget bounds, the specialist scaffold, supervisor routing + agent cards, MCP tool discovery — the only layer that may import langchain/langgraph |
+| `model/` | provider-agnostic gateway, fallback chain + circuit breaker, cost/quota routing, cost-attribution ledger, eval-gated versioning registry |
 | `providers/` | vendor-SDK boundary — `local` (offline echo), `openai_compatible` (any `/v1`), `aws` — the only layer that may import cloud SDKs |
 | `fabric/` | data fabric — federate-vs-aggregate policy, query-in-place federation, storage roles, provenance |
+| `retrieval/` | hybrid retrieval (dense + BM25 + RRF fusion), corrective agentic-RAG loop, protocol seam for pluggable vector backends |
+| `semantic/` | entity resolution, knowledge-graph spine, entity+aspect catalog, conflict surfacing, graph+vector fusion |
 | `connectors/` | source connectors + MCP export + server registry; demo domains: `docs` (Markdown corpus), `ledger` (CSV transactions) |
 | `tools/` | typed tool contracts (flat JSON-schema, fail-closed entitlements), invocation, authz |
 | `config/` | deployment profiles + validation |
@@ -92,6 +95,11 @@ Kubernetes/ECS; placement is env/Helm-driven, never baked in (ADR-047).
 
 ## Status
 
-Private reference implementation. The prior Mira (deepagents/Ollama insight panel
-consumed by Sentinel) is preserved on the `legacy/v0` branch; its nightly launchd job
-is disabled until the Sentinel use case is re-ported as a domain on this runtime.
+Private reference implementation. Phases A–E of the ADR catalog are built: the
+sanitized core runtime and demo domains (A), supervisor routing + the offline eval
+harness (B), hybrid/agentic retrieval + the semantic spine (C), guardrail detectors,
+HITL escalation, decision traces, and `/explain` (D), and AgentOps cost attribution,
+SLOs, and incident routing (E). Remaining: Phase F (workflow composition + `mira-scaffold`,
+ADR-015/016) and the Sentinel re-port (Phase G). The prior Mira (deepagents/Ollama
+insight panel consumed by Sentinel) is preserved on the `legacy/v0` branch; its nightly
+launchd job stays disabled until Phase G.

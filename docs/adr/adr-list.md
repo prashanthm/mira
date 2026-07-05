@@ -21,7 +21,7 @@ extensions) on top of that boundary.
 ## ADRs — Mira
 
 ADRs 001–014, 017–027, 031–035, 037, and 045–048 are **Accepted**. ADR-036 and the twelve
-pending ADRs (015, 016, 028–030, 038–044) are **Proposed**; each pending ADR has a stub linked
+pending ADRs (015, 016) are **Proposed**; each pending ADR has a stub linked
 below. Summaries are one decision-oriented sentence; `(Phase X)` marks decisions the roadmap
 defers: **B** supervisor + evals, **C** retrieval (028–030), **D** safety & trust (036, 038–041),
 **E** AgentOps (042–044), **F** dynamic composition (015, 016). `(pending ADR)` marks decisions
@@ -73,9 +73,9 @@ whose direction is not yet committed.
 | ADR-025 | [Interpretation-vs-Measurement & Multi-Source Conflict Surfacing](./adr-025-interpretation-vs-measurement-and-multi-source-conflict-surfacing.md) | Accepted | Tagged value model with mandatory `kind` classification (measurement vs interpretation) and explicit multi-source conflict surfacing — never silently picks a winner. |
 | ADR-026 | [Catalog Service Design](./adr-026-catalog-service-design.md) | Accepted | Dedicated catalog service, architecturally distinct from the knowledge-graph spine, using an entity + pluggable-aspect metadata model. |
 | ADR-027 | [Knowledge-Graph Semantic Catalog Spine](./adr-027-knowledge-graph-semantic-catalog-spine.md) | Accepted | RDF/OWL as the graph model for the ADR-021 knowledge-graph store role, ontology seeded from an open reference ontology. |
-| ADR-028 | [Hybrid Retrieval Pipeline](./adr-028-hybrid-retrieval.md) | Proposed | Select the retrieval approach (hybrid dense + sparse, re-ranking, query expansion, multi-KB); hybrid + RRF + cross-encoder is the current direction (pending ADR) (Phase C). |
-| ADR-029 | [Agentic RAG Strategy](./adr-029-agentic-rag.md) | Proposed | Select the agentic retrieval strategy; Self-RAG / Corrective-RAG loops are the current direction (pending ADR) (Phase C). |
-| ADR-030 | [Graph + Vector Fusion (Graph RAG)](./adr-030-graph-vector-fusion.md) | Proposed | Select the graph-plus-vector fusion approach (document-KG with source linking and community detection) for entity-aware grounding (pending ADR) (Phase C). |
+| ADR-028 | [Hybrid Retrieval Pipeline](./adr-028-hybrid-retrieval.md) | Accepted | Hybrid retrieval: dense (deterministic hash embedder behind the Embedder/VectorIndex protocol seam) + BM25 sparse, fused with RRF and a re-rank hook; pgvector/OpenSearch backends deferred behind the same Protocols. |
+| ADR-029 | [Agentic RAG Strategy](./adr-029-agentic-rag.md) | Accepted | Agentic RAG: corrective retrieve → grade → re-query loop with deterministic query relaxation, bounded by the ADR-013 budget discipline; live-model grading deferred behind the same hooks. |
+| ADR-030 | [Graph + Vector Fusion (Graph RAG)](./adr-030-graph-vector-fusion.md) | Accepted | Graph + vector fusion: retrieval hits joined with 1-hop knowledge-graph context via non-creating entity lookup; each fused hit carries retrieval score and graph provenance. |
 | ADR-031 | [Typed Tool Contracts](./adr-031-typed-tool-contracts.md) | Accepted | Agent tools are typed MCP contracts: flat JSON Schema inputSchema + tool annotations (readOnly/idempotent/destructive/openWorld) + idempotency keys/retry/timeout + declared authorization; conforms to the inherited MCP tool surface, versioned by ADR-012, enforced in ADR-009, authz enforced at the MCP boundary. |
 | ADR-032 | [Skills Registry, Versioning & Authorization](./adr-032-skills-registry-versioning-and-authorization.md) | Accepted | Skills register as a new versioned artifact kind in the ADR-012 registry: a named, composed capability built from one or more ADR-031 typed tool contracts. |
 
@@ -86,20 +86,20 @@ whose direction is not yet committed.
 | ADR-033 | [Phase 1 Minimum Identity Slice](./adr-033-phase-1-minimum-identity-slice.md) | Accepted | Ship an initial service identity carrying per-call tenant/user/correlation attribution and MCP-scoped entitlements as the interim least-privilege model. |
 | ADR-034 | [Per-Agent Identity & Task-Scoped Tokens](./adr-034-per-agent-identity-and-task-scoped-tokens.md) | Accepted | OAuth 2.0 Token Exchange (RFC 8693) mints a short-lived, task-scoped token per specialist dispatch, replacing the shared initial service identity. |
 | ADR-035 | [Agent Cards & A2A Discovery](./adr-035-agent-cards-and-a2a-discovery.md) | Accepted | A2A `AgentCard` schema for specialist/supervisor discovery metadata, published at a well-known URI, discovered via direct/private configuration. |
-| ADR-036 | [Prompt-Injection & Tool-Abuse Defense](./adr-036-prompt-injection-and-tool-abuse-defense.md) | Proposed | Select the prompt-injection and unauthorized-tool-use defense for the agent boundary (pending ADR) (Phase D — coupled to per-agent identity; the full bidirectional guardrail pipeline is ADR-037). |
+| ADR-036 | [Prompt-Injection & Tool-Abuse Defense](./adr-036-prompt-injection-and-tool-abuse-defense.md) | Accepted | Prompt-injection and tool-abuse defense: deterministic instruction-override detector + fail-closed tool-call validation (unknown tool, schema-violating args, destructive-needs-allow) in the guardrail-in stage. |
 | ADR-037 | [Bidirectional Guardrail Pipeline](./adr-037-bidirectional-guardrail-pipeline.md) | Accepted | Custom bidirectional (input+output) guardrail pipeline in the ADR-009 guardrail-IN/-OUT stages as the primary control, with an optional cloud guardrail service as a secondary defense-in-depth layer; portable to on-prem, framework-agnostic; composes ADR-036/038/039. |
-| ADR-038 | [Hallucination & Topic-Drift Controls](./adr-038-hallucination-and-topic-drift-controls.md) | Proposed | Select the hallucination-detection and topic-drift/domain-scope controls, recognizing grounding is necessary but not sufficient (pending ADR) (Phase D). |
-| ADR-039 | [Human-in-the-Loop Escalation](./adr-039-hitl-escalation.md) | Proposed | Escalate high-risk actions to a human at the request boundary; an async webhook callback integrated with ticketing/chat tooling is the current mechanism direction (pending ADR) (Phase D). |
-| ADR-040 | [Decision-Trace Audit Model](./adr-040-decision-trace-audit.md) | Proposed | Link every factual claim to source records via decision traces; an append-only attribution store is the current direction (pending ADR) (Phase D). |
-| ADR-041 | [Explanation API & Uncertainty Quantification](./adr-041-explanation-api-and-uncertainty.md) | Proposed | Select the `/explain` API and uncertainty-quantification design exposing multi-level explanations (pending ADR) (Phase D). |
+| ADR-038 | [Hallucination & Topic-Drift Controls](./adr-038-hallucination-and-topic-drift-controls.md) | Accepted | Hallucination and drift controls: structural groundedness (claim→source provenance) and per-domain topic-drift detection in guardrail-out; only an ungrounded final result blocks. |
+| ADR-039 | [Human-in-the-Loop Escalation](./adr-039-hitl-escalation.md) | Accepted | HITL escalation: structural risk tiers → proceed/notify/hold_for_approval decisions feeding the ADR-013 interrupt gate; webhook notifier with injectable transport. |
+| ADR-040 | [Decision-Trace Audit Model](./adr-040-decision-trace-audit.md) | Accepted | Decision-trace audit: append-only TraceStore of frozen claim→source records with monotonic sequence and no update/delete surface. |
+| ADR-041 | [Explanation API & Uncertainty Quantification](./adr-041-explanation-api-and-uncertainty.md) | Accepted | /explain API: trace lookup by trace_id/correlation_id on the warm service with deterministic structural uncertainty annotations. |
 
 ### Observability & Eval (cross-cutting)
 
 | ID | Title | Status | Summary |
 |----|-------|--------|---------|
-| ADR-042 | [AgentOps Telemetry & LLM Cost Attribution](./adr-042-agentops-telemetry-and-llm-cost-attribution.md) | Proposed | Extend the inherited OpenTelemetry stack with LLM cost-attribution spans, cost dashboards/alerting, and anomaly detection; the exact span/cost-model design is pending ADR (Phase E). |
-| ADR-043 | [SLOs & Error Budgets](./adr-043-slos-and-error-budgets.md) | Proposed | Define the agent surface's SLOs and error budgets (latency, cost, error rate) as the operability target (pending ADR) (Phase E). |
-| ADR-044 | [Incident Detection & Remediation Workflow](./adr-044-incident-detection-and-remediation.md) | Proposed | Select the anomaly-triggered incident detection and escalation workflow for production AgentOps (pending ADR) (Phase E). |
+| ADR-042 | [AgentOps Telemetry & LLM Cost Attribution](./adr-042-agentops-telemetry-and-llm-cost-attribution.md) | Accepted | AgentOps cost attribution: per tenant/domain/tool cost ledger fed by a gateway span observer, plus threshold anomaly detection (ceiling, budget caps, rate spike). |
+| ADR-043 | [SLOs & Error Budgets](./adr-043-slos-and-error-budgets.md) | Accepted | SLOs and error budgets as code: event-count ring windows, full error-budget math, /health surfacing that never flaps liveness. |
+| ADR-044 | [Incident Detection & Remediation Workflow](./adr-044-incident-detection-and-remediation.md) | Accepted | Incident detection and remediation: anomaly/SLO signals → severity-mapped incidents routed through the escalation webhook; remediation levers advisory-only. |
 | ADR-045 | [Eval Framework & CI Safety Gate](./adr-045-eval-framework-ci-safety-gate.md) | Accepted | Blocking golden + adversarial CI gate, run by a pytest-orchestrated, trace/OTLP-based suite using a pytest-native OSS eval library (DeepEval) — framework-agnostic per ADR-007 containment, not LangSmith; asserts claim→source linkage via decision traces. |
 | ADR-046 | [Agent-Layer Resilience Policy](./adr-046-agent-layer-resilience.md) | Accepted | Define agent-layer resilience (model-gateway circuit-breaking/backoff, reasoning loop safety, runtime health), explicitly deferring MCP→source call-path resilience to the inherited MCP tool server (pending ADR). |
 

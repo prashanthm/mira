@@ -28,6 +28,8 @@ by number.
 | `model/` | gateway, fallback, routing, versioning, cost spans | framework-free |
 | `providers/` | vendor-SDK boundary (local echo / openai_compatible / aws) | **only** place cloud SDKs may be imported |
 | `fabric/` | federate-vs-aggregate policy, federation, storage roles, provenance | framework-free |
+| `retrieval/` | hybrid dense+sparse retrieval, RRF fusion, corrective RAG loop | framework-free |
+| `semantic/` | entity resolution, knowledge graph, catalog, conflicts, fusion | framework-free |
 | `connectors/` | connector framework + MCP export; demo domains `docs` + `ledger` | framework-free |
 | `tools/` | typed tool contracts, invocation, authz | framework-free |
 | `config/` | deployment profiles | framework-free |
@@ -74,9 +76,11 @@ CI (`.github/workflows/ci.yml`) runs `make lint` and `make test` on Python 3.12.
 - `deploy/` assets (Helm/Terraform/Fargate) are functional references but **not wired
   to any pipeline** — no image push, no `terraform apply`, no CD.
 - No typecheck in CI; `ruff` is configured but not gated.
-- Supervisor routing (ADR-014, `orchestration/supervisor.py`) and the offline evals
-  harness (ADR-045, `evals/` + `make eval`, CI-gated) are built; retrieval/RAG,
-  safety detectors, XAI, and AgentOps land in phases C-E per `docs/adr/adr-list.md`.
+- Phases B-E are built: supervisor routing + agent cards (`orchestration/`), the
+  offline evals harness (`evals/`, CI-gated), retrieval/RAG (`retrieval/`), the
+  semantic spine (`semantic/`), guardrail detectors + escalation + decision traces +
+  `/explain` (`core/`), and AgentOps (`model/cost_attribution.py`, `config/slos.py`,
+  `core/incidents.py`). Remaining: ADR-015/016 (Phase F) and the Sentinel re-port (G).
 - `legacy/v0` branch holds the previous Mira (deepagents/Ollama insight panel used by
   Sentinel); its launchd job is disabled pending re-port as a domain here.
 - LICENSE is all-rights-reserved pending an IP review before any open-sourcing.
