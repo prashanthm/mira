@@ -1,0 +1,46 @@
+{
+  "family": "mira",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "512",
+  "memory": "1024",
+  "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/mira-ecs-execution",
+  "taskRoleArn": "arn:aws:iam::ACCOUNT_ID:role/mira-ecs-task",
+  "containerDefinitions": [
+    {
+      "name": "mira",
+      "image": "ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/mira:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {
+          "name": "DEPLOYMENT_PROFILE",
+          "value": "saas"
+        }
+      ],
+      "healthCheck": {
+        "command": [
+          "CMD-SHELL",
+          "python3 -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:8080/health', timeout=3).status==200 else 1)\" || exit 1"
+        ],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 60
+      },
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/mira",
+          "awslogs-region": "REGION",
+          "awslogs-stream-prefix": "mira"
+        }
+      }
+    }
+  ]
+}

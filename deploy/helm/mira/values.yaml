@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  # Pullable registry URI placeholder (matches the Fargate task definition).
+  # Override per environment; not a GitHub org/repo slug.
+  repository: ACCOUNT_ID.dkr.ecr.REGION.amazonaws.com/mira
+  tag: latest
+  pullPolicy: IfNotPresent
+
+deploymentProfile: customer-k8s
+
+service:
+  port: 8080
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: "1"
+    memory: 1Gi
+
+probes:
+  liveness:
+    path: /health
+    port: http
+    initialDelaySeconds: 10
+    periodSeconds: 10
+    timeoutSeconds: 3
+    failureThreshold: 3
+  readiness:
+    path: /health/ready
+    port: http
+    initialDelaySeconds: 15
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 3
