@@ -207,10 +207,17 @@ def build_app(
     def _turn_handler(prompt: str, thread_id: str) -> WSGIHandler:
         return app_holder[0].turn_handler(prompt, thread_id)
 
+    # ADR-035: expose the routable registry as A2A discovery cards.
+    agent_cards = None
+    if registry is not None:
+        cards_registry = registry
+        agent_cards = lambda: [card.to_dict() for card in cards_registry.cards()]  # noqa: E731
+
     service = WarmService(
         deps_ready=lambda: True,
         turn_handler=_turn_handler,
         insights_provider=insights_provider,
+        agent_cards=agent_cards,
     )
     service.mark_startup_complete()
 

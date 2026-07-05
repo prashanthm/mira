@@ -91,7 +91,7 @@ def _bridge_tool(tool: Any, *, entitlement_prefix: str) -> RegisteredTool:
 
     def handler(payload: dict[str, Any]) -> Any:
         try:
-            raw = tool.invoke(payload)
+            raw = _invoke_tool(tool, payload)
         except Exception as exc:
             raise BridgedToolError(
                 f"MCP tool {name!r} invocation failed: {type(exc).__name__}: {exc}"
@@ -99,6 +99,25 @@ def _bridge_tool(tool: Any, *, entitlement_prefix: str) -> RegisteredTool:
         return _json_safe_result(raw)
 
     return RegisteredTool(contract=contract, handler=handler)
+
+
+def _invoke_tool(tool: Any, payload: dict[str, Any]) -> Any:
+    """Invoke a bridged tool, tolerating async-only adapters.
+
+    langchain-mcp-adapters ``StructuredTool``s raise ``NotImplementedError``
+    from sync ``invoke`` — real MCP calls are async-only. The specialist
+    dispatcher is synchronous, so drive ``ainvoke`` on a private event loop
+    (one per call; the WSGI turn path has no running loop).
+    """
+    try:
+        return tool.invoke(payload)
+    except NotImplementedError:
+        ainvoke = getattr(tool, "ainvoke", None)
+        if ainvoke is None:
+            raise
+        import asyncio
+
+        return asyncio.run(ainvoke(payload))
 
 
 def _flat_input_schema(tool: Any) -> dict[str, Any]:
