@@ -7,6 +7,9 @@ tools from live MCP discovery instead; the registry contract is identical.
 
 from __future__ import annotations
 
+from collections.abc import Sequence
+from typing import Any
+
 from mira.connectors import export_tools
 from mira.connectors.docs import from_file as docs_from_file
 from mira.connectors.ledger import from_file as ledger_from_file
@@ -98,10 +101,40 @@ def build_demo_registry(handbook_path: str, ledger_path: str) -> AgentCardRegist
     return registry
 
 
+def build_live_registry(
+    mcp_tools: Sequence[Any],
+    *,
+    base: AgentCardRegistry | None = None,
+) -> AgentCardRegistry:
+    """Extend ``base`` (or a fresh registry) with MCP-backed live specialists.
+
+    Tools discovered with the ``vantage.`` namespace are bridged
+    (:func:`~mira.orchestration.mcp_bridge.registered_tools_from_mcp`) and
+    registered as the advisor specialist (ADR-014 Phase V3) alongside whatever
+    ``base`` already holds — typically the research/finance demo domains, which
+    keep working unchanged when the MCP server is absent (no vantage tools ⇒
+    ``base`` is returned as-is).
+    """
+    from mira.orchestration.mcp_bridge import registered_tools_from_mcp
+    from mira.orchestration.specialists.advisor import advisor_registry_entry
+
+    registry = base if base is not None else AgentCardRegistry()
+    vantage_tools = [
+        tool
+        for tool in mcp_tools
+        if str(getattr(tool, "name", "") or "").startswith("vantage.")
+    ]
+    if vantage_tools:
+        card, factory = advisor_registry_entry(registered_tools_from_mcp(vantage_tools))
+        registry.register(card, factory)
+    return registry
+
+
 __all__ = [
     "FINANCE_CARD",
     "RESEARCH_CARD",
     "build_demo_registry",
+    "build_live_registry",
     "docs_registered_tools",
     "ledger_registered_tools",
 ]

@@ -20,6 +20,8 @@ dependencies = [
 mira-chat = "mira.chat:cli"
 # Domain-agent scaffold generator (ADR-016).
 mira-scaffold = "mira.scaffold:main"
+# Advisory insight report over the Vantage MCP server (Phase V3). Needs [mcp].
+mira-insights = "mira.insights_cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

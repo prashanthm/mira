@@ -181,7 +181,22 @@ def build_app(
     tools = _discover_mcp_tools(resolved)
     runtime = AgentRuntime(gateway, bundle.state_store, tools=tools)
 
+    # Advisor domain (ADR-014 Phase V3): when MCP discovery yielded a vantage.*
+    # tool surface, bridge it and register the advisor card so /turn routes
+    # portfolio queries to the MCP-backed specialist. Best-effort — failure
+    # degrades to the registry as passed in, matching the discovery contract.
+    registry = _registry_with_advisor(tools, registry)
+
     supervisor = Supervisor(registry) if registry is not None else None
+
+    # /insights (ADR-006 Phase V3): lazy, cached advisory reports per registered
+    # domain. Reports generate on first request (a scheduled job hitting the
+    # endpoint periodically keeps them warm); ?refresh=1 regenerates.
+    insights_provider = None
+    if registry is not None:
+        from mira.orchestration.insights import cached_insights_provider
+
+        insights_provider = cached_insights_provider(registry)
 
     # The service needs the /turn factory at construction time, but the factory
     # is a method of the App composed *around* the service — bind it through a
@@ -192,7 +207,11 @@ def build_app(
     def _turn_handler(prompt: str, thread_id: str) -> WSGIHandler:
         return app_holder[0].turn_handler(prompt, thread_id)
 
-    service = WarmService(deps_ready=lambda: True, turn_handler=_turn_handler)
+    service = WarmService(
+        deps_ready=lambda: True,
+        turn_handler=_turn_handler,
+        insights_provider=insights_provider,
+    )
     service.mark_startup_complete()
 
     app = App(
@@ -236,6 +255,40 @@ def _discover_mcp_tools(profile: Profile) -> list[Any]:
             file=sys.stderr,
         )
         return []
+
+
+def _registry_with_advisor(
+    mcp_tools: list[Any],
+    registry: AgentCardRegistry | None,
+) -> AgentCardRegistry | None:
+    """Register the advisor specialist when discovery yielded ``vantage.*`` tools.
+
+    Best-effort (matching :func:`_discover_mcp_tools`'s degrade contract): no
+    vantage tools, or a bridging/registration failure, leaves the registry
+    exactly as passed in — boot proceeds, /turn keeps its existing routing.
+    With vantage tools and no base registry, a fresh registry is created so the
+    advisor is routable even without the demo domains.
+    """
+    import sys
+
+    vantage = [
+        tool
+        for tool in mcp_tools
+        if str(getattr(tool, "name", "") or "").startswith("vantage.")
+    ]
+    if not vantage:
+        return registry
+    try:
+        from mira.orchestration.specialists.demo import build_live_registry
+
+        return build_live_registry(vantage, base=registry)
+    except Exception as exc:  # noqa: BLE001 — degrade to no-advisor rather than fail boot
+        print(
+            f"mira: advisor registration failed ({type(exc).__name__}: {exc}); "
+            "continuing without the advisor domain",
+            file=sys.stderr,
+        )
+        return registry
 
 
 def _profile_name_or_default() -> str:

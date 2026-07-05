@@ -101,3 +101,45 @@ subgraphs.**
 - Research & rubric: `research/adr-014-domain-agent-supervisor-routing.md`
 - Catalog: [adr-list.md](./adr-list.md) — ADR-014
 - Epic: MIRA-AGENTS
+
+## Implemented Mechanism (Phase V3)
+
+The decision above is unchanged. This section records the Phase V3 slice: the
+**advisor** domain — the first specialist whose entire tool surface is a
+*remote* MCP server rather than an in-process demo connector.
+
+### Advisor: first MCP-backed remote-tool specialist
+
+- **Tool surface.** The Vantage backend (separate repo) owns the deterministic
+  portfolio engine and exposes it as read-only MCP tools on `:8640/mcp`
+  (`vantage.positions`, `vantage.allocation`, `vantage.wash_status`,
+  `vantage.tlh_candidates`, `vantage.lots`, `vantage.quotes`); every result
+  carries `{"source_type": "vantage", "source_id": "<data-dir>#<dataset>"}`.
+  **Mira performs no portfolio math** — the advisor only calls tools and
+  reshapes attributed answers.
+- **Same scaffold, remote tools.** Discovered tools are bridged by
+  `mira.orchestration.mcp_bridge.registered_tools_from_mcp` into the same
+  `RegisteredTool` shape the demo connectors use, then bound through the shared
+  specialist subgraph with `ADVISOR_DOMAIN = DomainSpec("advisor",
+  {"vantage."})` (`src/mira/orchestration/specialists/advisor.py`). Allow-listing,
+  explicit-call authorization (foreign `docs.*`/`ledger.*` calls fail closed),
+  and the supervisor result contract are unchanged — proving the ADR's claim
+  that a new domain is a spec + allow-list + card, never new routing code.
+- **Deterministic query inference.** The per-domain hook maps wash/harvest
+  phrasing → `vantage.wash_status`, TLH/candidate phrasing →
+  `vantage.tlh_candidates`, allocation/drift → `vantage.allocation`,
+  holdings/positions → `vantage.positions` (regex checks, same pattern as the
+  finance/research hooks). Remote failures inside the hook degrade to the
+  structured `{"status": "tool_error"}` observation — a flaky server never
+  crashes the graph (the mcp_bridge degrade contract).
+- **Registration & boot.** `build_live_registry`
+  (`specialists/demo.py`) extends any base registry with the advisor card when
+  the discovered tools include a `vantage.` surface; `mira.app.build_app` calls
+  it after MCP discovery, so `python -m mira` with
+  `MCP_BASE_URL=http://127.0.0.1:8640/mcp` routes portfolio prompts on `/turn`
+  to the advisor. Best-effort: discovery or registration failure degrades to
+  the existing registry and boot proceeds (the demo domains keep working
+  without the MCP server).
+- **Evals.** `evals/test_advisor_evals.py` runs the advisor goldens and
+  adversarial cases fully offline against fake `vantage.*` tools
+  (`tests/fake_vantage.py`) with engine-shaped results — never a live server.

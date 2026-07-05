@@ -154,3 +154,31 @@ CORS wrapper (`src/mira/core/cors.py`):
 a development server. Selecting a production WSGI server (and the FastAPI
 migration this ADR decides) is deferred; the service/app split keeps that swap
 a composition-root change only.
+
+### `GET /insights` — advisory insight feed (Phase V3)
+
+`WarmService` routes `GET /insights?domain=<name>` and delegates to an optional
+`insights_provider` callable `(domain, refresh) -> dict | None` the composition
+root supplies — transport-only, mirroring `/explain`. The report body is the
+`InsightReport` contract (`src/mira/orchestration/insights.py`): a plain-dataclass
+mirror of the legacy v0 insight shape (summary, observations with
+topic/detail/evidence/provenance, suggestions, confidence, caveats,
+generated_for). Reports are **advisory only** — suggestions are observations,
+never trade instructions, and a fixed disclaimer always lands in `caveats`.
+
+Responses:
+
+| Case | Status / body |
+|------|---------------|
+| Known domain | `200` — the report dict |
+| Provider returns None (unknown domain) | `404 {"error": "unknown_domain"}` |
+| Missing `domain` param | `400 {"error": "missing_parameter", "detail": "domain required"}` |
+| No provider configured | `503 {"error": "insights_unavailable"}` |
+
+`mira.app.build_app` wires an in-memory `{domain: report}` cache over
+`generate_insight_report`: generation is lazy on first request (a scheduled job
+hitting the endpoint periodically keeps it warm) and `?refresh=1` regenerates.
+Confidence is a deterministic structural heuristic (all battery queries
+grounded + error-free → `medium`; any error/ungrounded answer → `low`; `high`
+is never produced without a model in the loop). The same report is available
+offline via the `mira-insights` console script (`src/mira/insights_cli.py`).

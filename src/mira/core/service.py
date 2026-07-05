@@ -15,6 +15,15 @@ A2A discovery from an optional ``agent_cards`` provider callable — 200 with
 ``{"cards": [...]}`` when configured, 503 ``discovery_unavailable`` otherwise
 (fail-closed, matching the ``/explain`` unconfigured behaviour).
 
+``GET /insights`` (ADR-006 Phase V3) serves advisory insight reports from an
+optional ``insights_provider`` callable — ``(domain, refresh) -> dict | None``
+that the composition root (:mod:`mira.app`) supplies (a cached wrapper over the
+orchestration-layer report generator; this module stays transport-only). 200
+with the report for a known ``?domain=``, 404 ``unknown_domain`` when the
+provider returns None, 400 when ``domain`` is missing, 503
+``insights_unavailable`` when unconfigured — the same fail-closed pattern as
+``/explain``. ``?refresh=1`` asks the provider to regenerate.
+
 ``POST /turn`` (ADR-006 Phase V1) runs one streamed agent turn: the JSON body
 ``{"prompt": str, "thread_id"?: str}`` is delegated to an optional
 ``turn_handler`` factory — ``(prompt, thread_id) -> SSE WSGI handler`` — that
@@ -55,6 +64,11 @@ WSGIApp = Callable[[dict[str, Any], StartResponse], Iterable[bytes]]
 # stays framework-free (the SSE machinery lives in mira.core.streaming_sse and
 # the turn semantics in mira.app).
 TurnHandlerFactory = Callable[[str, str], WSGIApp]
+# Insight-report provider the composition root supplies: (domain, refresh) ->
+# the report dict for a registered domain, or None when the domain is unknown.
+# Kept as a plain callable so this module stays framework-free (report
+# generation and caching live in mira.orchestration.insights / mira.app).
+InsightsProvider = Callable[[str, bool], dict[str, Any] | None]
 
 LIVE_PATH = "/health"
 READY_PATH = "/health/ready"
@@ -62,12 +76,21 @@ STARTUP_PATH = "/health/startup"
 EXPLAIN_PATH = "/explain"
 AGENT_CARDS_PATH = "/.well-known/agent-cards"
 TURN_PATH = "/turn"
+INSIGHTS_PATH = "/insights"
 
 DEFAULT_TURN_THREAD_ID = "web"
 
 # Routes the CORS middleware answers OPTIONS preflight for.
 _ROUTE_PATHS = frozenset(
-    {LIVE_PATH, READY_PATH, STARTUP_PATH, EXPLAIN_PATH, AGENT_CARDS_PATH, TURN_PATH}
+    {
+        LIVE_PATH,
+        READY_PATH,
+        STARTUP_PATH,
+        EXPLAIN_PATH,
+        AGENT_CARDS_PATH,
+        TURN_PATH,
+        INSIGHTS_PATH,
+    }
 )
 
 
@@ -87,6 +110,7 @@ class WarmService:
         slo_tracker: SloTracker | None = None,
         agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
         turn_handler: TurnHandlerFactory | None = None,
+        insights_provider: InsightsProvider | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
@@ -94,6 +118,7 @@ class WarmService:
         self._slo_tracker = slo_tracker
         self._agent_cards = agent_cards
         self._turn_handler = turn_handler
+        self._insights_provider = insights_provider
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -206,6 +231,8 @@ class WarmService:
             return self._handle_agent_cards(start_response)
         if path == TURN_PATH:
             return self._handle_turn(environ, start_response)
+        if path == INSIGHTS_PATH:
+            return self._handle_insights(environ, start_response)
         return self._json_response(start_response, 404, {"error": "not_found"})
 
     def _handle_turn(
@@ -259,6 +286,36 @@ class WarmService:
                 start_response, 503, {"error": "discovery_unavailable"}
             )
         return self._json_response(start_response, 200, {"cards": self._agent_cards()})
+
+    def _handle_insights(
+        self,
+        environ: dict[str, Any],
+        start_response: StartResponse,
+    ) -> list[bytes]:
+        """Serve advisory insight reports (ADR-006 Phase V3) from the provider.
+
+        Transport-only, following the ``/explain`` pattern: unconfigured → 503;
+        missing ``domain`` → 400; provider returns None (unknown domain) → 404;
+        otherwise 200 with the report dict. ``?refresh=1`` (or ``true``) is
+        forwarded to the provider so a scheduled job can force regeneration.
+        """
+        if self._insights_provider is None:
+            return self._json_response(
+                start_response, 503, {"error": "insights_unavailable"}
+            )
+        params = urllib.parse.parse_qs(environ.get("QUERY_STRING", ""))
+        domain = (params.get("domain") or [""])[0]
+        if not domain:
+            return self._json_response(
+                start_response,
+                400,
+                {"error": "missing_parameter", "detail": "domain required"},
+            )
+        refresh = (params.get("refresh") or [""])[0].lower() in {"1", "true"}
+        report = self._insights_provider(domain, refresh)
+        if report is None:
+            return self._json_response(start_response, 404, {"error": "unknown_domain"})
+        return self._json_response(start_response, 200, report)
 
     def _handle_explain(
         self,
@@ -340,12 +397,14 @@ def create_app(
     slo_tracker: SloTracker | None = None,
     agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
     turn_handler: TurnHandlerFactory | None = None,
+    insights_provider: InsightsProvider | None = None,
 ) -> WarmService:
-    """Build a warm service with health probe, /explain, discovery, and /turn routes."""
+    """Build a warm service with health, /explain, discovery, /turn, /insights routes."""
     return WarmService(
         deps_ready=deps_ready,
         trace_store=trace_store,
         slo_tracker=slo_tracker,
         agent_cards=agent_cards,
         turn_handler=turn_handler,
+        insights_provider=insights_provider,
     )
