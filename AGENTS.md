@@ -74,9 +74,9 @@ CI (`.github/workflows/ci.yml`) runs `make lint` and `make test` on Python 3.12.
 - `deploy/` assets (Helm/Terraform/Fargate) are functional references but **not wired
   to any pipeline** — no image push, no `terraform apply`, no CD.
 - No typecheck in CI; `ruff` is configured but not gated.
-- The supervisor routing graph (ADR-014) and the evals harness (ADR-045) are designed
-  but not yet built — specialists already return the `SpecialistResult` contract a
-  supervisor will consume, and `model/versioning.py` exposes the `eval_gate` hook.
+- Supervisor routing (ADR-014, `orchestration/supervisor.py`) and the offline evals
+  harness (ADR-045, `evals/` + `make eval`, CI-gated) are built; retrieval/RAG,
+  safety detectors, XAI, and AgentOps land in phases C-E per `docs/adr/adr-list.md`.
 - `legacy/v0` branch holds the previous Mira (deepagents/Ollama insight panel used by
   Sentinel); its launchd job is disabled pending re-port as a domain here.
 - LICENSE is all-rights-reserved pending an IP review before any open-sourcing.

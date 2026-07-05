@@ -1,4 +1,4 @@
-.PHONY: setup start smoke test lint lint-imports sanitize-check
+.PHONY: setup start smoke test eval lint lint-imports sanitize-check
 
 # Use the project venv if it exists (created by `make setup`), else system python3.
 # Lets `make start/smoke/test` work without activating the venv — and avoids
@@ -33,6 +33,10 @@ smoke:
 
 test:
 	$(PY) -m pytest -q
+
+# Offline eval harness (ADR-045): goldens + adversarial seed + trace scoring + gate.
+eval:
+	$(PY) -m pytest evals -q
 
 lint: lint-imports sanitize-check
 

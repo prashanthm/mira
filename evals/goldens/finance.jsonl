@@ -1,0 +1,3 @@
+{"id": "finance-travel-march", "query": "What was the total travel spend for 2026-03?", "domain": "finance", "expect": {"total": 1336.4, "currency": "USD", "entry_count": 2}}
+{"id": "finance-cloud-explicit", "query": "ledger spend :tool:ledger.query:{\"category\": \"cloud\", \"period\": \"2026-03\"}", "domain": "finance", "expect": {"total": 3020.75, "currency": "USD"}}
+{"id": "finance-travel-feb-explicit", "query": "ledger spend :tool:ledger.query:{\"category\": \"travel\", \"period\": \"2026-02\"}", "domain": "finance", "expect": {"total": 412.5, "entry_count": 1}}

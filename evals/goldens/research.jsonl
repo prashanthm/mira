@@ -1,0 +1,3 @@
+{"id": "research-middleware", "query": "What does the engineering handbook say about middleware ordering?", "domain": "research", "expect": {"anchor": "middleware-ordering", "title": "Middleware Ordering"}}
+{"id": "research-profiles-explicit", "query": "handbook docs :tool:docs.search:{\"query\": \"profiles\"}", "domain": "research", "expect": {"anchor": "deployment-profiles"}}
+{"id": "research-testing-explicit", "query": "handbook docs :tool:docs.search:{\"query\": \"testing\"}", "domain": "research", "expect": {"anchor": "testing-standards"}}
