@@ -120,6 +120,36 @@ use.
   composed-capability authorization undeclared and unreviewed — the operational-text/supply-chain risk
   current skill-registry security research documents.
 
+## Implemented Mechanism (Phase F)
+
+The registration/authorization slice of this decision is implemented in `src/mira/tools/skills.py`
+(tests: `tests/test_skills.py`); the decision text above is unchanged.
+
+- **`Skill`** — a frozen artifact: `name`, `version`, `description`, the `tool_names` tuple of
+  composed ADR-031 contract names, and a *derived* `required_entitlements` set. Authors never
+  declare entitlements on a skill.
+- **`SkillsRegistry.register(skill, contracts)`** — validates that **every** composed tool name
+  resolves to a `ToolContract` in the provided lookup (an unresolved composition is rejected
+  outright, nothing stored) and aggregates the skill's required entitlements as the **union of the
+  composed contracts' declared entitlements** (§4 above: composition never escalates privilege).
+  Versions are **immutable**: re-registering an existing `(name, version)` raises, mirroring the
+  ADR-012 registry semantics (`mira.model.versioning.Registry`).
+- **`resolve(name, version=None)`** — a named version resolves exactly; `None` resolves the
+  highest registered version by a dotted-numeric tuple compare (documented in the module — a full
+  SemVer comparator can replace the sort key without changing the contract).
+- **`authorize(skill, granted_entitlements)`** — **fail-closed**: authorization is decided against
+  the *registered* skill (the one whose entitlement union the registry derived); an unregistered
+  skill is denied, and every required entitlement must be covered by the grant — a partial grant
+  denies. Enforcement remains at the inherited MCP boundary via the caller's ADR-034 task-scoped
+  token; this method is the declaration-side check the composition layer consults.
+- **Composition seam** — the ADR-015 `WorkflowComposer` accepts a `SkillsRegistry`, the forward
+  seam where a future planner composes registered skills (not just whole specialists) into steps.
+
+Deferred to the ADR-012 pipeline as designed (not re-implemented here): staged dev→staging→prod
+promotion, eval-gated canary, and the kill switch — a skill version is an artifact kind the
+existing `Registry` machinery promotes; this module owns the skill-specific concerns (composition
+validation, entitlement union, fail-closed authorization).
+
 ## Consequences
 
 ### Becomes Easier

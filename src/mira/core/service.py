@@ -10,6 +10,11 @@ ADR-006 probe table; ops manifests should configure it as the K8s startupProbe.
 or ``correlation_id`` (all records for a request), each annotated with a
 deterministic structural uncertainty summary.
 
+``/.well-known/agent-cards`` (ADR-035) serves the deployed agent-card set for
+A2A discovery from an optional ``agent_cards`` provider callable — 200 with
+``{"cards": [...]}`` when configured, 503 ``discovery_unavailable`` otherwise
+(fail-closed, matching the ``/explain`` unconfigured behaviour).
+
 When an :class:`~mira.config.slos.SloTracker` is configured (ADR-043), the
 ``/health`` liveness body additionally carries an ``"slos"`` summary for
 operators; liveness status itself never depends on SLO health.
@@ -37,6 +42,7 @@ LIVE_PATH = "/health"
 READY_PATH = "/health/ready"
 STARTUP_PATH = "/health/startup"
 EXPLAIN_PATH = "/explain"
+AGENT_CARDS_PATH = "/.well-known/agent-cards"
 
 
 class ServiceDrainingError(RuntimeError):
@@ -53,11 +59,13 @@ class WarmService:
         drain_timeout: float = 30.0,
         trace_store: TraceStore | None = None,
         slo_tracker: SloTracker | None = None,
+        agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
         self._trace_store = trace_store
         self._slo_tracker = slo_tracker
+        self._agent_cards = agent_cards
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -164,7 +172,17 @@ class WarmService:
             return self._json_response(start_response, 503, {"status": "starting"})
         if path == EXPLAIN_PATH:
             return self._handle_explain(environ, start_response)
+        if path == AGENT_CARDS_PATH:
+            return self._handle_agent_cards(start_response)
         return self._json_response(start_response, 404, {"error": "not_found"})
+
+    def _handle_agent_cards(self, start_response: StartResponse) -> list[bytes]:
+        """Serve the A2A discovery card set (ADR-035) from the cards provider."""
+        if self._agent_cards is None:
+            return self._json_response(
+                start_response, 503, {"error": "discovery_unavailable"}
+            )
+        return self._json_response(start_response, 200, {"cards": self._agent_cards()})
 
     def _handle_explain(
         self,
@@ -226,8 +244,12 @@ def create_app(
     deps_ready: Callable[[], bool] | None = None,
     trace_store: TraceStore | None = None,
     slo_tracker: SloTracker | None = None,
+    agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
 ) -> WarmService:
-    """Build a warm service instance with health probe and /explain routes."""
+    """Build a warm service with health probe, /explain, and agent-card discovery routes."""
     return WarmService(
-        deps_ready=deps_ready, trace_store=trace_store, slo_tracker=slo_tracker
+        deps_ready=deps_ready,
+        trace_store=trace_store,
+        slo_tracker=slo_tracker,
+        agent_cards=agent_cards,
     )

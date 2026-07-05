@@ -114,6 +114,30 @@ dispatch, relayed by the specialist in place of the shared Phase-1 service ident
   validation path through the existing `JWTValidator`; no interop with the emerging A2A agent-card
   auth model ADR-035 will need.
 
+## Implemented Mechanism (Phase F)
+
+The dispatch-side shape of this decision is implemented in `src/mira/core/identity.py`
+(tests: `tests/test_identity.py`); the decision text above is unchanged.
+
+- **`AgentIdentity`** — the stable per-agent subject (the specialist's `domain_id` plus display
+  metadata), the RFC 8693 *subject* of an exchange.
+- **`TaskToken`** — the minted, task-scoped credential: agent name, allowed **tool prefixes** (the
+  `resource`/`audience` narrowing above, e.g. `ledger.` for a finance task), **entitlements** (the
+  scope relayed to the inherited MCP enforcement boundary), `issued_at`/`expires_at`, and a
+  signature.
+- **`TokenExchanger`** — the RFC 8693-shaped exchange, framework-free and offline-testable:
+  `mint(identity, tool_prefixes=…, entitlements=…)` issues a **short-lived** token
+  (`ttl_seconds`, minutes not hours), signed with stdlib **HMAC-SHA256 over the canonical field
+  string**; `validate` checks signature (constant-time compare) and expiry; `scope_allows(token,
+  tool_name)` is the prefix check — **fail-closed**: an invalid or expired token allows no tool at
+  all, and an empty prefix set allows nothing. The clock is **injected and required** (no
+  wall-clock default), keeping expiry behaviour deterministic under the ADR-045 offline gate.
+
+Deferred (unchanged from the decision's scope): swapping the HMAC shape for the IdP's JWT signing
+behind the same `TokenExchanger` surface, **key rotation** (a key-id joins the canonical string
+without changing the contract), and multi-hop delegation — ADR-015's composed workflows execute
+each step as an ordinary single-hop dispatch, so the single-hop scoping model above still holds.
+
 ## Consequences
 
 ### Becomes Easier

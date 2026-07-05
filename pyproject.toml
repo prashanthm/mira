@@ -18,6 +18,8 @@ dependencies = [
 [project.scripts]
 # One-step chatbot CLI. Needs the [llm,mcp] extras at runtime.
 mira-chat = "mira.chat:cli"
+# Domain-agent scaffold generator (ADR-016).
+mira-scaffold = "mira.scaffold:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

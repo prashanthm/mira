@@ -108,6 +108,30 @@ specialist set (not a dynamic runtime registry — see Scope below).
   identical reason (brittle as domains/skills grow); a hard-coded discovery table is that same
   anti-pattern applied to discovery instead of routing logic.
 
+## Implemented Mechanism (Phase F)
+
+Building on the Phase-B slice (`src/mira/orchestration/agent_cards.py`: in-process `AgentCard` +
+`AgentCardRegistry` with the deterministic keyword matcher the supervisor routes against), Phase F
+adds the **well-known discovery surface** on the warm service (`src/mira/core/service.py`; tests:
+`tests/test_agent_discovery.py`); the decision text above is unchanged.
+
+- **`GET /.well-known/agent-cards`** (`AGENT_CARDS_PATH`) serves the deployed card set as
+  `{"cards": [...]}` — each entry the A2A-shaped `AgentCard.to_dict()` payload (name, description,
+  version, capabilities with tool prefixes + routing keywords).
+- The card set is supplied by an optional **`agent_cards` provider callable** on
+  `WarmService`/`create_app` (typically `lambda: [c.to_dict() for c in registry.cards()]`),
+  evaluated per request so the served set tracks the live registry. Unconfigured discovery is
+  **fail-closed**: `503 {"error": "discovery_unavailable"}`, matching the `/explain` unconfigured
+  behaviour.
+- Consumers: ADR-014 routing and ADR-015 composition read the same registry the endpoint serves,
+  so what a remote peer discovers is exactly what the supervisor composes from; ADR-016 scaffolded
+  agents ship their card snippet at creation.
+
+Deferred (unchanged from the decision's scope): **remote A2A card fetch** (supervisor-side
+resolution of *other* services' well-known URIs — today's specialist set is in-process, so
+publication landed first), per-specialist card endpoints (one service publishes the set), and
+`AgentCardSignature` signing/verification, still an open implementation-phase risk.
+
 ## Consequences
 
 ### Becomes Easier

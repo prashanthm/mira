@@ -20,12 +20,12 @@ extensions) on top of that boundary.
 
 ## ADRs — Mira
 
-ADRs 001–014, 017–027, 031–035, 037, and 045–048 are **Accepted**. ADR-036 and the twelve
-pending ADRs (015, 016) are **Proposed**; each pending ADR has a stub linked
-below. Summaries are one decision-oriented sentence; `(Phase X)` marks decisions the roadmap
-defers: **B** supervisor + evals, **C** retrieval (028–030), **D** safety & trust (036, 038–041),
-**E** AgentOps (042–044), **F** dynamic composition (015, 016). `(pending ADR)` marks decisions
-whose direction is not yet committed.
+All ADRs (001–048) are **Accepted** — with ADR-015 and ADR-016 landing in Phase F, the catalog
+is fully Accepted and no pending stubs remain. Summaries are one decision-oriented sentence;
+`(Phase X)` marks the roadmap phase a decision landed in: **B** supervisor + evals, **C**
+retrieval (028–030), **D** safety & trust (036, 038–041), **E** AgentOps (042–044), **F** dynamic
+composition & scaffolding (015, 016). `(pending ADR)` marks decisions whose recorded direction
+still awaits a future revisit.
 
 ### Foundation & Platform
 
@@ -55,8 +55,8 @@ whose direction is not yet committed.
 | ADR-012 | [Prompt & Tool Versioning with Staged Rollout & Kill Switch](./adr-012-prompt-tool-versioning.md) | Accepted | Version prompts & tool defs as first-class artifacts in a registry behind the Protocol seam; promote dev→staging→prod, eval-gated canary rollout (ADR-045), and a runtime kill switch for instant code-deploy-free rollback; version resolved at the ADR-010 gateway. |
 | ADR-013 | [Reasoning Pattern & Loop-Safety Bounds](./adr-013-reasoning-pattern-and-loop-safety.md) | Accepted | ReAct (plan/act/observe/reflect) as LangGraph nodes/edges with layered hard bounds (recursion_limit + token/time/cost ceilings + interrupt() HITL gates); durable waits don't count as loop steps. |
 | ADR-014 | [Domain-Agent & Supervisor Routing Model](./adr-014-domain-agent-supervisor-routing.md) | Accepted | Supervisor (orchestrator-worker) on LangGraph subgraphs routes to domain specialists (`research` and `finance` demo agents; each a state-isolated subgraph running the ADR-013 loop, an identity boundary, discoverable via agent cards); single auditable control flow with hierarchical failure boundaries. |
-| ADR-015 | [Dynamic Workflow Composition](./adr-015-dynamic-workflow-composition.md) | Proposed | Select how multi-step workflows are composed from discoverable agents and skills via supervisor routing (pending ADR) (Phase F). |
-| ADR-016 | [Agent Scaffolding & Generation](./adr-016-agent-scaffolding-and-generation.md) | Proposed | Select how new domain agents are generated from a spec with identity, agent card, and eval baseline wired at creation (pending ADR) (Phase F). |
+| ADR-015 | [Dynamic Workflow Composition](./adr-015-dynamic-workflow-composition.md) | Accepted | Supervisor-planned composition: a deterministic `WorkflowComposer` decomposes a request into explicit `WorkflowStep`s over the agent-card registry (seam split, fallback steps, parallel fan-out) and executes them on the existing ADR-014 dispatch paths — no second control plane; a model-driven planner slots in behind `compose()` (Phase F). |
+| ADR-016 | [Agent Scaffolding & Generation](./adr-016-agent-scaffolding-and-generation.md) | Accepted | Template-scaffold generator CLI (`mira-scaffold new-domain`) that emits a connector skeleton with fail-closed entitlements (or an MCP-bound variant), a shared-scaffold specialist with agent-card snippet, passing tests, the spec trio, and an eval-golden stub — refusing to overwrite, lint-clean unmodified (Phase F). |
 | ADR-017 | [Memory Architecture](./adr-017-memory-architecture.md) | Accepted | Three-tier working/session/long-term memory: LangGraph checkpointer behind IStateStore for durable session state, a framework-agnostic retrievable long-term store behind the ADR-002 seams, and summarization-based compression; integrity/embedding-versioning deferred to ADR-018. |
 | ADR-018 | [Memory Integrity & Embedding Versioning](./adr-018-memory-integrity-and-embedding-versioning.md) | Accepted | Write-time provenance + trust-gated ingestion for the long-term memory tier, plus version-tagged embeddings behind a stable alias with parallel-index-then-swap re-embedding on model upgrade. |
 
