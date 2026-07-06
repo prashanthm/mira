@@ -102,6 +102,41 @@ def test_golden_tlh_query_grounds_candidates(advisor_supervisor) -> None:
     assert trace.score == 1.0, trace.to_dict()
 
 
+def test_golden_losing_positions_surfaces_close_decisions_with_wash(
+    advisor_supervisor,
+) -> None:
+    """"What should I do with my losing positions?" must route to the advisor,
+    narrate the persisted CLOSE_AND_BOOK_LOSS decisions (never recompute them),
+    surface each one's wash status, and stay grounded in vantage provenance."""
+    result = advisor_supervisor.invoke(
+        "What should I do with my losing positions?",
+        thread_id="golden:advisor-losing-close",
+    )
+
+    assert result.routed_domain == "advisor"
+    assert result.results, "no specialist result collected"
+    answer = result.results[0]["answer"]
+
+    # grounded, not recomputed: provenance is vantage and the journal shape rode through
+    assert answer["provenance"]["source_type"] == "vantage"
+    closes = {
+        d["symbol"]: d
+        for d in answer["decisions"]
+        if d["recommendation"] == "CLOSE_AND_BOOK_LOSS"
+    }
+    assert set(closes) == {"BBAI", "SNAP"}
+    # each CLOSE carries its wash status from the engine (one safe, one blocked)
+    assert closes["BBAI"]["action_detail"]["wash_blocked"] is False
+    assert closes["SNAP"]["action_detail"]["wash_blocked"] is True
+    assert closes["SNAP"]["action_detail"]["wash_reason"]
+    # the loss numbers the advisor repeats came straight from the journal
+    assert closes["BBAI"]["action_detail"]["unrealized_loss"] == -367.0
+    assert closes["SNAP"]["action_detail"]["unrealized_loss"] == -512.0
+
+    trace = score_trace(result.results[0])
+    assert trace.score == 1.0, trace.to_dict()
+
+
 def test_advisor_routing_leaves_demo_goldens_untouched(advisor_supervisor) -> None:
     """Registering the advisor must not steal the demo domains' routing."""
     research = advisor_supervisor.invoke(

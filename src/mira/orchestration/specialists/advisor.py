@@ -67,6 +67,17 @@ ADVISOR_CARD: AgentCard = card_for_domain(
         "shares",
         "quotes",
         "vantage",
+        # decision-journal phrasing (routes to position_actions / analysis)
+        "recommendation",
+        "recommend",
+        "action",
+        "close",
+        "book",
+        "sell",
+        "call",
+        "covered",
+        "conviction",
+        "losing",
     ),
 )
 
@@ -82,7 +93,50 @@ def _wash_payload(action: str) -> dict[str, Any]:
     return {"symbol": match.group(0)} if match else {}
 
 
+def _symbol_payload(action: str) -> dict[str, Any]:
+    """Symbol filter when the action names an uppercase ticker, else all symbols."""
+    match = _TICKER.search(action)
+    return {"symbol": match.group(0)} if match else {}
+
+
+# Intent → (tool, payload builder), evaluated in order — first match wins.
+#
+# The decision-journal intents sit FIRST and are matched before the generic
+# holdings/wash/tlh intents, so "any positions to close?" reaches the journal
+# (vantage.analysis, which carries the CLOSE evidence + wash status) instead of
+# vantage.positions, and "which calls should I sell?" / "what should I do with
+# PLTR?" reach vantage.position_actions (the compact per-symbol recommendation
+# view) rather than the wash check. Their patterns are deliberately specific:
+#
+#   * close / book (the) loss / losing / freefall            -> vantage.analysis
+#     (the CLOSE_AND_BOOK_LOSS surface — full evidence incl. wash status)
+#   * what/which should I ... , sell (a) call, covered call,
+#     recommendation, action                                 -> vantage.position_actions
+#     (compact {symbol, conviction, recommendation, action_detail})
+#
+# "tax-loss" / "TLH" still reaches vantage.tlh_candidates because that intent's
+# pattern is checked before the generic wash intent, and the close intent below
+# is scoped to "book (the) loss" / "close" phrasing, not the word "loss" alone.
 _INTENTS: tuple[tuple[re.Pattern[str], str, Callable[[str], dict[str, Any]]], ...] = (
+    (
+        re.compile(
+            r"\bclose\b|book[-\s]?(the\s+)?loss|losing\s+position|freefall|"
+            r"\bcut\b.*\bloss|which.*\bclose\b",
+            re.I,
+        ),
+        "vantage.analysis",
+        _symbol_payload,
+    ),
+    (
+        re.compile(
+            r"sell\s+(a\s+|which\s+|the\s+)?call|covered\s+call|"
+            r"what\s+should\s+i\s+do|which.*should\s+i\s+sell|"
+            r"\brecommendation\b|\brecommend\b|conviction|per[-\s]?position\s+action",
+            re.I,
+        ),
+        "vantage.position_actions",
+        _symbol_payload,
+    ),
     (re.compile(r"\btlh\b|candidate|tax[-\s]?loss", re.I), "vantage.tlh_candidates", lambda _a: {}),
     (re.compile(r"wash|harvest", re.I), "vantage.wash_status", _wash_payload),
     (re.compile(r"allocation|drift|asset[-\s]?class", re.I), "vantage.allocation", lambda _a: {}),

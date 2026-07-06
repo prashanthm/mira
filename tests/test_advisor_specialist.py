@@ -89,6 +89,58 @@ def test_holdings_phrasing_dispatches_positions() -> None:
     assert result.answer["positions"][0]["symbol"] == "VOO"
 
 
+def test_what_should_i_do_with_symbol_dispatches_position_actions() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke("What should I do with PLTR?", thread_id="route-act-pltr")
+
+    assert ("vantage.position_actions", {"symbol": "PLTR"}) in calls
+    assert any(a["symbol"] == "PLTR" for a in result.answer["actions"])
+
+
+def test_which_calls_should_i_sell_dispatches_position_actions() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke("Which calls should I sell?", thread_id="route-sell-call")
+
+    assert calls and calls[0][0] == "vantage.position_actions"
+    recs = {a["recommendation"] for a in result.answer["actions"]}
+    assert "HOLD_AND_SELL_CALL" in recs
+
+
+def test_positions_to_close_dispatches_analysis_journal() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke("Any positions to close?", thread_id="route-close")
+
+    assert calls and calls[0][0] == "vantage.analysis"
+    closes = [d for d in result.answer["decisions"]
+              if d["recommendation"] == "CLOSE_AND_BOOK_LOSS"]
+    assert closes  # the journal's CLOSE decisions are surfaced
+
+
+def test_losing_positions_query_surfaces_close_decisions_with_wash_status() -> None:
+    specialist, _ = _specialist_with_calls()
+    result = specialist.invoke(
+        "What should I do with my losing positions?", thread_id="route-losing"
+    )
+
+    # routed to the journal (CLOSE surface), grounded to vantage provenance
+    assert result.answer["provenance"]["source_type"] == "vantage"
+    closes = {d["symbol"]: d for d in result.answer["decisions"]
+              if d["recommendation"] == "CLOSE_AND_BOOK_LOSS"}
+    assert "BBAI" in closes and "SNAP" in closes
+    # wash status rides along on each CLOSE's action_detail (not recomputed)
+    assert closes["BBAI"]["action_detail"]["wash_blocked"] is False
+    assert closes["SNAP"]["action_detail"]["wash_blocked"] is True
+    assert closes["SNAP"]["action_detail"]["wash_reason"]
+
+
+def test_tax_loss_phrasing_still_reaches_tlh_not_close_intent() -> None:
+    """The new close/losing intent must not steal 'tax-loss-harvest' routing."""
+    specialist, calls = _specialist_with_calls()
+    specialist.invoke("Which lots are tax-loss-harvest candidates?", thread_id="route-tlh2")
+
+    assert calls and calls[0][0] == "vantage.tlh_candidates"
+
+
 def test_unrelated_query_falls_through_to_noop_without_tool_calls() -> None:
     specialist, calls = _specialist_with_calls()
     result = specialist.invoke("what is the weather today?", thread_id="route-noop")
