@@ -141,6 +141,48 @@ def test_tax_loss_phrasing_still_reaches_tlh_not_close_intent() -> None:
     assert calls and calls[0][0] == "vantage.tlh_candidates"
 
 
+def test_edges_phrasing_dispatches_trade_stats() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke("What are my edges and leaks?", thread_id="route-edges")
+
+    assert calls and calls[0][0] == "vantage.trade_stats"
+    # grounded in vantage provenance, and the notable buckets ride through
+    assert result.answer["provenance"]["source_type"] == "vantage"
+    assert result.answer["baseline_win_rate"] == 0.378378
+
+
+def test_what_have_i_learned_dispatches_trade_stats() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke(
+        "What have I learned from my trading?", thread_id="route-learned"
+    )
+
+    assert calls and calls[0][0] == "vantage.trade_stats"
+    # the Thursday edge is significant; the deep_itm bucket is NOT (small-n)
+    notable = result.answer["notable"]
+    sig = [b for b in notable if b.get("significant") is True]
+    assert [b["value"] for b in sig] == ["Thursday"]
+    assert any(b["value"] == "deep_itm" and not b["significant"] for b in notable)
+
+
+def test_round_trips_phrasing_dispatches_roundtrips() -> None:
+    specialist, calls = _specialist_with_calls()
+    result = specialist.invoke("Show my closed round-trips record.", thread_id="route-rt")
+
+    assert calls and calls[0][0] == "vantage.roundtrips"
+    assert result.answer["summary"]["profit_factor"] == 0.7742
+    assert result.answer["provenance"]["source_type"] == "vantage"
+
+
+def test_edges_query_does_not_steal_close_or_position_routing() -> None:
+    """The new trade-review intents must not steal the existing routes."""
+    specialist, calls = _specialist_with_calls()
+    specialist.invoke("Any positions to close?", thread_id="route-guard-close")
+    assert calls[-1][0] == "vantage.analysis"
+    specialist.invoke("What are my current holdings?", thread_id="route-guard-pos")
+    assert calls[-1][0] == "vantage.positions"
+
+
 def test_unrelated_query_falls_through_to_noop_without_tool_calls() -> None:
     specialist, calls = _specialist_with_calls()
     result = specialist.invoke("what is the weather today?", thread_id="route-noop")

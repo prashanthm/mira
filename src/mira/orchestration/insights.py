@@ -47,6 +47,13 @@ DEFAULT_INSIGHT_QUERIES: tuple[str, ...] = (
     "What is the current asset allocation?",
 )
 
+# Battery for the trade-review report: round-trip summary + the defensible
+# edges/leaks. Both phrases route to vantage.* trade-analytics tools.
+TRADE_REVIEW_QUERIES: tuple[str, ...] = (
+    "Show my closed round-trips record.",  # → vantage.roundtrips (summary)
+    "What are my trading edges and leaks?",  # → vantage.trade_stats (notable)
+)
+
 _MAX_FALLBACK_DETAIL = 200
 
 
@@ -93,6 +100,19 @@ class InsightReport:
 def _topic_for(query: str) -> str:
     """Deterministic topic label from the battery query's intent."""
     lowered = query.lower()
+    if (
+        "learned" in lowered
+        or "edge" in lowered
+        or "leak" in lowered
+        or "lesson" in lowered
+        or "trade best" in lowered
+        or "profit factor" in lowered
+        or "win rate" in lowered
+        or "round-trip" in lowered
+        or "round trip" in lowered
+        or "roundtrip" in lowered
+    ):
+        return "trade_review"
     if "tlh" in lowered or "candidate" in lowered or "tax-loss" in lowered:
         return "tlh_candidates"
     if "wash" in lowered or "harvest" in lowered:
@@ -130,7 +150,33 @@ def _detail_for(topic: str, answer: Mapping[str, Any]) -> str:
         return "allocation: " + ", ".join(parts)
     if topic == "positions" and isinstance(answer.get("positions"), list):
         return f"{len(answer['positions'])} position(s) held"
+    if topic == "trade_review":
+        summary = answer.get("summary")
+        if isinstance(summary, Mapping):
+            return (
+                f"{summary.get('count', 0)} closed round-trips: win-rate "
+                f"{_pct(summary.get('win_rate'))}, profit factor "
+                f"{round(float(summary.get('profit_factor', 0) or 0), 2)}, "
+                f"avg hold {round(float(summary.get('avg_holding_days', 0) or 0), 1)}d"
+            )
+        notable = answer.get("notable")
+        if isinstance(notable, list):
+            sig = [b for b in notable if isinstance(b, Mapping) and b.get("significant") is True]
+            thin = len(notable) - len(sig)
+            base = answer.get("baseline_win_rate")
+            head = f"baseline win-rate {_pct(base)}" if base is not None else "no baseline yet"
+            return (
+                f"{head}; {len(sig)} defensible edge/leak(s)"
+                + (f", {thin} seen but too thin to count" if thin else "")
+            )
     return json.dumps(dict(answer), sort_keys=True, default=str)[:_MAX_FALLBACK_DETAIL]
+
+
+def _pct(value: Any) -> str:
+    try:
+        return f"{round(float(value) * 100)}%"
+    except (TypeError, ValueError):
+        return "n/a"
 
 
 def _suggestions_for(topic: str, answer: Mapping[str, Any]) -> list[str]:
@@ -157,6 +203,21 @@ def _suggestions_for(topic: str, answer: Mapping[str, Any]) -> list[str]:
                 f"Observation: {len(clear)} loss lot(s) are marked clear by the engine "
                 "with a mapped replacement — a consideration to review, not a trade "
                 "instruction."
+            )
+    if topic == "trade_review" and isinstance(answer.get("notable"), list):
+        base = answer.get("baseline_win_rate")
+        for bucket in answer["notable"]:
+            if not isinstance(bucket, Mapping) or bucket.get("significant") is not True:
+                continue  # never surface a thin bucket as a suggestion
+            dim = str(bucket.get("dimension", "")).replace("_", " ")
+            val = str(bucket.get("value", ""))
+            n = bucket.get("n")
+            wr = _pct(bucket.get("win_rate"))
+            verb = "win more" if bucket.get("kind") == "edge" else "win less"
+            out.append(
+                f"Observation: you {verb} on {val} {dim} — {wr} vs {_pct(base)} baseline "
+                f"(n={n}); a grounded pattern in your own round-trips to consider, not a "
+                "trade instruction."
             )
     return out
 
@@ -245,28 +306,134 @@ def generate_insight_report(
     )
 
 
+def generate_trade_review_report(
+    specialist: SpecialistSubgraph,
+    *,
+    thread_id: str = "trade_review",
+) -> InsightReport:
+    """Advisory trade-review over round-trip summary + defensible edges/leaks.
+
+    Runs :data:`TRADE_REVIEW_QUERIES` (round-trip record → win-rate/profit-factor
+    summary; edges/leaks → the *significant* notable buckets) through the
+    advisor. Advisory only: suggestions phrase each significant bucket as an
+    observation (never an instruction), and a small-n / non-significant bucket is
+    NEVER surfaced as an edge (:func:`_suggestions_for` filters on
+    ``significant is True``).
+
+    Confidence is honest about sample size: ``medium`` only when every battery
+    query grounded AND at least one defensible edge/leak exists; ``low``
+    otherwise (thin data, tool error, or no significant bucket). ``high`` is
+    never produced — same structural heuristic as
+    :func:`generate_insight_report`.
+    """
+    battery = TRADE_REVIEW_QUERIES
+    domain = specialist.domain_spec.domain_id
+
+    observations: list[Insight] = []
+    suggestions: list[str] = []
+    error_caveats: list[str] = []
+    significant_edges = 0
+    thin_seen = 0
+    for index, query in enumerate(battery):
+        result = specialist.invoke(query, thread_id=f"{thread_id}:{index}")
+        insight, caveats = _consume_result(query, result)
+        error_caveats.extend(caveats)
+        if insight is None:
+            continue
+        observations.append(insight)
+        suggestions.extend(_suggestions_for(insight.topic, result.answer))
+        answer = result.answer if isinstance(result.answer, Mapping) else {}
+        notable = answer.get("notable")
+        if isinstance(notable, list):
+            for bucket in notable:
+                if not isinstance(bucket, Mapping):
+                    continue
+                if bucket.get("significant") is True:
+                    significant_edges += 1
+                else:
+                    thin_seen += 1
+
+    all_grounded = bool(observations) and all(
+        insight.provenance.get("source_type") and insight.provenance.get("source_id")
+        for insight in observations
+    )
+    confidence: Confidence = (
+        "medium"
+        if not error_caveats
+        and all_grounded
+        and len(observations) == len(battery)
+        and significant_edges > 0
+        else "low"
+    )
+
+    caveat_lines = list(error_caveats)
+    if thin_seen:
+        caveat_lines.append(
+            f"{thin_seen} condition(s) separated from baseline but had too few "
+            "trades to be defensible — not reported as edges (small-n honesty)."
+        )
+    if significant_edges == 0:
+        caveat_lines.append(
+            "No statistically defensible edge or leak yet — win-rate differences "
+            "seen are within noise for the current sample."
+        )
+
+    summary = (
+        f"Trade review for domain '{domain}': {significant_edges} defensible "
+        f"edge/leak(s) from {len(observations)} grounded observation(s); "
+        f"confidence {confidence}."
+    )
+    caveats = "\n".join([*caveat_lines, ADVISORY_DISCLAIMER])
+    return InsightReport(
+        summary=summary,
+        observations=tuple(observations),
+        suggestions=tuple(suggestions),
+        confidence=confidence,
+        caveats=caveats,
+        generated_for=f"{domain}:trade_review",
+    )
+
+
 def cached_insights_provider(
     registry: AgentCardRegistry,
 ) -> Callable[[str, bool], dict[str, Any] | None]:
-    """In-memory ``{domain: report}`` cache over :func:`generate_insight_report`.
+    """In-memory ``{domain: report}`` cache over the insight generators.
 
     The provider the composition root hands to the service's ``/insights`` route:
     ``provider(domain, refresh)`` returns the report dict for a registered
     domain (generated lazily on first request; a scheduled job hitting the
     endpoint periodically keeps it warm), regenerates when ``refresh`` is true,
     and returns None for a domain with no registered card (→ 404).
+
+    A ``trade_review`` suffix selects the trade-review battery instead of the
+    default advisory battery: ``?domain=advisor:trade_review`` (or the bare alias
+    ``?domain=trade_review``, which resolves the advisor) yields
+    :func:`generate_trade_review_report` — the round-trip summary + defensible
+    edges/leaks, with small-n buckets held out of the edges.
     """
     cache: dict[str, dict[str, Any]] = {}
+    _TRADE_REVIEW = "trade_review"
 
     def provider(domain: str, refresh: bool = False) -> dict[str, Any] | None:
         known = {card.name for card in registry.cards()}
-        if domain not in known:
+        # Resolve the trade-review virtual domain: bare alias → advisor; or the
+        # "<domain>:trade_review" suffix form.
+        base_domain = domain
+        trade_review = False
+        if domain == _TRADE_REVIEW:
+            base_domain, trade_review = "advisor", True
+        elif domain.endswith(f":{_TRADE_REVIEW}"):
+            base_domain, trade_review = domain[: -len(f":{_TRADE_REVIEW}")], True
+        if base_domain not in known:
             return None
         if refresh or domain not in cache:
-            specialist = registry.resolve(domain)
-            cache[domain] = generate_insight_report(
-                specialist, thread_id=f"insights:{domain}"
-            ).to_dict()
+            specialist = registry.resolve(base_domain)
+            report = (
+                generate_trade_review_report(specialist, thread_id=f"insights:{domain}")
+                if trade_review
+                else generate_insight_report(specialist, thread_id=f"insights:{domain}")
+            )
+            cache[domain] = report.to_dict()
         return cache[domain]
 
     return provider
@@ -275,9 +442,11 @@ def cached_insights_provider(
 __all__ = [
     "ADVISORY_DISCLAIMER",
     "DEFAULT_INSIGHT_QUERIES",
+    "TRADE_REVIEW_QUERIES",
     "Confidence",
     "Insight",
     "InsightReport",
     "cached_insights_provider",
     "generate_insight_report",
+    "generate_trade_review_report",
 ]

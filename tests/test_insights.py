@@ -15,9 +15,11 @@ from mira.orchestration.agent_cards import AgentCardRegistry
 from mira.orchestration.insights import (
     ADVISORY_DISCLAIMER,
     DEFAULT_INSIGHT_QUERIES,
+    TRADE_REVIEW_QUERIES,
     InsightReport,
     cached_insights_provider,
     generate_insight_report,
+    generate_trade_review_report,
 )
 from mira.orchestration.specialists.advisor import (
     advisor_registry_entry,
@@ -167,6 +169,74 @@ def test_cached_provider_refresh_regenerates() -> None:
     assert len(calls) == first_calls  # cached: no new tool dispatches
     provider("advisor", True)
     assert len(calls) > first_calls  # refresh re-ran the battery
+
+
+# ── trade-review report ──────────────────────────────────────────────────────
+
+
+def _trade_review(**kwargs: Any) -> InsightReport:
+    specialist = build_advisor_specialist(fake_vantage_registered_tools(**kwargs))
+    return generate_trade_review_report(specialist, thread_id="tr-test")
+
+
+def test_trade_review_report_shape_and_grounding() -> None:
+    report = _trade_review()
+    assert report.generated_for == "advisor:trade_review"
+    assert len(TRADE_REVIEW_QUERIES) == 2
+    # both battery queries produce a trade_review observation, both grounded
+    assert [o.topic for o in report.observations] == ["trade_review", "trade_review"]
+    for obs in report.observations:
+        assert obs.provenance["source_type"] == "vantage"
+    # the round-trip summary observation carries win-rate / profit factor
+    assert any("profit factor" in o.detail for o in report.observations)
+
+
+def test_trade_review_surfaces_significant_edge_only_never_small_n() -> None:
+    report = _trade_review()
+    joined = " ".join(report.suggestions)
+    # the Thursday edge (n=8, significant) is surfaced...
+    assert "Thursday" in joined
+    # ...and the thin deep_itm bucket (n=2) is NEVER presented as an edge
+    assert "deep_itm" not in joined
+    for suggestion in report.suggestions:
+        assert suggestion.startswith("Observation:")
+
+
+def test_trade_review_confidence_medium_with_defensible_edge() -> None:
+    report = _trade_review()
+    assert report.confidence == "medium"  # never "high"
+    # the small-n honesty caveat is present (deep_itm seen but held out)
+    assert "too few trades" in report.caveats
+    assert ADVISORY_DISCLAIMER in report.caveats
+
+
+def test_trade_review_tool_error_degrades_to_low() -> None:
+    report = _trade_review(failing={"vantage.trade_stats"})
+    assert report.confidence == "low"
+    assert "tool_error" in report.caveats
+
+
+def test_trade_review_domain_reachable_via_cached_provider() -> None:
+    provider = cached_insights_provider(_advisor_registry())
+
+    review = provider("trade_review", False)
+    assert review is not None
+    assert review["generated_for"] == "advisor:trade_review"
+    # the default advisory battery is still served for the bare advisor domain
+    default = provider("advisor", False)
+    assert default["generated_for"] == "advisor"
+    assert review is not default
+
+    suffix = provider("advisor:trade_review", False)
+    assert suffix["generated_for"] == "advisor:trade_review"
+
+
+def test_trade_review_endpoint_returns_report() -> None:
+    status, payload = _call_wsgi(_service().wsgi_app, INSIGHTS_PATH, "domain=trade_review")
+    assert status == 200
+    assert payload["generated_for"] == "advisor:trade_review"
+    # no small-n bucket leaked into the surfaced suggestions
+    assert all("deep_itm" not in s for s in payload["suggestions"])
 
 
 # ── /insights endpoint (WSGI level) ──────────────────────────────────────────

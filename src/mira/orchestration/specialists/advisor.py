@@ -78,6 +78,24 @@ ADVISOR_CARD: AgentCard = card_for_domain(
         "covered",
         "conviction",
         "losing",
+        # trade-review phrasing (routes to trade_stats — grounded lessons/edges)
+        "learned",
+        "learn",
+        "edge",
+        "edges",
+        "leak",
+        "leaks",
+        "lesson",
+        "lessons",
+        "pattern",
+        "patterns",
+        "win-rate",
+        "profit-factor",
+        "roundtrip",
+        "roundtrips",
+        "realized",
+        "closed",
+        "review",
     ),
 )
 
@@ -118,6 +136,35 @@ def _symbol_payload(action: str) -> dict[str, Any]:
 # pattern is checked before the generic wash intent, and the close intent below
 # is scoped to "book (the) loss" / "close" phrasing, not the word "loss" alone.
 _INTENTS: tuple[tuple[re.Pattern[str], str, Callable[[str], dict[str, Any]]], ...] = (
+    (
+        # Trade-review: "what have I learned", "what are my edges/leaks", "when do
+        # I trade best", "my win rate / profit factor". Sits FIRST so the
+        # reflective phrasing is not stolen by the generic close/position intents.
+        # Routes to vantage.trade_stats (the notable edges/leaks + baseline the
+        # advisor narrates as grounded lessons — never a small-n bucket).
+        re.compile(
+            r"what\s+have\s+i\s+learned|\blesson|\bedges?\b|\bleaks?\b|"
+            r"when\s+do\s+i\s+trade\s+best|trade\s+best|"
+            r"my\s+(trading\s+)?(edge|pattern)|win[-\s]?rate|profit[-\s]?factor|"
+            r"trade\s+stats|trade\s+review|trade\s+analytics",
+            re.I,
+        ),
+        "vantage.trade_stats",
+        lambda _a: {},
+    ),
+    (
+        # Round-trip history / realized trade record → vantage.roundtrips (the
+        # labeled closed trades + win-rate/profit-factor summary). Checked before
+        # the generic close/position intents so "my round trips" / "realized
+        # trades" / "closed trades" reach the journal-of-record, not the analyzer.
+        re.compile(
+            r"round[-\s]?trips?|realized\s+(pnl|p/l|trades?|record)|"
+            r"closed\s+trades?|trade\s+history|my\s+trades\b",
+            re.I,
+        ),
+        "vantage.roundtrips",
+        _symbol_payload,
+    ),
     (
         re.compile(
             r"\bclose\b|book[-\s]?(the\s+)?loss|losing\s+position|freefall|"

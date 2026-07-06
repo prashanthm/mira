@@ -137,6 +137,73 @@ def test_golden_losing_positions_surfaces_close_decisions_with_wash(
     assert trace.score == 1.0, trace.to_dict()
 
 
+def test_golden_what_have_i_learned_surfaces_thursday_edge_grounded(
+    advisor_supervisor,
+) -> None:
+    """"What have I learned from my trading?" routes to the advisor, grounds in
+    vantage trade_stats, and surfaces the ONE defensible edge (Thursday, n=8,
+    significant) — while the thin deep_itm bucket (n=2) is present but marked
+    non-significant, so it is never presented as a confident lesson/edge."""
+    result = advisor_supervisor.invoke(
+        "What have I learned from my trading?",
+        thread_id="golden:advisor-learned",
+    )
+
+    assert result.routed_domain == "advisor"
+    assert result.results, "no specialist result collected"
+    answer = result.results[0]["answer"]
+
+    # grounded, not recomputed
+    assert answer["provenance"]["source_type"] == "vantage"
+    assert answer["provenance"]["source_id"].endswith("#trade_stats")
+    assert answer["baseline_win_rate"] == 0.378378
+
+    notable = answer["notable"]
+    significant = [b for b in notable if b.get("significant") is True]
+    # exactly the Thursday edge is defensible; nothing else
+    assert [b["value"] for b in significant] == ["Thursday"]
+    thursday = significant[0]
+    assert thursday["n"] == 8
+    assert thursday["ci_low"] > answer["baseline_win_rate"]  # CI clears baseline
+
+    # the small-n bucket is present in notable but explicitly NOT significant —
+    # a lesson layer must never promote it.
+    thin = [b for b in notable if b.get("significant") is not True]
+    assert thin and all(b["n"] < 3 for b in thin)
+    assert all(b["value"] != "Thursday" for b in thin)
+
+    trace = score_trace(result.results[0])
+    assert trace.score == 1.0, trace.to_dict()
+
+
+def test_golden_edges_lesson_never_promotes_small_n_bucket(advisor_supervisor) -> None:
+    """The lessons store, fed the eval's own trade_stats notable buckets, promotes
+    only the significant edge — the small-n bucket is never an influential lesson."""
+    from mira.core.lessons import LessonsStore, propose_from_buckets
+    from mira.core.memory import InMemoryLongTermMemory
+
+    result = advisor_supervisor.invoke(
+        "What are my edges and leaks?", thread_id="golden:advisor-edges"
+    )
+    answer = result.results[0]["answer"]
+
+    store = LessonsStore(memory=InMemoryLongTermMemory())
+    candidates = propose_from_buckets(
+        answer["notable"],
+        answer["baseline_win_rate"],
+        provenance=answer["provenance"],
+        as_of=str(answer.get("trade_stats_as_of", "")),
+    )
+    for candidate in candidates:
+        store.reinforce_or_add(candidate)
+
+    influential = store.influential_lessons()
+    assert [le.id for le in influential] == ["day_of_week=Thursday"]
+    assert all("deep_itm" not in le.id for le in store.all_lessons())
+    # the grounded lesson cites vantage provenance
+    assert influential[0].source_provenance["source_type"] == "vantage"
+
+
 def test_advisor_routing_leaves_demo_goldens_untouched(advisor_supervisor) -> None:
     """Registering the advisor must not steal the demo domains' routing."""
     research = advisor_supervisor.invoke(

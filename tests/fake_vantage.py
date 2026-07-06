@@ -349,6 +349,155 @@ POSITION_ACTIONS_RESULT = _envelope(
     ],
 )
 
+# ── trade analytics (roundtrips / trade_stats) ───────────────────────────────
+# Shapes copied verbatim from the Vantage ML surface (api.py /api/ml/*). The
+# numbers mirror the real built data: baseline win-rate 37.8%, profit factor
+# 0.77, and exactly ONE defensible edge (day_of_week=Thursday, win 75%, n=8, CI
+# clears baseline → significant). A second notable row (a thin bucket that
+# separates but n<min_n) is included with significant=False so tests can prove
+# a small-n bucket is NEVER promoted to a lesson/edge.
+
+ROUNDTRIPS_RESULT = _envelope(
+    "roundtrips",
+    account="all",
+    symbol=None,
+    roundtrips_as_of="2025-07-15",
+    roundtrips=[
+        {
+            "symbol": "PLTR",
+            "kind": "option",
+            "open_date": "2025-06-30",
+            "close_date": "2025-07-03",
+            "holding_days": 3,
+            "realized_pnl": 444.0,
+            "realized_pct": 13.5,
+            "win": True,
+            "mfe": 520.0,
+            "mae": -60.0,
+            "mfe_capture": 0.85,
+            "entry_unknown": False,
+        },
+        {
+            "symbol": "SNAP",
+            "kind": "equity",
+            "open_date": "2025-06-24",
+            "close_date": "2025-07-01",
+            "holding_days": 7,
+            "realized_pnl": -512.0,
+            "realized_pct": -6.1,
+            "win": False,
+            "mfe": 80.0,
+            "mae": -540.0,
+            "mfe_capture": -0.20,
+            "entry_unknown": False,
+        },
+    ],
+    summary={
+        "count": 37,
+        "wins": 14,
+        "losses": 23,
+        "win_rate": 0.3784,
+        "avg_win": 543.21,
+        "avg_loss": -427.07,
+        "gross_profit": 7605.0,
+        "gross_loss": 9822.61,
+        "profit_factor": 0.7742,
+        "avg_holding_days": 7.19,
+        "avg_mfe_capture": -0.2478,
+        "entry_unknown": 6,
+        "by_kind": {
+            "equity": {"count": 9, "win_rate": 0.1111, "profit_factor": 0.0396},
+            "option": {"count": 28, "win_rate": 0.4643, "profit_factor": 0.8312},
+        },
+    },
+)
+
+TRADE_STATS_RESULT = _envelope(
+    "trade_stats",
+    account="all",
+    dimension=None,
+    trade_stats_as_of="2025-07-15",
+    baseline_win_rate=0.378378,
+    buckets=[
+        {
+            "dimension": "__baseline__",
+            "value": "all_trades",
+            "n": 37,
+            "wins": 14,
+            "losses": 23,
+            "win_rate": 0.378378,
+            "ci_low": 0.25,
+            "ci_high": 0.52,
+            "ci": 0.90,
+            "avg_pnl": -59.9,
+            "total_pnl": -2217.61,
+        },
+        {
+            "dimension": "day_of_week",
+            "value": "Thursday",
+            "n": 8,
+            "wins": 6,
+            "losses": 2,
+            "win_rate": 0.75,
+            "ci_low": 0.450358,
+            "ci_high": 0.902253,
+            "ci": 0.90,
+            "avg_pnl": 210.0,
+            "total_pnl": 1680.0,
+        },
+        {
+            # A THIN bucket that separates but is too small — must never be a lesson.
+            "dimension": "moneyness",
+            "value": "deep_itm",
+            "n": 2,
+            "wins": 2,
+            "losses": 0,
+            "win_rate": 1.0,
+            "ci_low": 0.34,
+            "ci_high": 0.99,
+            "ci": 0.90,
+            "avg_pnl": 300.0,
+            "total_pnl": 600.0,
+        },
+    ],
+    notable=[
+        {
+            "dimension": "day_of_week",
+            "value": "Thursday",
+            "n": 8,
+            "wins": 6,
+            "losses": 2,
+            "win_rate": 0.75,
+            "ci_low": 0.450358,
+            "ci_high": 0.902253,
+            "ci": 0.90,
+            "avg_pnl": 210.0,
+            "total_pnl": 1680.0,
+            "kind": "edge",
+            "edge": 0.371622,
+            "significant": True,
+        },
+        {
+            # Present in notable (it separates) but significant=False (n<min_n).
+            "dimension": "moneyness",
+            "value": "deep_itm",
+            "n": 2,
+            "wins": 2,
+            "losses": 0,
+            "win_rate": 1.0,
+            "ci_low": 0.34,
+            "ci_high": 0.99,
+            "ci": 0.90,
+            "avg_pnl": 300.0,
+            "total_pnl": 600.0,
+            "kind": "edge",
+            "edge": 0.621622,
+            "significant": False,
+            "note": "n<min, not significant",
+        },
+    ],
+)
+
 RESULTS: dict[str, dict[str, Any]] = {
     "vantage.positions": POSITIONS_RESULT,
     "vantage.allocation": ALLOCATION_RESULT,
@@ -358,6 +507,8 @@ RESULTS: dict[str, dict[str, Any]] = {
     "vantage.quotes": QUOTES_RESULT,
     "vantage.analysis": ANALYSIS_RESULT,
     "vantage.position_actions": POSITION_ACTIONS_RESULT,
+    "vantage.roundtrips": ROUNDTRIPS_RESULT,
+    "vantage.trade_stats": TRADE_STATS_RESULT,
 }
 
 _PERMISSIVE_SCHEMA: dict[str, Any] = {"type": "object", "additionalProperties": True}
