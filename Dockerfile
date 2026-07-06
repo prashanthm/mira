@@ -16,16 +16,24 @@ ENV PYTHONUNBUFFERED=1 \
 WORKDIR /app
 
 # Install dependencies first (separate layer) for build caching.
-COPY pyproject.toml ./
+COPY pyproject.toml README.md ./
 COPY src ./src
 RUN pip install ".[llm,mcp]"
 
+# Demo agent-card registry fixtures (handbook.md + ledger.csv): the __main__
+# entrypoint loads them ONLY when tests/fixtures/ exists relative to the cwd, so
+# /turn routes supervisor-first (grounded specialist answers) instead of the
+# plain runtime turn. Copied read-only; drop this layer for a minimal image.
+COPY tests/fixtures ./tests/fixtures
+
 # Non-root runtime user.
-RUN useradd --create-home --uid 10001 mira
+RUN useradd --create-home --uid 10001 mira \
+    && chown -R mira:mira /app
 USER mira
 
 EXPOSE 8080
 
 # Serve the warm service + runtime. Host 0.0.0.0 so the container is reachable; the
-# process reads all other config from env at boot.
+# process reads all other config from env at boot. WORKDIR /app is the cwd so the
+# demo fixtures above are discovered.
 CMD ["python", "-m", "mira", "--host", "0.0.0.0", "--port", "8080"]
