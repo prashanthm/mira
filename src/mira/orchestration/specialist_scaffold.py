@@ -40,7 +40,12 @@ class RegisteredTool:
 
 @dataclass
 class SpecialistResult:
-    """Structured payload a supervisor collects after a specialist run."""
+    """Structured payload a supervisor collects after a specialist run.
+
+    ``decisions`` (ADR-052) are audit records in the public ``Decision`` shape
+    (``{"kind", "detail"}``, kinds per ``mira_contracts.trace.DECISION_KINDS``)
+    — e.g. one ``kind="escalation"`` entry per model-tier escalation attempt.
+    """
 
     domain: str
     query: str
@@ -48,6 +53,7 @@ class SpecialistResult:
     plan_steps: list[dict[str, Any]] = field(default_factory=list)
     bound_exceeded: dict[str, Any] | None = None
     error: str | None = None
+    decisions: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -57,6 +63,7 @@ class SpecialistResult:
             "plan_steps": self.plan_steps,
             "bound_exceeded": self.bound_exceeded,
             "error": self.error,
+            "decisions": self.decisions,
         }
 
 

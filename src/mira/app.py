@@ -220,6 +220,12 @@ def build_app(
     gateway = _gateway_from_env(bundle, registry)
     runtime = AgentRuntime(gateway.for_agent("general"), bundle.state_store, tools=tools)
 
+    # Model-tier escalation (ADR-052, double-flagged): only when tier routing is
+    # configured AND the profile flag is on (ENABLE_TIER_ESCALATION) do
+    # registered specialists get the one-retry escalating wrapper. The eval
+    # registry never passes through here, so eval semantics are untouched.
+    registry = _registry_with_tier_escalation(registry, resolved)
+
     supervisor = Supervisor(registry) if registry is not None else None
 
     # /insights (ADR-006 Phase V3): lazy, cached advisory reports per registered
@@ -342,6 +348,41 @@ def _registry_with_advisor(
             file=sys.stderr,
         )
         return registry
+
+
+def _registry_with_tier_escalation(
+    registry: AgentCardRegistry | None,
+    profile: Profile,
+) -> AgentCardRegistry | None:
+    """Wrap registered specialists in the model-tier escalating decorator (ADR-052).
+
+    Double-flagged: requires ``MODEL_ROUTES`` (tier routing configured) and the
+    ``tier_escalation`` profile flag (``ENABLE_TIER_ESCALATION`` per ADR-047).
+    Absent either ⇒ the registry is returned untouched.
+    """
+    import os
+
+    if registry is None:
+        return None
+    if not (os.environ.get("MODEL_ROUTES") or "").strip():
+        return registry
+    if not profile.flags.get("tier_escalation", False):
+        return registry
+
+    from mira_harness.quality import EscalationTrigger
+
+    from mira.orchestration.tier_escalation import TierEscalatingSpecialist
+
+    trigger = EscalationTrigger()
+
+    def wrap(card: Any, factory: Any) -> Any:
+        start_tier = card.model_hint or "light"
+        return lambda: TierEscalatingSpecialist(
+            factory(), trigger=trigger, start_tier=start_tier
+        )
+
+    registry.wrap_factories(wrap)
+    return registry
 
 
 def _gateway_from_env(

@@ -23,6 +23,7 @@ from mira_contracts.envelope import (
 from mira_contracts.trace import (
     AgentRef,
     BudgetConsumed,
+    Decision,
     TraceEvent,
     TraceResult,
 )
@@ -121,6 +122,7 @@ def trace_from_specialist_result(
         status=status,
         answer=dict(result.answer),
         events=tuple(TraceEvent.from_dict(step) for step in result.plan_steps),
+        decisions=tuple(Decision.from_dict(d) for d in result.decisions),
         bound_exceeded=dict(result.bound_exceeded) if result.bound_exceeded else None,
         error={"code": "", "message": result.error} if result.error else None,
     )
@@ -139,6 +141,7 @@ def specialist_result_from_trace(trace: TraceResult, *, query: str) -> Specialis
         plan_steps=[event.to_dict() for event in trace.events],
         bound_exceeded=dict(trace.bound_exceeded) if trace.bound_exceeded else None,
         error=str(trace.error["message"]) if trace.error else None,
+        decisions=[decision.to_dict() for decision in trace.decisions],
     )
 
 

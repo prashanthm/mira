@@ -13,7 +13,7 @@ remote discovery, signed cards) layers on later without changing this contract.
 from __future__ import annotations
 
 import re
-from collections.abc import Callable, Iterable
+from collections.abc import Callable, Iterable, Mapping
 from dataclasses import dataclass, field
 from typing import Any, Protocol
 
@@ -87,10 +87,18 @@ class RoutableAgent(Protocol):
 
     ``SpecialistSubgraph`` satisfies this natively; a
     :class:`~mira.orchestration.foreign.ForeignSpecialist` satisfies it for
-    agents behind the public contracts.
+    agents behind the public contracts. ``context`` (ADR-052) carries
+    per-dispatch state — e.g. ``{"model_tier": ...}`` from a model-tier
+    escalation retry — which the specialist scaffold merges into loop state.
     """
 
-    def invoke(self, query: str, *, thread_id: str) -> SpecialistResult: ...
+    def invoke(
+        self,
+        query: str,
+        *,
+        thread_id: str,
+        context: Mapping[str, Any] | None = None,
+    ) -> SpecialistResult: ...
 
 
 SpecialistFactory = Callable[[], RoutableAgent]
@@ -127,6 +135,20 @@ class AgentCardRegistry:
         if name not in self._instances:
             self._instances[name] = self._factories[name]()
         return self._instances[name]
+
+    def wrap_factories(
+        self,
+        wrapper: Callable[[AgentCard, SpecialistFactory], SpecialistFactory],
+    ) -> None:
+        """Replace every factory with ``wrapper(card, factory)`` (ADR-052).
+
+        Registration-time decoration — e.g. wrapping each specialist in a
+        model-tier escalating decorator — without touching supervisor code.
+        Cached instances are dropped so the wrap applies on next resolve.
+        """
+        for name, card in self._cards.items():
+            self._factories[name] = wrapper(card, self._factories[name])
+            self._instances.pop(name, None)
 
     def match(self, query: str) -> AgentCard | None:
         """Deterministic keyword classification: best card for ``query`` or None.
