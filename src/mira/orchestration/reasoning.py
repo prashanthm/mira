@@ -71,6 +71,21 @@ class ReasoningBudget:
         self.tokens += tokens
         self.cost += cost
 
+    def reset(self) -> None:
+        """Re-arm the budget for a fresh reasoning run.
+
+        A budget bounds ONE run (ADR-013), but the loop instance — and thus the
+        budget the graph nodes close over — lives as long as its (registry-
+        cached) specialist. Without a per-run reset, wall-clock since *specialist
+        build* counts against ``max_seconds`` and steps accumulate across
+        requests, so every long-lived service's specialists go permanently
+        bound-exceeded ~5 minutes after first use.
+        """
+        self.steps = 0
+        self.tokens = 0
+        self.cost = 0.0
+        self._started_at = self._clock()
+
 
 class ReasoningState(TypedDict, total=False):
     query: str
@@ -229,6 +244,11 @@ class ReasoningLoop:
         *,
         thread_id: str,
     ) -> dict[str, Any]:
+        # A fresh run gets a fresh budget window (``resume`` deliberately does
+        # not reset — it continues the same run). Concurrent invokes on one
+        # specialist share the ceilings best-effort; per-run budget instances
+        # would need the graph closures rebuilt per call.
+        self._budget.reset()
         config = {
             "configurable": {"thread_id": thread_id},
             "recursion_limit": self._recursion_limit,

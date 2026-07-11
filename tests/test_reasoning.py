@@ -101,3 +101,30 @@ def test_hitl_gate_pauses_and_resumes() -> None:
     assert finished["approval"] == "approved"
     assert any(step["phase"] == "hitl" for step in finished["plan_steps"])
     assert not ReasoningLoop.is_paused(finished)
+
+
+# ── per-run budget window (long-lived specialists) ───────────────────────────
+
+
+def test_budget_window_is_per_invoke_not_per_loop_lifetime() -> None:
+    """A registry-cached specialist's loop outlives its budget's creation by
+    hours; each fresh invoke must get a fresh wall-clock window — otherwise
+    every long-lived service's specialists go bound-exceeded ~5min after
+    build (observed live: bound_exceeded time 300s / observed 819s)."""
+    clock = FakeClock()
+    budget = ReasoningBudget(max_seconds=300.0, _clock=clock)  # type: ignore[arg-type]
+    loop = ReasoningLoop(budget)
+
+    clock.advance(819.0)  # the loop sat idle far past the per-run ceiling
+    result = loop.invoke({"query": "late", "max_iterations": 1}, thread_id="late")
+    assert not result.get("bound_exceeded"), result["bound_exceeded"]
+    assert result.get("observation")  # the run actually executed
+
+
+def test_steps_do_not_accumulate_across_invokes() -> None:
+    budget = ReasoningBudget(max_steps=2)
+    loop = ReasoningLoop(budget)
+    for n in range(3):  # 3 runs x 1 iteration each would trip a cumulative bound
+        result = loop.invoke({"query": f"run-{n}", "max_iterations": 1},
+                             thread_id=f"run-{n}")
+        assert not result.get("bound_exceeded"), (n, result["bound_exceeded"])
