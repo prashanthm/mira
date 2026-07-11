@@ -209,6 +209,11 @@ def build_app(
     # degrades to the registry as passed in, matching the discovery contract.
     registry = _registry_with_advisor(tools, registry)
 
+    # Foreign CLI agent (ADR-051, optional): FOREIGN_AGENT_CMD names a command
+    # that speaks the envelope→trace contract over stdin/stdout. Absent env ⇒
+    # zero behavior change; failures degrade like advisor registration.
+    registry = _registry_with_foreign(registry)
+
     supervisor = Supervisor(registry) if registry is not None else None
 
     # /insights (ADR-006 Phase V3): lazy, cached advisory reports per registered
@@ -328,6 +333,46 @@ def _registry_with_advisor(
         print(
             f"mira: advisor registration failed ({type(exc).__name__}: {exc}); "
             "continuing without the advisor domain",
+            file=sys.stderr,
+        )
+        return registry
+
+
+def _registry_with_foreign(
+    registry: AgentCardRegistry | None,
+) -> AgentCardRegistry | None:
+    """Register a subprocess foreign agent when ``FOREIGN_AGENT_CMD`` is set.
+
+    Best-effort, mirroring :func:`_registry_with_advisor`: an empty/absent env
+    var leaves the registry exactly as passed in; a wiring failure degrades to
+    no-foreign rather than failing boot. With a command and no base registry, a
+    fresh registry is created so the foreign agent is routable on its own.
+    """
+    import os
+    import shlex
+    import sys
+
+    command = (os.environ.get("FOREIGN_AGENT_CMD") or "").strip()
+    if not command:
+        return registry
+    try:
+        from mira_harness.cli_adapter import CliAgentAdapter
+
+        from mira.orchestration.foreign import ForeignSpecialist, foreign_card
+        from mira.orchestration.specialist_scaffold import DomainSpec
+
+        runner = CliAgentAdapter(shlex.split(command))
+        card = foreign_card(
+            runner, keywords=("delegate", "external", "partner", "foreign")
+        )
+        spec = DomainSpec(domain_id=card.name, tool_prefixes=card.tool_prefixes)
+        resolved = registry if registry is not None else AgentCardRegistry()
+        resolved.register(card, lambda: ForeignSpecialist(runner, spec))
+        return resolved
+    except Exception as exc:  # noqa: BLE001 — degrade to no-foreign rather than fail boot
+        print(
+            f"mira: foreign agent registration failed ({type(exc).__name__}: {exc}); "
+            "continuing without the foreign domain",
             file=sys.stderr,
         )
         return registry
