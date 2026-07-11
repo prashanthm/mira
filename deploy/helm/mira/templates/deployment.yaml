@@ -25,6 +25,17 @@ spec:
           env:
             - name: DEPLOYMENT_PROFILE
               value: {{ .Values.deploymentProfile | quote }}
+            {{- range .Values.extraEnv }}
+            - name: {{ .name | quote }}
+              value: {{ .value | quote }}
+            {{- end }}
+          {{- if .Values.envFromSecret }}
+          # Secrets (e.g. LLM_API_KEY) come from a pre-created Kubernetes Secret —
+          # never from values files, which end up in git and helm release history.
+          envFrom:
+            - secretRef:
+                name: {{ .Values.envFromSecret | quote }}
+          {{- end }}
           livenessProbe:
             httpGet:
               path: {{ .Values.probes.liveness.path }}

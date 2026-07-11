@@ -93,6 +93,24 @@ Architecture decisions are recorded in [`docs/adr/`](docs/adr/adr-list.md).
 but not wired to any pipeline. The same image is intended to run locally and on
 Kubernetes/ECS; placement is env/Helm-driven, never baked in (ADR-047).
 
+### Secrets — the LLM API key
+
+`LLM_API_KEY` is a secret and is only ever read from the process environment —
+**never commit it to this repo**, values files, task definitions, or `.env` files
+tracked by git. Inject it from a real secret store per platform:
+
+- **Local dev:** export it in your shell (or a git-ignored direnv/`.envrc`).
+- **Kubernetes (Helm):** create the Secret out-of-band and point the chart at it —
+  `kubectl create secret generic mira-llm --from-literal=LLM_API_KEY=<key>` then set
+  `envFromSecret: mira-llm` in your values override. Non-secret knobs
+  (`LLM_BASE_URL`, `LLM_MODEL`, `MODEL_ROUTES`) go in `extraEnv`.
+- **ECS/Fargate:** the task definition's `secrets` block pulls `LLM_API_KEY` from
+  AWS Secrets Manager (see `deploy/fargate/task-definition.json`).
+- **Claude Code on the web:** set `LLM_API_KEY` in the environment's settings so
+  sessions inherit it without pasting keys into conversations.
+
+A key that has ever been pasted into a chat, ticket, or log should be rotated.
+
 ## Status
 
 Private reference implementation. Phases A–E of the ADR catalog are built: the

@@ -1,7 +1,9 @@
 {
   "family": "mira",
   "networkMode": "awsvpc",
-  "requiresCompatibilities": ["FARGATE"],
+  "requiresCompatibilities": [
+    "FARGATE"
+  ],
   "cpu": "512",
   "memory": "1024",
   "executionRoleArn": "arn:aws:iam::ACCOUNT_ID:role/mira-ecs-execution",
@@ -40,7 +42,13 @@
           "awslogs-region": "REGION",
           "awslogs-stream-prefix": "mira"
         }
-      }
+      },
+      "secrets": [
+        {
+          "name": "LLM_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:REGION:ACCOUNT_ID:secret:mira/llm-api-key"
+        }
+      ]
     }
   ]
 }

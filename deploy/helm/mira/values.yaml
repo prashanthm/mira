@@ -9,6 +9,19 @@ image:
 
 deploymentProfile: customer-k8s
 
+# Plain (non-secret) env config, e.g. LLM_BASE_URL / LLM_MODEL / MODEL_ROUTES.
+# extraEnv:
+#   - name: LLM_BASE_URL
+#     value: https://api.deepseek.com/v1
+#   - name: LLM_MODEL
+#     value: deepseek-chat
+extraEnv: []
+
+# Name of a pre-created Kubernetes Secret whose keys become env vars —
+# the place for LLM_API_KEY. Create it out-of-band, never in values:
+#   kubectl create secret generic mira-llm --from-literal=LLM_API_KEY=<key>
+envFromSecret: ""
+
 service:
   port: 8080
 
