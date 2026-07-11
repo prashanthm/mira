@@ -40,3 +40,18 @@ NEWS_DOMAIN = DomainSpec(
     domain_id="news",
     tool_prefixes=frozenset({"vantage."}),
 )
+
+GROWTH_DOMAIN = DomainSpec(
+    domain_id="growth",
+    tool_prefixes=frozenset({"vantage."}),
+)
+
+EXPECTATIONS_DOMAIN = DomainSpec(
+    domain_id="expectations",
+    tool_prefixes=frozenset({"vantage."}),
+)
+
+THESIS_DOMAIN = DomainSpec(
+    domain_id="thesis",
+    tool_prefixes=frozenset({"vantage."}),
+)

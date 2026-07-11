@@ -238,15 +238,38 @@ def build_app(
 
         insights_provider = cached_insights_provider(registry)
 
-        # /analyze: multi-facet fan-out (technical/fundamental/news + advisor)
-        # synthesized by the LLM into grounded prose. Synthesis goes through the
-        # tier-aware gateway (ADR-052) as agent "synthesis" and asks for the
-        # deep tier, so MODEL_ROUTES picks the strong model; without routes the
-        # gateway passes through to the bundle's LLM unchanged.
-        from mira.orchestration.analyze import cached_analyze_provider
+        # /analyze: parallel multi-domain fan-out synthesized by the LLM into
+        # grounded prose. One cached provider per analysis GROUP the registry's
+        # cards declare (analyze_group — "equity" today; a new family tomorrow
+        # is pure registration), dispatched by the request's ?group= (default:
+        # the first registered group). Synthesis goes through the tier-aware
+        # gateway (ADR-052) as agent "synthesis" on the deep tier, so
+        # MODEL_ROUTES picks the strong model; without routes the gateway
+        # passes through to the bundle's LLM unchanged.
+        from mira.orchestration.analyze import (
+            DEFAULT_GROUP,
+            analyze_groups,
+            cached_analyze_provider,
+        )
 
-        analyze_provider = cached_analyze_provider(
-            registry, llm=gateway.for_agent("synthesis"))
+        synthesis_llm = gateway.for_agent("synthesis")
+        groups = analyze_groups(registry) or [DEFAULT_GROUP]
+        providers = {
+            g: cached_analyze_provider(registry, llm=synthesis_llm, group=g)
+            for g in groups
+        }
+        default_group = groups[0]
+
+        def analyze_provider(  # noqa: E731 — the WarmService AnalyzeProvider shape
+            subject: str,
+            question: str | None = None,
+            refresh: bool = False,
+            group: str | None = None,
+        ) -> dict[str, Any] | None:
+            provider = providers.get(group or default_group)
+            if provider is None:
+                return None  # unknown group -> 404 at the transport layer
+            return provider(subject, question, refresh)
 
     # /playbook: the daily 0DTE SPX playbook. Fetches the deterministic scaffold
     # over the vantage.spx_playbook MCP tool and narrates it (templated draft +

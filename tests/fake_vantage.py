@@ -574,6 +574,95 @@ NEWS_RESULT = _envelope(
     },
 )
 
+GROWTH_RESULT = _envelope(
+    "growth",
+    symbol="PLTR",
+    no_data=False,
+    growth={
+        "symbol": "PLTR",
+        "revenue_ttm": 3_800_000_000.0,
+        "revenue_yoy": 0.33,
+        "revenue_yoy_basis": "ttm",
+        "gross_margin": 0.80,
+        "operating_margin": 0.14,
+        "fcf_ttm": 1_200_000_000.0,
+        "fcf_margin": 0.32,
+        "sbc_ttm": 600_000_000.0,
+        "sbc_pct_revenue": 0.16,
+        "rule_of_40": 65.0,
+        "rule_of_40_basis": "yoy_growth_plus_fcf_margin",
+        "period_end": "2025-06-30",
+    },
+)
+
+EXPECTATIONS_RESULT = _envelope(
+    "expectations",
+    symbol="PLTR",
+    no_data=False,
+    inputs={
+        "fcf_ttm": 1_200_000_000.0,
+        "market_cap": 295_000_000_000.0,
+        "enterprise_value": 291_000_000_000.0,
+        "value_basis": "enterprise_value",
+        "price": 126.79,
+        "shares_outstanding": 2_400_000_000.0,
+    },
+    assumptions={
+        "discount_rate": 0.095,
+        "terminal_growth": 0.025,
+        "horizon_years": 10,
+        "model": "two_stage_fcf_reverse_dcf",
+    },
+    implied={"fcf_growth_10y": 0.42, "clamped": None, "status": "ok"},
+    scenarios=[
+        {"growth": 0.0, "fair_value": 21_000_000_000.0,
+         "fair_value_per_share": 8.75, "vs_price_pct": -93.1},
+        {"growth": 0.10, "fair_value": 34_000_000_000.0,
+         "fair_value_per_share": 14.17, "vs_price_pct": -88.8},
+        {"growth": 0.20, "fair_value": 57_000_000_000.0,
+         "fair_value_per_share": 23.75, "vs_price_pct": -81.3},
+        {"growth": 0.30, "fair_value": 96_000_000_000.0,
+         "fair_value_per_share": 40.0, "vs_price_pct": -68.5},
+    ],
+)
+
+# days_until=5 exercises the synthesis earnings gate (report within a week).
+EARNINGS_RESULT = _envelope(
+    "earnings",
+    symbol="PLTR",
+    no_data=False,
+    earnings={
+        "next_date": "2025-07-20",
+        "days_until": 5,
+        "last_date": "2025-05-05",
+        "days_since": 71,
+        "recent": [
+            {"date": "2025-07-20", "eps_estimate": 0.09, "eps_actual": None},
+            {"date": "2025-05-05", "eps_estimate": 0.08, "eps_actual": 0.10},
+        ],
+        "dates_as_of": "2025-07-14",
+        "future_date_known": True,
+    },
+)
+
+TICKER_PLAN_RESULT = _envelope(
+    "ticker_plan",
+    symbol="PLTR",
+    has_plan=True,
+    plan={
+        "thesis": "AIP land-and-expand converts gov credibility into commercial "
+                  "growth; hold while US commercial revenue accelerates.",
+        "target": 180.0,
+        "stop": 95.0,
+        "notes": "Re-evaluate if US commercial growth decelerates two quarters running.",
+        "updated_at": "2025-06-20T10:00:00",
+    },
+    journal=[
+        {"created_at": "2025-06-20T10:00:00", "kind": "note",
+         "payload": {"text": "Trimmed 10% into strength at 142."}},
+    ],
+)
+
 RESULTS: dict[str, dict[str, Any]] = {
     "vantage.positions": POSITIONS_RESULT,
     "vantage.allocation": ALLOCATION_RESULT,
@@ -588,6 +677,10 @@ RESULTS: dict[str, dict[str, Any]] = {
     "vantage.bars": BARS_RESULT,
     "vantage.fundamentals": FUNDAMENTALS_RESULT,
     "vantage.news": NEWS_RESULT,
+    "vantage.growth": GROWTH_RESULT,
+    "vantage.expectations": EXPECTATIONS_RESULT,
+    "vantage.earnings": EARNINGS_RESULT,
+    "vantage.ticker_plan": TICKER_PLAN_RESULT,
 }
 
 _PERMISSIVE_SCHEMA: dict[str, Any] = {"type": "object", "additionalProperties": True}

@@ -69,11 +69,12 @@ TurnHandlerFactory = Callable[[str, str], WSGIApp]
 # Kept as a plain callable so this module stays framework-free (report
 # generation and caching live in mira.orchestration.insights / mira.app).
 InsightsProvider = Callable[[str, bool], dict[str, Any] | None]
-# Multi-facet analyze provider: (symbol, question, refresh) -> the synthesized
-# fan-out result dict for a ticker, or None for a blank/invalid symbol. Same
-# framework-free callable shape as InsightsProvider (generation/caching live in
-# mira.orchestration.analyze).
-AnalyzeProvider = Callable[[str, "str | None", bool], dict[str, Any] | None]
+# Multi-domain analyze provider: (subject, question, refresh, group) -> the
+# synthesized fan-out result dict for a group-valid subject, or None for a
+# blank/invalid subject or unknown group. ``group`` None means the app's
+# default analysis group. Same framework-free callable shape as
+# InsightsProvider (generation/caching live in mira.orchestration.analyze).
+AnalyzeProvider = Callable[[str, "str | None", bool, "str | None"], dict[str, Any] | None]
 # 0DTE SPX playbook provider: (date, refresh) -> the narrated playbook dict, or
 # None. Same framework-free callable shape (generation in
 # mira.orchestration.playbook).
@@ -343,20 +344,23 @@ class WarmService:
         environ: dict[str, Any],
         start_response: StartResponse,
     ) -> list[bytes]:
-        """Serve a multi-facet analysis for one ticker from the analyze provider.
+        """Serve a multi-domain analysis for one subject from the analyze provider.
 
-        GET ``?symbol=SYM[&question=...][&refresh=1]`` or POST
-        ``{"symbol","question"?,"refresh"?}``. Transport-only, following the
-        ``/insights`` pattern: unconfigured → 503; missing ``symbol`` → 400;
-        provider returns None (blank/invalid symbol) → 404; otherwise 200 with
-        the synthesized fan-out result (``{query, results, synthesis, ...}``).
+        GET ``?subject=X[&group=g][&question=...][&refresh=1]`` or POST
+        ``{"subject","group"?,"question"?,"refresh"?}`` — ``symbol`` is accepted
+        as an alias of ``subject`` (the equity group was the first family).
+        Transport-only, following the ``/insights`` pattern: unconfigured →
+        503; missing subject → 400; provider returns None (subject fails the
+        group's shape, or unknown group) → 404; otherwise 200 with the
+        synthesized fan-out result (``{query, results, synthesis, ...}``).
         """
         if self._analyze_provider is None:
             return self._json_response(
                 start_response, 503, {"error": "analyze_unavailable"}
             )
         method = environ.get("REQUEST_METHOD", "GET").upper()
-        symbol = ""
+        subject = ""
+        group: str | None = None
         question: str | None = None
         refresh = False
         if method == "POST":
@@ -371,24 +375,29 @@ class WarmService:
                     start_response, 400,
                     {"error": "invalid_request", "detail": "body must be a JSON object"},
                 )
-            symbol = str(body.get("symbol", "") or "")
+            subject = str(body.get("subject") or body.get("symbol") or "")
+            g = body.get("group")
+            group = str(g) if isinstance(g, str) and g.strip() else None
             q = body.get("question")
             question = str(q) if isinstance(q, str) and q.strip() else None
             refresh = bool(body.get("refresh"))
         else:
             params = urllib.parse.parse_qs(environ.get("QUERY_STRING", ""))
-            symbol = (params.get("symbol") or [""])[0]
+            subject = (params.get("subject") or params.get("symbol") or [""])[0]
+            g = (params.get("group") or [""])[0]
+            group = g if g.strip() else None
             q = (params.get("question") or [""])[0]
             question = q if q.strip() else None
             refresh = (params.get("refresh") or [""])[0].lower() in {"1", "true"}
 
-        if not symbol.strip():
+        if not subject.strip():
             return self._json_response(
-                start_response, 400, {"error": "missing_parameter", "detail": "symbol required"},
+                start_response, 400,
+                {"error": "missing_parameter", "detail": "subject (or symbol) required"},
             )
-        result = self._analyze_provider(symbol, question, refresh)
+        result = self._analyze_provider(subject, question, refresh, group)
         if result is None:
-            return self._json_response(start_response, 404, {"error": "invalid_symbol"})
+            return self._json_response(start_response, 404, {"error": "invalid_subject"})
         return self._json_response(start_response, 200, result)
 
     def _handle_playbook(

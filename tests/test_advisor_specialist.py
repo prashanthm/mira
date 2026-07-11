@@ -269,10 +269,11 @@ def test_build_live_registry_adds_advisor_alongside_base() -> None:
     registry = build_live_registry(fake_vantage_mcp_tools(), base=base)
 
     assert registry is base
-    # The advisor plus the three analysis facets (technical/fundamental/news) are
-    # registered over the same vantage.* surface, alongside the base domains.
+    # The advisor plus the six analysis facets are registered over the same
+    # vantage.* surface, alongside the base domains.
     assert {card.name for card in registry.cards()} == {
-        "research", "advisor", "technical", "fundamental", "news",
+        "research", "advisor", "technical", "fundamental", "growth",
+        "expectations", "news", "thesis",
     }
     specialist = registry.resolve("advisor")
     result = specialist.invoke(REPRESENTATIVE_ADVISOR_QUERY, thread_id="live")

@@ -1,14 +1,21 @@
 """Facet specialists for the multi-facet analysis graph (ADR-014 follow-on).
 
-The advisor answers *position/tax* questions. These three answer the other
-facets of "what should I do about SYM?", each grounded in ONE Vantage tool:
+The advisor answers *position/tax* questions. These answer the other facets of
+"what should I do about SYM?", each grounded in its Vantage tool(s):
 
   * **technical** → ``vantage.analysis`` (the nightly decision journal: trend,
     momentum, support/resistance, conviction, which rule fired) + ``vantage.bars``
     (levels) — the market/technical read.
   * **fundamental** → ``vantage.fundamentals`` (valuation context: P/E, target,
     52w range, market cap).
-  * **news** → ``vantage.news`` (recent aggregated headlines + sentiment lean).
+  * **growth** → ``vantage.growth`` (revenue growth, margins, FCF, SBC,
+    Rule of 40 — what the business is doing, not what the market pays).
+  * **expectations** → ``vantage.expectations`` (reverse DCF: the growth rate
+    the current price already implies, with assumptions + scenarios).
+  * **news** → ``vantage.news`` + ``vantage.earnings`` (headlines + sentiment
+    lean, and the earnings calendar — together the catalyst read).
+  * **thesis** → ``vantage.ticker_plan`` (the operator's stored thesis/target/
+    stop; synthesis weighs sell/close calls against it).
 
 Unlike the advisor (whose inference keyword-routes among many tools), a facet
 specialist is dispatched via ``fan_out`` with a uniform ``"analyze SYM"`` query,
@@ -33,9 +40,12 @@ from mira.orchestration.specialist_scaffold import (
     build_specialist_subgraph,
 )
 from mira.orchestration.specialists.domains import (
+    EXPECTATIONS_DOMAIN,
     FUNDAMENTAL_DOMAIN,
+    GROWTH_DOMAIN,
     NEWS_DOMAIN,
     TECHNICAL_DOMAIN,
+    THESIS_DOMAIN,
 )
 
 # Ticker extraction — same convention as the advisor (2-6 uppercase letters).
@@ -79,6 +89,11 @@ TECHNICAL_CARD: AgentCard = card_for_domain(
         "level", "levels", "breakout", "chart", "analysis", "signal",
     ),
     model_hint="light",
+    analyze_group="equity",
+    synthesis_hint=(
+        "The recommendation is RULE-BASED from the nightly journal (name the "
+        "rule); it is a timing signal, not a thesis judgment."
+    ),
 )
 
 
@@ -111,6 +126,7 @@ FUNDAMENTAL_CARD: AgentCard = card_for_domain(
         "undervalued",
     ),
     model_hint="light",
+    analyze_group="equity",
 )
 
 
@@ -121,28 +137,141 @@ def _infer_fundamental(action: str, registry: dict[str, RegisteredTool]) -> dict
     return {"facet": "fundamental", "fundamentals": result}
 
 
-# ------------------------------------------------------------ news
+# ------------------------------------------------------------ news + earnings catalyst
 
 NEWS_CARD: AgentCard = card_for_domain(
     NEWS_DOMAIN,
     description=(
-        "News/sentiment read for one ticker — recent aggregated headlines with a "
-        "headline sentiment lean (estimated, never ground truth) — from Vantage "
-        "news."
+        "News/catalyst read for one ticker — recent aggregated headlines with a "
+        "headline sentiment lean (estimated, never ground truth) plus the "
+        "earnings calendar (next report date, days until) — from Vantage news "
+        "and earnings."
     ),
     keywords=(
         "news", "headline", "headlines", "sentiment", "story", "stories",
-        "press", "coverage", "media", "catalyst",
+        "press", "coverage", "media", "catalyst", "earnings", "report",
     ),
     model_hint="light",
+    analyze_group="equity",
+    synthesis_hint=(
+        "Sentiment is an ESTIMATED headline lean, not fact. EARNINGS GATE: if "
+        "the earnings block shows a report within about a week (days_until <= "
+        "7), surface it prominently and make any 'act now' advice explicitly "
+        "conditional on it; if future_date_known is false, say the next "
+        "earnings date is unknown — never assume there is none."
+    ),
 )
 
 
 def _infer_news(action: str, registry: dict[str, RegisteredTool]) -> dict[str, Any] | None:
-    result = _call(registry, "vantage.news", _symbol(action))
+    """News + the earnings calendar — together, the catalyst read. Either half
+    failing (or missing) leaves the other intact; None only when both are."""
+    payload = _symbol(action)
+    news = _call(registry, "vantage.news", payload)
+    earnings = _call(registry, "vantage.earnings", payload)
+    if news is None and earnings is None:
+        return None
+    out: dict[str, Any] = {"facet": "news"}
+    if news is not None:
+        out["news"] = news
+    if earnings is not None:
+        out["earnings"] = earnings
+    return out
+
+
+# ------------------------------------------------------------ growth / quality
+
+GROWTH_CARD: AgentCard = card_for_domain(
+    GROWTH_DOMAIN,
+    description=(
+        "Growth/quality read for one ticker — revenue growth, gross/operating "
+        "margin, free cash flow, stock-based compensation, Rule of 40 — from "
+        "Vantage statement-derived metrics (nulls for ETFs; never fabricated)."
+    ),
+    keywords=(
+        "growth", "revenue", "margin", "margins", "fcf", "free-cash-flow",
+        "cash-flow", "sbc", "dilution", "rule-of-40", "quality", "profitability",
+    ),
+    model_hint="light",
+    analyze_group="equity",
+    synthesis_hint=(
+        "Quote rule_of_40 with its stated basis; statement-derived TTM figures, "
+        "so they lag the current quarter."
+    ),
+)
+
+
+def _infer_growth(action: str, registry: dict[str, RegisteredTool]) -> dict[str, Any] | None:
+    result = _call(registry, "vantage.growth", _symbol(action))
     if result is None:
         return None
-    return {"facet": "news", "news": result}
+    return {"facet": "growth", "growth": result}
+
+
+# ------------------------------------------------------------ expectations (reverse DCF)
+
+EXPECTATIONS_CARD: AgentCard = card_for_domain(
+    EXPECTATIONS_DOMAIN,
+    description=(
+        "Market-implied expectations for one ticker — the reverse-DCF growth "
+        "rate the current price already bakes in, with assumptions and fair-"
+        "value scenarios — from Vantage expectations (model-derived context, "
+        "not a price target; Mira does no math)."
+    ),
+    keywords=(
+        "expectations", "implied", "priced-in", "priced", "dcf", "reverse-dcf",
+        "fair-value", "intrinsic", "worth", "justify", "expensive", "cheap",
+    ),
+    model_hint="light",
+    analyze_group="equity",
+    synthesis_hint=(
+        "Implied-growth figures are MODEL-DERIVED — cite the stated assumptions "
+        "(discount rate, terminal growth, horizon) when quoting them; "
+        "status=negative_fcf means implied growth is undefined (say so, never "
+        "guess). Compare the implied bar against the growth facet's actual "
+        "trajectory."
+    ),
+)
+
+
+def _infer_expectations(action: str, registry: dict[str, RegisteredTool]) -> dict[str, Any] | None:
+    result = _call(registry, "vantage.expectations", _symbol(action))
+    if result is None:
+        return None
+    return {"facet": "expectations", "expectations": result}
+
+
+# ------------------------------------------------------------ thesis (operator's plan)
+
+THESIS_CARD: AgentCard = card_for_domain(
+    THESIS_DOMAIN,
+    description=(
+        "The operator's stored thesis for one ticker — why the position is "
+        "held, price target, stop/invalidation level, notes, recent journal — "
+        "from Vantage ticker_plan (read-only; authored in the Vantage UI). "
+        "Synthesis weighs sell/close calls against this."
+    ),
+    keywords=(
+        "thesis", "plan", "why", "conviction", "target", "stop", "invalidation",
+        "notes", "journal", "rationale",
+    ),
+    model_hint="light",
+    analyze_group="equity",
+    synthesis_hint=(
+        "When a stored plan exists, explicitly weigh any close/sell "
+        "recommendation against the stated thesis and its target/stop "
+        "invalidation levels, and state whether the thesis is BROKEN or INTACT "
+        "on the evidence from the other domains. When no plan is on file, note "
+        "that — never invent one."
+    ),
+)
+
+
+def _infer_thesis(action: str, registry: dict[str, RegisteredTool]) -> dict[str, Any] | None:
+    result = _call(registry, "vantage.ticker_plan", _symbol(action))
+    if result is None:
+        return None
+    return {"facet": "thesis", "plan": result}
 
 
 # ------------------------------------------------------------ builders / registry entries
@@ -150,7 +279,10 @@ def _infer_news(action: str, registry: dict[str, RegisteredTool]) -> dict[str, A
 _FACETS: tuple[tuple[Any, AgentCard, Callable[[str, dict[str, RegisteredTool]], dict[str, Any] | None]], ...] = (
     (TECHNICAL_DOMAIN, TECHNICAL_CARD, _infer_technical),
     (FUNDAMENTAL_DOMAIN, FUNDAMENTAL_CARD, _infer_fundamental),
+    (GROWTH_DOMAIN, GROWTH_CARD, _infer_growth),
+    (EXPECTATIONS_DOMAIN, EXPECTATIONS_CARD, _infer_expectations),
     (NEWS_DOMAIN, NEWS_CARD, _infer_news),
+    (THESIS_DOMAIN, THESIS_CARD, _infer_thesis),
 )
 
 
@@ -176,14 +308,18 @@ def facet_registry_entries(
     return entries
 
 
-#: The facet domain ids the analyze flow fans across (order = synthesis order).
-FACET_DOMAIN_IDS = (TECHNICAL_DOMAIN.domain_id, FUNDAMENTAL_DOMAIN.domain_id, NEWS_DOMAIN.domain_id)
+#: The facet domain ids the analyze flow fans across (order = synthesis order;
+#: thesis last so it frames the net takeaway right before the advisor).
+FACET_DOMAIN_IDS = tuple(domain.domain_id for domain, _, _ in _FACETS)
 
 
 __all__ = [
+    "EXPECTATIONS_CARD",
     "FACET_DOMAIN_IDS",
     "FUNDAMENTAL_CARD",
+    "GROWTH_CARD",
     "NEWS_CARD",
     "TECHNICAL_CARD",
+    "THESIS_CARD",
     "facet_registry_entries",
 ]

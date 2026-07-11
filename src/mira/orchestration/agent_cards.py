@@ -42,6 +42,14 @@ class AgentCard:
     caller can see the tool surface without invoking the agent. ``model_hint``
     (ADR-052) names the model *tier* this agent prefers — a tier name, never a
     model id, so cards stay deployment-agnostic; empty means no preference.
+    ``synthesis_hint`` is the domain's own instruction to any synthesis node
+    weaving its results with others' (e.g. "sentiment is estimated, never
+    fact") — carried on the card so the synthesizer stays domain-generic and a
+    new domain never requires a synthesis-prompt edit; empty means no special
+    handling. ``analyze_group`` names the analysis family this domain fans out
+    with (e.g. ``"equity"``) — the analyze flow resolves its participant set
+    from the registry by group, in registration order, so a new family is pure
+    registration; empty means the domain joins no analyze fan-out.
     """
 
     name: str
@@ -50,6 +58,8 @@ class AgentCard:
     keywords: frozenset[str] = field(default_factory=frozenset)
     version: str = CARD_SCHEMA_VERSION
     model_hint: str = ""
+    synthesis_hint: str = ""
+    analyze_group: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         """A2A-shaped card payload for discovery surfaces."""
@@ -61,6 +71,8 @@ class AgentCard:
                 "tool_prefixes": sorted(self.tool_prefixes),
                 "keywords": sorted(self.keywords),
                 "model_hint": self.model_hint,
+                "synthesis_hint": self.synthesis_hint,
+                "analyze_group": self.analyze_group,
             },
         }
 
@@ -71,6 +83,8 @@ def card_for_domain(
     description: str,
     keywords: Iterable[str],
     model_hint: str = "",
+    synthesis_hint: str = "",
+    analyze_group: str = "",
 ) -> AgentCard:
     """Build a card from a :class:`DomainSpec` so identity stays single-sourced."""
     return AgentCard(
@@ -79,6 +93,8 @@ def card_for_domain(
         tool_prefixes=spec.tool_prefixes,
         keywords=frozenset(k.strip().lower() for k in keywords if k.strip()),
         model_hint=model_hint,
+        synthesis_hint=synthesis_hint,
+        analyze_group=analyze_group,
     )
 
 

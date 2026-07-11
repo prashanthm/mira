@@ -129,12 +129,14 @@ def build_live_registry(
     ]
     if vantage_tools:
         bridged = registered_tools_from_mcp(vantage_tools)
-        # The advisor (position/tax) plus the analyze-graph facets
-        # (technical/fundamental/news), all over the same vantage.* surface.
-        card, factory = advisor_registry_entry(bridged)
-        registry.register(card, factory)
+        # The analyze-graph facets, then the advisor (position/tax), all over
+        # the same vantage.* surface. Registration order matters: it is the
+        # "equity" analyze group's fan-out AND synthesis order — facets frame
+        # the picture, the advisor closes it.
         for card, factory in facet_registry_entries(bridged):
             registry.register(card, factory)
+        card, factory = advisor_registry_entry(bridged)
+        registry.register(card, factory)
     return registry
 
 

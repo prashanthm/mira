@@ -42,6 +42,11 @@ REPRESENTATIVE_ADVISOR_QUERY = "Am I wash-safe to harvest VOO?"
 ADVISOR_CARD: AgentCard = card_for_domain(
     ADVISOR_DOMAIN,
     model_hint="deep",
+    analyze_group="equity",
+    synthesis_hint=(
+        "The position/tax angle: cover the wash-sale status and any loss/credit "
+        "math it returned before endorsing an action."
+    ),
     description=(
         "Answers portfolio questions (holdings, allocation, wash-sale windows, "
         "tax-loss-harvest candidates) grounded in the read-only Vantage engine — "

@@ -1,11 +1,15 @@
-"""Multi-facet analyze flow: fan-out across facets + advisor, degrade, cache."""
+"""Multi-domain analyze flow: parallel group fan-out, degrade, cache, groups."""
 
 from __future__ import annotations
 
 from mira.orchestration.analyze import (
     DEFAULT_ANALYZE_DOMAINS,
+    analyze_groups,
+    analyze_subject,
     analyze_symbol,
     cached_analyze_provider,
+    domains_for_group,
+    normalize_subject,
 )
 from mira.orchestration.agent_cards import AgentCardRegistry
 from mira.orchestration.specialists.advisor import advisor_registry_entry
@@ -15,12 +19,14 @@ from tests.fake_vantage import fake_vantage_registered_tools
 
 
 def _full_registry(calls=None) -> AgentCardRegistry:
+    """Facets first, advisor last — mirroring build_live_registry's order,
+    which IS the equity group's fan-out and synthesis order."""
     tools = fake_vantage_registered_tools(calls=calls)
     registry = AgentCardRegistry()
-    card, factory = advisor_registry_entry(tools)
-    registry.register(card, factory)
     for card, factory in facet_registry_entries(tools):
         registry.register(card, factory)
+    card, factory = advisor_registry_entry(tools)
+    registry.register(card, factory)
     return registry
 
 
@@ -57,6 +63,62 @@ def test_analyze_folds_user_question_into_query():
     result = analyze_symbol(registry, "PLTR", question="is it overvalued?").to_dict()
     assert "overvalued" in result["query"]
     assert "PLTR" in result["query"]
+
+
+# ------------------------------------------------------------ groups (D3-b)
+
+def test_equity_group_resolves_from_cards_in_registration_order():
+    registry = _full_registry()
+    assert domains_for_group(registry, "equity") == list(DEFAULT_ANALYZE_DOMAINS)
+    assert analyze_groups(registry) == ["equity"]
+
+
+def test_results_come_back_in_registration_order():
+    registry = _full_registry()
+    result = analyze_symbol(registry, "PLTR").to_dict()
+    assert [r["domain"] for r in result["results"]] == list(DEFAULT_ANALYZE_DOMAINS)
+
+
+def test_new_group_is_pure_registration():
+    """A future family (health, devops, ...) joins /analyze by registering
+    cards with its analyze_group — zero pipeline edits (the D3-b contract)."""
+    from mira.orchestration.agent_cards import AgentCard
+
+    class _Stub:
+        def __init__(self, domain):
+            self._d = domain
+
+        def invoke(self, query, *, thread_id, context=None, **kw):
+            class _R:
+                def to_dict(_self):
+                    return {"domain": self._d, "answer": {"echo": query}, "error": None}
+            return _R()
+
+    registry = AgentCardRegistry()
+    for name in ("sleep", "activity"):
+        registry.register(
+            AgentCard(name=name, description=name, analyze_group="health"),
+            lambda n=name: _Stub(n))
+    result = analyze_subject(registry, "last month", group="health").to_dict()
+    assert [r["domain"] for r in result["results"]] == ["sleep", "activity"]
+    assert "last month" in result["query"]
+
+
+def test_subject_validation_is_group_scoped():
+    # equity subjects are tickers…
+    assert normalize_subject("pltr", "equity") == "PLTR"
+    assert normalize_subject("not a ticker", "equity") is None
+    # …but an unknown group accepts any non-blank subject verbatim
+    assert normalize_subject("sleep last month", "health") == "sleep last month"
+    assert normalize_subject("   ", "health") is None
+
+
+def test_cached_provider_validates_by_group():
+    registry = AgentCardRegistry()
+    provider = cached_analyze_provider(registry, group="health")
+    assert provider("") is None  # blank still rejected
+    out = provider("sleep")  # non-ticker subject is fine for a non-equity group
+    assert out is not None and out["results"] == []
 
 
 # ------------------------------------------------------------ degrade

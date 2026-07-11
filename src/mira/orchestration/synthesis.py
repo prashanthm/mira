@@ -1,11 +1,15 @@
-"""LLM synthesis over multi-facet analyze results — the fix for terse answers.
+"""LLM synthesis over multi-domain analyze results — the fix for terse answers.
 
 The deterministic ``supervisor._synthesize`` concatenates ``[domain] {json}`` —
 which is why "what should I do about INDA?" surfaced a bare "MONITOR". This node
 takes the fan-out results + the user's question + optional conversation context
-and asks an LLM to weave them into **grounded multi-facet prose**, under a strict
-system prompt: synthesize ONLY what the tools returned, cite the facet a claim
-came from, and NEVER invent a number the tools didn't provide.
+and asks an LLM to weave them into **grounded multi-domain prose**, under a
+strict, DOMAIN-GENERIC system prompt: synthesize ONLY what the tools returned,
+cite the domain a claim came from, and NEVER invent a number the tools didn't
+provide. Domain-specific rules ("sentiment is estimated", "weigh close calls
+against the stored thesis") are NOT written here — each domain carries its own
+``synthesis_hint`` on its :class:`~mira.orchestration.agent_cards.AgentCard`,
+and only hints for domains present in the results reach the prompt.
 
 Model selection rides the ADR-052 tier plane: synthesis asks for the ``deep``
 tier and playbook polish the ``light`` tier, so the gateway's router (via
@@ -62,23 +66,46 @@ def _invoke(llm: ILLMProvider, system: str, user: str, *, tier: str) -> str:
     reply = chat(messages, **kwargs)
     return str(getattr(reply, "text", "") or "").strip()
 
+# The GENERIC synthesis contract — domain-agnostic on purpose. Anything a
+# domain needs said about ITS results ("sentiment is estimated", "weigh calls
+# against the stored thesis") travels on that domain's AgentCard as
+# ``synthesis_hint`` and is assembled into the prompt below only when the
+# domain actually returned results. A new domain never edits this module.
 _SYSTEM_PROMPT = (
-    "You are a portfolio analysis synthesizer. You are given the raw results of "
-    "several analysis FACETS for one ticker (technical, fundamental, news, and a "
-    "position/tax advisor), each already grounded in read-only portfolio-engine "
+    "You are a synthesis node. You are given the raw results of several "
+    "specialist DOMAINS for one subject, each already grounded in read-only "
     "tools. Write a concise, decision-useful synthesis for the user.\n\n"
     "HARD RULES:\n"
-    "1. Use ONLY facts present in the facet results below. Never invent or "
-    "estimate a number, price, date, or recommendation the tools did not return.\n"
-    "2. When you state a figure or a call (e.g. a recommendation like MONITOR or "
-    "CLOSE_AND_BOOK_LOSS), name the facet it came from.\n"
-    "3. If a facet returned nothing useful (empty, tool_error, or ETF nulls), say "
+    "1. Use ONLY facts present in the domain results below. Never invent or "
+    "estimate a number, price, date, or recommendation the tools did not "
+    "return.\n"
+    "2. When you state a figure or a call, name the domain it came from.\n"
+    "3. If a domain returned nothing useful (empty, tool_error, or nulls), say "
     "so plainly rather than filling the gap.\n"
-    "4. Treat news sentiment as an ESTIMATED headline lean, not fact.\n"
-    "5. Be direct and multi-faceted: cover market/technical read, valuation, news, "
-    "and the position/tax angle, then a one-line net takeaway. No preamble, no "
-    "disclaimers beyond what the rules require."
+    "4. Be direct and comprehensive: cover every domain that returned data, "
+    "then a one-line net takeaway. No preamble, no disclaimers beyond what "
+    "the rules require."
 )
+
+
+def _guidance_block(
+    results: list[dict[str, Any]],
+    hints: Mapping[str, str] | None,
+) -> str:
+    """The per-domain guidance lines for domains that are actually present.
+
+    Empty when no present domain carries a hint — the core prompt never
+    references guidance, so nothing dangles.
+    """
+    if not hints:
+        return ""
+    present = [r.get("domain") for r in results or []]
+    lines = [f"- {d}: {hints[d].strip()}"
+             for d in present if hints.get(d, "").strip()]
+    if not lines:
+        return ""
+    return ("DOMAIN GUIDANCE (each line is that domain's own HARD RULE for "
+            "how its results may be used):\n" + "\n".join(lines))
 
 _MAX_FACET_JSON = 1400  # cap each facet's digest so the prompt stays bounded
 
@@ -160,12 +187,59 @@ def _one_line(domain: str, answer: Mapping[str, Any]) -> str:
     if domain == "news":
         news = answer.get("news")
         inner = news.get("news") if isinstance(news, Mapping) else None
+        line = "no news"
         if isinstance(inner, Mapping):
             items = inner.get("items") or []
             sent = inner.get("sentiment") or {}
             band = sent.get("band", "?") if isinstance(sent, Mapping) else "?"
-            return f"{len(items)} headline(s), sentiment lean {band} (estimated)"
-        return "no news"
+            line = f"{len(items)} headline(s), sentiment lean {band} (estimated)"
+        earn = answer.get("earnings")
+        cal = earn.get("earnings") if isinstance(earn, Mapping) else None
+        if isinstance(cal, Mapping):
+            if cal.get("days_until") is not None:
+                line += f"; earnings {cal.get('next_date')} in {cal['days_until']}d"
+            elif not cal.get("future_date_known", False):
+                line += "; next earnings date unknown"
+        return line
+    if domain == "growth":
+        grown = answer.get("growth")
+        inner = grown.get("growth") if isinstance(grown, Mapping) else None
+        if isinstance(inner, Mapping):
+            yoy = inner.get("revenue_yoy")
+            fcfm = inner.get("fcf_margin")
+            r40 = inner.get("rule_of_40")
+            yoy_s = f"{yoy * 100:.0f}%" if yoy is not None else "n/a"
+            fcf_s = f"{fcfm * 100:.0f}%" if fcfm is not None else "n/a"
+            r40_s = f"{r40:.0f}" if r40 is not None else "n/a"
+            return f"revenue YoY {yoy_s}, FCF margin {fcf_s}, Rule of 40 {r40_s}"
+        return "no growth data"
+    if domain == "expectations":
+        implied = answer.get("expectations", {}).get("implied") \
+            if isinstance(answer.get("expectations"), Mapping) else None
+        assumptions = answer.get("expectations", {}).get("assumptions") \
+            if isinstance(answer.get("expectations"), Mapping) else None
+        if isinstance(implied, Mapping):
+            status = implied.get("status")
+            if status == "negative_fcf":
+                return "implied growth undefined: negative FCF"
+            g = implied.get("fcf_growth_10y")
+            if status == "ok" and g is not None:
+                a = assumptions if isinstance(assumptions, Mapping) else {}
+                return (f"market implies ~{g * 100:.0f}% FCF growth "
+                        f"(r={a.get('discount_rate', '?')}, "
+                        f"gt={a.get('terminal_growth', '?')})")
+            return f"no implied growth ({status})"
+        return "no expectations data"
+    if domain == "thesis":
+        plan_env = answer.get("plan")
+        if isinstance(plan_env, Mapping):
+            plan = plan_env.get("plan")
+            if plan_env.get("has_plan") and isinstance(plan, Mapping):
+                return (f"plan on file: target {plan.get('target', 'n/a')} / "
+                        f"stop {plan.get('stop', 'n/a')}, "
+                        f"updated {str(plan.get('updated_at', '?'))[:10]}")
+            return "no thesis on file"
+        return "no thesis data"
     # advisor / other: surface a recommendation if present, else compact json.
     for key in ("recommendation", "actions", "recommendations"):
         if key in answer:
@@ -180,27 +254,35 @@ def synthesize_analysis(
     *,
     question: str | None = None,
     context: str | None = None,
+    hints: Mapping[str, str] | None = None,
 ) -> str:
-    """Weave fan-out ``results`` into grounded multi-facet prose via the LLM.
+    """Weave fan-out ``results`` into grounded multi-domain prose via the LLM.
 
     ``llm`` None (or any LLM failure) → the deterministic :func:`_fallback`.
     ``question`` is the user's actual ask; ``context`` is optional prior
-    conversation (so "what do you mean?" follow-ups have grounding).
+    conversation (so "what do you mean?" follow-ups have grounding). ``hints``
+    maps domain id → that domain's card-carried ``synthesis_hint``; only hints
+    for domains present in ``results`` reach the prompt, so the synthesizer
+    stays domain-generic.
     """
     if not results:
-        return f"No analysis facets returned results for {symbol}."
+        return f"No analysis domains returned results for {symbol}."
     if llm is None:
         return _fallback(symbol, results)
 
     ask = question.strip() if question and question.strip() else f"What should I do about {symbol}?"
-    user_parts = [f"Ticker: {symbol}", f"User question: {ask}"]
+    system = _SYSTEM_PROMPT
+    guidance = _guidance_block(results, hints)
+    if guidance:
+        system = f"{system}\n\n{guidance}"
+    user_parts = [f"Subject: {symbol}", f"User question: {ask}"]
     if context and context.strip():
         user_parts.append(f"Prior conversation:\n{context.strip()}")
-    user_parts.append("Facet results:\n" + _facet_digest(results))
+    user_parts.append("Domain results:\n" + _facet_digest(results))
     user_prompt = "\n\n".join(user_parts)
 
     try:
-        text = _invoke(llm, _SYSTEM_PROMPT, user_prompt, tier=SYNTHESIS_TIER)
+        text = _invoke(llm, system, user_prompt, tier=SYNTHESIS_TIER)
         return text or _fallback(symbol, results)
     except Exception:  # noqa: BLE001 — any LLM/adapter failure degrades, never blanks
         return _fallback(symbol, results)

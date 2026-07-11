@@ -220,45 +220,62 @@ def test_analyze_unconfigured_returns_503():
     assert payload["error"] == "analyze_unavailable"
 
 
-def test_analyze_missing_symbol_returns_400():
+def test_analyze_missing_subject_returns_400():
     service = WarmService(deps_ready=lambda: True,
-                          analyze_provider=lambda s, q, r: {"synthesis": "x"})
+                          analyze_provider=lambda s, q, r, g: {"synthesis": "x"})
     status, payload = _call_analyze(service.wsgi_app, "")
     assert status == 400
     assert payload["error"] == "missing_parameter"
 
 
-def test_analyze_invalid_symbol_returns_404():
-    service = WarmService(deps_ready=lambda: True, analyze_provider=lambda s, q, r: None)
+def test_analyze_invalid_subject_returns_404():
+    service = WarmService(deps_ready=lambda: True,
+                          analyze_provider=lambda s, q, r, g: None)
     status, payload = _call_analyze(service.wsgi_app, "symbol=not+a+ticker")
     assert status == 404
-    assert payload["error"] == "invalid_symbol"
+    assert payload["error"] == "invalid_subject"
 
 
 def test_analyze_get_returns_synthesis():
     captured = {}
 
-    def provider(symbol, question, refresh):
-        captured["args"] = (symbol, question, refresh)
-        return {"query": f"analyze {symbol}", "results": [], "synthesis": "grounded prose"}
+    def provider(subject, question, refresh, group):
+        captured["args"] = (subject, question, refresh, group)
+        return {"query": f"analyze {subject}", "results": [], "synthesis": "grounded prose"}
 
     service = WarmService(deps_ready=lambda: True, analyze_provider=provider)
     status, payload = _call_analyze(service.wsgi_app, "symbol=PLTR&question=overvalued%3F&refresh=1")
     assert status == 200
     assert payload["synthesis"] == "grounded prose"
-    assert captured["args"] == ("PLTR", "overvalued?", True)
+    # symbol is the subject alias; no explicit group -> None (app default)
+    assert captured["args"] == ("PLTR", "overvalued?", True, None)
+
+
+def test_analyze_subject_and_group_params():
+    captured = {}
+
+    def provider(subject, question, refresh, group):
+        captured["args"] = (subject, question, refresh, group)
+        return {"synthesis": "health prose"}
+
+    service = WarmService(deps_ready=lambda: True, analyze_provider=provider)
+    status, payload = _call_analyze(service.wsgi_app, "subject=sleep&group=health")
+    assert status == 200
+    assert captured["args"] == ("sleep", None, False, "health")
 
 
 def test_analyze_post_returns_synthesis():
-    def provider(symbol, question, refresh):
-        return {"symbol": symbol, "question": question, "synthesis": "post prose"}
+    def provider(subject, question, refresh, group):
+        return {"subject": subject, "question": question, "group": group,
+                "synthesis": "post prose"}
 
     service = WarmService(deps_ready=lambda: True, analyze_provider=provider)
-    body = json.dumps({"symbol": "PLTR", "question": "news?"}).encode("utf-8")
+    body = json.dumps({"subject": "PLTR", "question": "news?", "group": "equity"}).encode("utf-8")
     status, payload = _call_analyze(service.wsgi_app, method="POST", body=body)
     assert status == 200
     assert payload["synthesis"] == "post prose"
     assert payload["question"] == "news?"
+    assert payload["group"] == "equity"
 
 
 # ── /playbook route (0DTE SPX playbook) ──────────────────────────────────────
