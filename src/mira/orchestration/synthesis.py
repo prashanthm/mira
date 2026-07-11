@@ -1,0 +1,340 @@
+"""LLM synthesis over multi-facet analyze results — the fix for terse answers.
+
+The deterministic ``supervisor._synthesize`` concatenates ``[domain] {json}`` —
+which is why "what should I do about INDA?" surfaced a bare "MONITOR". This node
+takes the fan-out results + the user's question + optional conversation context
+and asks an LLM to weave them into **grounded multi-facet prose**, under a strict
+system prompt: synthesize ONLY what the tools returned, cite the facet a claim
+came from, and NEVER invent a number the tools didn't provide.
+
+Model selection rides the ADR-052 tier plane: synthesis asks for the ``deep``
+tier and playbook polish the ``light`` tier, so the gateway's router (via
+``MODEL_ROUTES``) picks the concrete model — no per-task env knobs. The
+composition root passes an agent-bound gateway view (``gateway.for_agent``)
+whose ``chat`` threads the tier; a plain provider without ``chat`` (or without
+a ``tier`` parameter) still works, it just uses its configured default model.
+
+Fail-safe: with no LLM (or an LLM error), synthesis falls back to a deterministic
+**readable** digest of the facets — still far better than raw JSON, and it never
+fabricates. So the node degrades, it never blanks the answer.
+"""
+
+from __future__ import annotations
+
+import inspect
+import json
+from collections.abc import Mapping
+from typing import Any
+
+from mira.model.tiering import ModelTier
+from mira.providers.protocols import ILLMProvider
+
+#: Tier requested per synthesis task (ADR-052). Facet grounding is deterministic
+#: tool calls (no LLM); weaving them into decision-useful prose is the hard,
+#: quality-sensitive step — so synthesis asks for the deep tier. Playbook polish
+#: only rewrites an already-correct templated draft — light is plenty.
+SYNTHESIS_TIER = ModelTier.DEEP.value
+PLAYBOOK_TIER = ModelTier.LIGHT.value
+
+
+def _invoke(llm: ILLMProvider, system: str, user: str, *, tier: str) -> str:
+    """One system+user chat turn, tier-routed when the provider supports it.
+
+    An agent-bound gateway view exposes ``chat(messages, tier=...)`` — the tier
+    reaches the router and picks the model. A bare provider ``chat`` without a
+    ``tier`` parameter is called without it; a provider with no ``chat`` at all
+    degrades to ``complete`` over the concatenated prompt. Exceptions propagate
+    (call sites own the fallback contract).
+    """
+    chat = getattr(llm, "chat", None)
+    if chat is None:
+        return str(llm.complete(f"{system}\n\n{user}") or "").strip()
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": user},
+    ]
+    kwargs: dict[str, Any] = {}
+    try:
+        if "tier" in inspect.signature(chat).parameters:
+            kwargs["tier"] = tier
+    except (TypeError, ValueError):  # builtins/uninspectable callables: skip tier
+        pass
+    reply = chat(messages, **kwargs)
+    return str(getattr(reply, "text", "") or "").strip()
+
+_SYSTEM_PROMPT = (
+    "You are a portfolio analysis synthesizer. You are given the raw results of "
+    "several analysis FACETS for one ticker (technical, fundamental, news, and a "
+    "position/tax advisor), each already grounded in read-only portfolio-engine "
+    "tools. Write a concise, decision-useful synthesis for the user.\n\n"
+    "HARD RULES:\n"
+    "1. Use ONLY facts present in the facet results below. Never invent or "
+    "estimate a number, price, date, or recommendation the tools did not return.\n"
+    "2. When you state a figure or a call (e.g. a recommendation like MONITOR or "
+    "CLOSE_AND_BOOK_LOSS), name the facet it came from.\n"
+    "3. If a facet returned nothing useful (empty, tool_error, or ETF nulls), say "
+    "so plainly rather than filling the gap.\n"
+    "4. Treat news sentiment as an ESTIMATED headline lean, not fact.\n"
+    "5. Be direct and multi-faceted: cover market/technical read, valuation, news, "
+    "and the position/tax angle, then a one-line net takeaway. No preamble, no "
+    "disclaimers beyond what the rules require."
+)
+
+_MAX_FACET_JSON = 1400  # cap each facet's digest so the prompt stays bounded
+
+
+def _facet_digest(results: list[dict[str, Any]]) -> str:
+    """A compact, labeled digest of each facet answer for the prompt.
+
+    Keeps the structure the model needs (facet name + its grounded answer) while
+    trimming oversize payloads (e.g. full bar arrays) so the context stays small.
+    Errors are kept VISIBLE so the model reports them instead of guessing.
+    """
+    blocks: list[str] = []
+    for result in results or []:
+        domain = result.get("domain", "?")
+        if result.get("error"):
+            blocks.append(f"### {domain}\nERROR: {result['error']}")
+            continue
+        answer = result.get("answer")
+        answer = answer if isinstance(answer, Mapping) else {}
+        trimmed = _trim(answer)
+        blocks.append(f"### {domain}\n{json.dumps(trimmed, sort_keys=True, default=str)}")
+    return "\n\n".join(blocks)
+
+
+def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
+    """Drop the heaviest keys (raw bar arrays) so a facet digest stays bounded."""
+    out = dict(answer)
+    # The technical facet nests bars under levels.bars — heavy and unneeded for
+    # synthesis (the model reasons over the computed levels, not raw OHLCV).
+    levels = out.get("levels")
+    if isinstance(levels, Mapping) and "bars" in levels:
+        levels = dict(levels)
+        levels["bars"] = f"<{len(levels['bars'])} bars omitted>"
+        out["levels"] = levels
+    blob = json.dumps(out, default=str)
+    if len(blob) > _MAX_FACET_JSON:
+        return {"_truncated": blob[:_MAX_FACET_JSON]}
+    return out
+
+
+def _fallback(symbol: str, results: list[dict[str, Any]]) -> str:
+    """Deterministic readable digest when no LLM is available — never fabricates.
+
+    One line per facet naming what it returned (recommendation, valuation head,
+    news lean), so even offline the answer beats raw ``[domain] {json}``.
+    """
+    lines = [f"Multi-facet read for {symbol} (deterministic — no synthesis model):"]
+    for result in results or []:
+        domain = result.get("domain", "?")
+        if result.get("error"):
+            lines.append(f"- {domain}: error — {result['error']}")
+            continue
+        answer = result.get("answer") if isinstance(result.get("answer"), Mapping) else {}
+        lines.append(f"- {domain}: {_one_line(domain, answer)}")
+    return "\n".join(lines)
+
+
+def _one_line(domain: str, answer: Mapping[str, Any]) -> str:
+    """A short human line for one facet answer (best-effort, structural)."""
+    if answer.get("status") == "tool_error":
+        return f"tool error ({answer.get('tool', '?')})"
+    if domain == "technical":
+        analysis = answer.get("analysis")
+        if isinstance(analysis, Mapping):
+            decisions = analysis.get("decisions")
+            if isinstance(decisions, list) and decisions:
+                d = decisions[0]
+                if isinstance(d, Mapping):
+                    return f"recommendation {d.get('recommendation', '?')} ({d.get('rule', '?')})"
+        return "no decision journal entry"
+    if domain == "fundamental":
+        fund = answer.get("fundamentals")
+        inner = fund.get("fundamentals") if isinstance(fund, Mapping) else None
+        if isinstance(inner, Mapping):
+            pe = inner.get("pe")
+            target = inner.get("target_mean")
+            return f"P/E {pe if pe is not None else 'n/a'}, mean target {target if target is not None else 'n/a'}"
+        return "no fundamentals"
+    if domain == "news":
+        news = answer.get("news")
+        inner = news.get("news") if isinstance(news, Mapping) else None
+        if isinstance(inner, Mapping):
+            items = inner.get("items") or []
+            sent = inner.get("sentiment") or {}
+            band = sent.get("band", "?") if isinstance(sent, Mapping) else "?"
+            return f"{len(items)} headline(s), sentiment lean {band} (estimated)"
+        return "no news"
+    # advisor / other: surface a recommendation if present, else compact json.
+    for key in ("recommendation", "actions", "recommendations"):
+        if key in answer:
+            return f"{key}: {json.dumps(answer[key], default=str)[:160]}"
+    return json.dumps(dict(answer), sort_keys=True, default=str)[:160]
+
+
+def synthesize_analysis(
+    llm: ILLMProvider | None,
+    symbol: str,
+    results: list[dict[str, Any]],
+    *,
+    question: str | None = None,
+    context: str | None = None,
+) -> str:
+    """Weave fan-out ``results`` into grounded multi-facet prose via the LLM.
+
+    ``llm`` None (or any LLM failure) → the deterministic :func:`_fallback`.
+    ``question`` is the user's actual ask; ``context`` is optional prior
+    conversation (so "what do you mean?" follow-ups have grounding).
+    """
+    if not results:
+        return f"No analysis facets returned results for {symbol}."
+    if llm is None:
+        return _fallback(symbol, results)
+
+    ask = question.strip() if question and question.strip() else f"What should I do about {symbol}?"
+    user_parts = [f"Ticker: {symbol}", f"User question: {ask}"]
+    if context and context.strip():
+        user_parts.append(f"Prior conversation:\n{context.strip()}")
+    user_parts.append("Facet results:\n" + _facet_digest(results))
+    user_prompt = "\n\n".join(user_parts)
+
+    try:
+        text = _invoke(llm, _SYSTEM_PROMPT, user_prompt, tier=SYNTHESIS_TIER)
+        return text or _fallback(symbol, results)
+    except Exception:  # noqa: BLE001 — any LLM/adapter failure degrades, never blanks
+        return _fallback(symbol, results)
+
+
+# ============================================================ 0DTE SPX playbook
+
+_PLAYBOOK_SYSTEM_PROMPT = (
+    "You rewrite a deterministic 0DTE SPX options playbook into plain, simple "
+    "English a busy trader reads in 30 seconds. You are given a TEMPLATED DRAFT "
+    "(already correct) and the raw SCAFFOLD it came from.\n\n"
+    "HARD RULES:\n"
+    "1. Use ONLY numbers present in the draft/scaffold. NEVER invent or change a "
+    "level, strike, date, or percentage. If it's not in the data, don't say it.\n"
+    "2. Keep every setup CONDITIONAL and tied to its trigger level (\"if SPX holds "
+    "above 7481 ...\"). Never turn it into a bare \"buy calls now.\"\n"
+    "3. Lead with the one-line regime read (gamma + the day's catalyst if any). "
+    "Then the key levels to watch, then the 2-3 setups in the trader's own terms, "
+    "then a short 'what to watch' line.\n"
+    "4. Simple words. Short sentences. No jargon the draft didn't already use; if "
+    "you use a term like 'gamma flip' or 'put wall', say in a few words what it "
+    "means the first time.\n"
+    "5. Keep it tight — aim for ~150-220 words. Preserve the caveats at the end "
+    "verbatim in one short line (0DTE-blind, context-not-a-signal, not advice)."
+)
+
+
+def _fmt_num(v) -> str:
+    try:
+        f = float(v)
+        return f"{f:.0f}" if abs(f - round(f)) < 0.05 else f"{f:.1f}"
+    except (TypeError, ValueError):
+        return str(v)
+
+
+def playbook_template(scaffold: Mapping[str, Any]) -> str:
+    """Deterministic plain-text playbook from the scaffold — the ground truth and
+    the fallback when no LLM is available. Never fabricates: every line is a
+    scaffold value. Mira's LLM polish rewrites THIS into simpler prose."""
+    reg = scaffold.get("regime") or {}
+    lines: list[str] = []
+    sess = scaffold.get("session", "next session")
+    lines.append(f"0DTE SPX playbook for {sess}.")
+
+    # regime line
+    bits = []
+    if reg.get("gamma"):
+        bits.append(f"dealer gamma is {reg['gamma']}")
+    if reg.get("spot") is not None:
+        bits.append(f"spot ~{_fmt_num(reg['spot'])}")
+    if reg.get("vix") is not None:
+        bits.append(f"VIX {_fmt_num(reg['vix'])}"
+                    + (f" ({reg['vix_band']})" if reg.get("vix_band") else ""))
+    if reg.get("vwap_regime"):
+        bits.append(reg["vwap_regime"])
+    if bits:
+        lines.append("Regime: " + ", ".join(bits) + ".")
+
+    # catalyst
+    cat = scaffold.get("catalysts") or {}
+    if cat.get("today"):
+        lines.append(f"Catalyst TODAY: {cat['today']} — expect bigger moves, size down.")
+    elif cat.get("next_session"):
+        lines.append(f"Catalyst next session: {cat['next_session']}.")
+    opex = scaffold.get("opex") or {}
+    if opex.get("today_is_triple_witching"):
+        lines.append("Triple-witching OpEx today — gamma rolls off, regime can shift after.")
+
+    # key levels (top of the ladder around spot)
+    ladder = scaffold.get("level_ladder") or []
+    if ladder:
+        lines.append("Key levels: " + " · ".join(
+            f"{_fmt_num(r['price'])} ({r['kind']})" for r in ladder[:8]) + ".")
+
+    # setups
+    for i, su in enumerate(scaffold.get("setups") or [], 1):
+        trig = su.get("trigger", ""); struct = su.get("structure", "")
+        lines.append(f"Setup {i} — {trig}: {struct}")
+
+    # a lookback edge if present
+    edge = ((scaffold.get("edges") or {}).get("gex_regime_next_day_range") or {})
+    if edge.get("read"):
+        lines.append("Lookback: " + edge["read"])
+
+    for c in scaffold.get("caveats") or []:
+        lines.append(c)
+    return "\n".join(lines)
+
+
+def synthesize_playbook(
+    llm: ILLMProvider | None,
+    scaffold: Mapping[str, Any],
+    *,
+    context: str | None = None,
+) -> str:
+    """Plain-English 0DTE SPX playbook: templated draft → LLM polish.
+
+    The templated draft is always the ground truth; the LLM only rewrites it into
+    simpler prose (same numbers, same conditional setups). ``llm`` None or any LLM
+    failure returns the templated draft unchanged — it never blanks, never
+    fabricates."""
+    draft = playbook_template(scaffold)
+    if llm is None:
+        return draft
+
+    user_parts = ["TEMPLATED DRAFT (rewrite this into simple prose — keep all numbers):",
+                  draft]
+    if context and context.strip():
+        user_parts.append(f"Extra context:\n{context.strip()}")
+    # the scaffold as JSON so the model can see structure, but the draft is authoritative
+    user_parts.append("Raw scaffold (reference only; the draft is authoritative):\n"
+                      + json.dumps(_trim_scaffold(scaffold), default=str)[:2000])
+    user_prompt = "\n\n".join(user_parts)
+
+    try:
+        text = _invoke(llm, _PLAYBOOK_SYSTEM_PROMPT, user_prompt, tier=PLAYBOOK_TIER)
+        return text or draft
+    except Exception:  # noqa: BLE001 — degrade to the templated draft, never blank
+        return draft
+
+
+def _trim_scaffold(scaffold: Mapping[str, Any]) -> dict[str, Any]:
+    """Drop the heaviest keys so the reference JSON stays bounded."""
+    out = dict(scaffold)
+    chart = out.get("chart")
+    if isinstance(chart, Mapping):
+        out["chart"] = {k: v for k, v in chart.items() if k not in ("resistance", "support")}
+    return out
+
+
+__all__ = [
+    "PLAYBOOK_TIER",
+    "SYNTHESIS_TIER",
+    "playbook_template",
+    "synthesize_analysis",
+    "synthesize_playbook",
+]

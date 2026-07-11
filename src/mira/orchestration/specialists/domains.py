@@ -21,3 +21,22 @@ ADVISOR_DOMAIN = DomainSpec(
     domain_id="advisor",
     tool_prefixes=frozenset({"vantage."}),
 )
+
+# Multi-facet analysis domains (the analyze graph). Each fans one query to ONE
+# facet tool and returns the attributed result; the synthesis node weaves them.
+# All bind the ``vantage.*`` surface (filtered per-facet by their inference to a
+# single tool), so no portfolio math happens in Mira.
+TECHNICAL_DOMAIN = DomainSpec(
+    domain_id="technical",
+    tool_prefixes=frozenset({"vantage."}),
+)
+
+FUNDAMENTAL_DOMAIN = DomainSpec(
+    domain_id="fundamental",
+    tool_prefixes=frozenset({"vantage."}),
+)
+
+NEWS_DOMAIN = DomainSpec(
+    domain_id="news",
+    tool_prefixes=frozenset({"vantage."}),
+)

@@ -1,0 +1,102 @@
+"""Facet specialists (technical/fundamental/news) — grounded, ticker-routed, degrade-safe."""
+
+from __future__ import annotations
+
+from typing import Any
+
+from mira.orchestration.specialist_scaffold import build_specialist_subgraph
+from mira.orchestration.specialists.domains import (
+    FUNDAMENTAL_DOMAIN,
+    NEWS_DOMAIN,
+    TECHNICAL_DOMAIN,
+)
+from mira.orchestration.specialists.facets import (
+    FACET_DOMAIN_IDS,
+    facet_registry_entries,
+    _infer_fundamental,
+    _infer_news,
+    _infer_technical,
+)
+
+from tests.fake_vantage import fake_vantage_registered_tools
+
+
+def _tech(calls=None):
+    return build_specialist_subgraph(
+        TECHNICAL_DOMAIN, fake_vantage_registered_tools(calls=calls),
+        query_inference=_infer_technical)
+
+
+def _fund(calls=None):
+    return build_specialist_subgraph(
+        FUNDAMENTAL_DOMAIN, fake_vantage_registered_tools(calls=calls),
+        query_inference=_infer_fundamental)
+
+
+def _news(calls=None):
+    return build_specialist_subgraph(
+        NEWS_DOMAIN, fake_vantage_registered_tools(calls=calls),
+        query_inference=_infer_news)
+
+
+# ------------------------------------------------------------ technical facet
+
+def test_technical_calls_analysis_and_bars_with_symbol():
+    calls: list[tuple[str, dict[str, Any]]] = []
+    result = _tech(calls).invoke("analyze PLTR", thread_id="t")
+    assert ("vantage.analysis", {"symbol": "PLTR"}) in calls
+    assert ("vantage.bars", {"symbol": "PLTR"}) in calls
+    assert result.answer["facet"] == "technical"
+    # grounded: carries the analysis decision + levels
+    assert result.answer["analysis"]["decisions"][0]["symbol"] == "BBAI"
+    assert "support" in result.answer["levels"]["levels"]
+
+
+# ------------------------------------------------------------ fundamental facet
+
+def test_fundamental_calls_fundamentals_with_symbol():
+    calls: list[tuple[str, dict[str, Any]]] = []
+    result = _fund(calls).invoke("analyze PLTR", thread_id="f")
+    assert ("vantage.fundamentals", {"symbol": "PLTR"}) in calls
+    assert result.answer["facet"] == "fundamental"
+    assert result.answer["fundamentals"]["fundamentals"]["pe"] == 210.5
+
+
+# ------------------------------------------------------------ news facet
+
+def test_news_calls_news_with_symbol():
+    calls: list[tuple[str, dict[str, Any]]] = []
+    result = _news(calls).invoke("analyze PLTR", thread_id="n")
+    assert ("vantage.news", {"symbol": "PLTR"}) in calls
+    assert result.answer["facet"] == "news"
+    news = result.answer["news"]["news"]
+    assert news["sentiment"]["band"] == "positive"
+    assert news["sentiment"]["estimated"] is True
+
+
+# ------------------------------------------------------------ degrade contract
+
+def test_facet_tool_failure_degrades_to_structured_observation():
+    # vantage.news failing -> the news facet still returns, with a tool_error obs.
+    tools = fake_vantage_registered_tools(failing={"vantage.news"})
+    spec = build_specialist_subgraph(NEWS_DOMAIN, tools, query_inference=_infer_news)
+    result = spec.invoke("analyze PLTR", thread_id="n")
+    assert result.error is None  # never crashes the graph
+    assert result.answer["news"]["status"] == "tool_error"
+
+
+# ------------------------------------------------------------ registry entries
+
+def test_facet_registry_entries_register_all_three():
+    from mira.orchestration.agent_cards import AgentCardRegistry
+
+    registry = AgentCardRegistry()
+    for card, factory in facet_registry_entries(fake_vantage_registered_tools()):
+        registry.register(card, factory)
+    names = {c.name for c in registry.cards()}
+    assert set(FACET_DOMAIN_IDS) <= names
+    # each factory resolves to a working specialist bound to its own facet
+    tech = registry.resolve("technical")
+    assert tech.domain_spec.domain_id == "technical"
+    news = registry.resolve("news")
+    assert news.invoke("analyze PLTR", thread_id="r").answer["facet"] == "news"

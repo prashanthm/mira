@@ -69,6 +69,15 @@ TurnHandlerFactory = Callable[[str, str], WSGIApp]
 # Kept as a plain callable so this module stays framework-free (report
 # generation and caching live in mira.orchestration.insights / mira.app).
 InsightsProvider = Callable[[str, bool], dict[str, Any] | None]
+# Multi-facet analyze provider: (symbol, question, refresh) -> the synthesized
+# fan-out result dict for a ticker, or None for a blank/invalid symbol. Same
+# framework-free callable shape as InsightsProvider (generation/caching live in
+# mira.orchestration.analyze).
+AnalyzeProvider = Callable[[str, "str | None", bool], dict[str, Any] | None]
+# 0DTE SPX playbook provider: (date, refresh) -> the narrated playbook dict, or
+# None. Same framework-free callable shape (generation in
+# mira.orchestration.playbook).
+PlaybookProvider = Callable[["str | None", bool], dict[str, Any] | None]
 
 LIVE_PATH = "/health"
 READY_PATH = "/health/ready"
@@ -77,6 +86,8 @@ EXPLAIN_PATH = "/explain"
 AGENT_CARDS_PATH = "/.well-known/agent-cards"
 TURN_PATH = "/turn"
 INSIGHTS_PATH = "/insights"
+ANALYZE_PATH = "/analyze"
+PLAYBOOK_PATH = "/playbook"
 
 DEFAULT_TURN_THREAD_ID = "web"
 
@@ -90,6 +101,8 @@ _ROUTE_PATHS = frozenset(
         AGENT_CARDS_PATH,
         TURN_PATH,
         INSIGHTS_PATH,
+        ANALYZE_PATH,
+        PLAYBOOK_PATH,
     }
 )
 
@@ -111,6 +124,8 @@ class WarmService:
         agent_cards: Callable[[], list[dict[str, Any]]] | None = None,
         turn_handler: TurnHandlerFactory | None = None,
         insights_provider: InsightsProvider | None = None,
+        analyze_provider: AnalyzeProvider | None = None,
+        playbook_provider: PlaybookProvider | None = None,
     ) -> None:
         self._deps_ready = deps_ready or (lambda: False)
         self._drain_timeout = drain_timeout
@@ -119,6 +134,8 @@ class WarmService:
         self._agent_cards = agent_cards
         self._turn_handler = turn_handler
         self._insights_provider = insights_provider
+        self._analyze_provider = analyze_provider
+        self._playbook_provider = playbook_provider
         self._draining = False
         self._startup_complete = False
         # Per-scope tokens (object identity), not thread id: nested track_in_flight
@@ -233,6 +250,10 @@ class WarmService:
             return self._handle_turn(environ, start_response)
         if path == INSIGHTS_PATH:
             return self._handle_insights(environ, start_response)
+        if path == ANALYZE_PATH:
+            return self._handle_analyze(environ, start_response)
+        if path == PLAYBOOK_PATH:
+            return self._handle_playbook(environ, start_response)
         return self._json_response(start_response, 404, {"error": "not_found"})
 
     def _handle_turn(
@@ -316,6 +337,81 @@ class WarmService:
         if report is None:
             return self._json_response(start_response, 404, {"error": "unknown_domain"})
         return self._json_response(start_response, 200, report)
+
+    def _handle_analyze(
+        self,
+        environ: dict[str, Any],
+        start_response: StartResponse,
+    ) -> list[bytes]:
+        """Serve a multi-facet analysis for one ticker from the analyze provider.
+
+        GET ``?symbol=SYM[&question=...][&refresh=1]`` or POST
+        ``{"symbol","question"?,"refresh"?}``. Transport-only, following the
+        ``/insights`` pattern: unconfigured → 503; missing ``symbol`` → 400;
+        provider returns None (blank/invalid symbol) → 404; otherwise 200 with
+        the synthesized fan-out result (``{query, results, synthesis, ...}``).
+        """
+        if self._analyze_provider is None:
+            return self._json_response(
+                start_response, 503, {"error": "analyze_unavailable"}
+            )
+        method = environ.get("REQUEST_METHOD", "GET").upper()
+        symbol = ""
+        question: str | None = None
+        refresh = False
+        if method == "POST":
+            try:
+                body = _read_json_body(environ)
+            except ValueError as exc:
+                return self._json_response(
+                    start_response, 400, {"error": "invalid_request", "detail": str(exc)}
+                )
+            if not isinstance(body, dict):
+                return self._json_response(
+                    start_response, 400,
+                    {"error": "invalid_request", "detail": "body must be a JSON object"},
+                )
+            symbol = str(body.get("symbol", "") or "")
+            q = body.get("question")
+            question = str(q) if isinstance(q, str) and q.strip() else None
+            refresh = bool(body.get("refresh"))
+        else:
+            params = urllib.parse.parse_qs(environ.get("QUERY_STRING", ""))
+            symbol = (params.get("symbol") or [""])[0]
+            q = (params.get("question") or [""])[0]
+            question = q if q.strip() else None
+            refresh = (params.get("refresh") or [""])[0].lower() in {"1", "true"}
+
+        if not symbol.strip():
+            return self._json_response(
+                start_response, 400, {"error": "missing_parameter", "detail": "symbol required"},
+            )
+        result = self._analyze_provider(symbol, question, refresh)
+        if result is None:
+            return self._json_response(start_response, 404, {"error": "invalid_symbol"})
+        return self._json_response(start_response, 200, result)
+
+    def _handle_playbook(
+        self,
+        environ: dict[str, Any],
+        start_response: StartResponse,
+    ) -> list[bytes]:
+        """Serve the narrated 0DTE SPX playbook from the playbook provider.
+
+        GET ``?date=YYYY-MM-DD&refresh=1`` (both optional; latest when no date).
+        Unconfigured → 503. Returns ``{available, session, scaffold, narrative,
+        draft}``; ``{available:false}`` (200) when no playbook has been generated.
+        Context, not a signal (ADR-008)."""
+        if self._playbook_provider is None:
+            return self._json_response(
+                start_response, 503, {"error": "playbook_unavailable"})
+        params = urllib.parse.parse_qs(environ.get("QUERY_STRING", ""))
+        date = (params.get("date") or [""])[0] or None
+        refresh = (params.get("refresh") or [""])[0].lower() in {"1", "true"}
+        result = self._playbook_provider(date, refresh)
+        if result is None:
+            return self._json_response(start_response, 200, {"available": False})
+        return self._json_response(start_response, 200, result)
 
     def _handle_explain(
         self,

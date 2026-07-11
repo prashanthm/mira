@@ -119,6 +119,7 @@ def build_live_registry(
     """
     from mira.orchestration.mcp_bridge import registered_tools_from_mcp
     from mira.orchestration.specialists.advisor import advisor_registry_entry
+    from mira.orchestration.specialists.facets import facet_registry_entries
 
     registry = base if base is not None else AgentCardRegistry()
     vantage_tools = [
@@ -127,8 +128,13 @@ def build_live_registry(
         if str(getattr(tool, "name", "") or "").startswith("vantage.")
     ]
     if vantage_tools:
-        card, factory = advisor_registry_entry(registered_tools_from_mcp(vantage_tools))
+        bridged = registered_tools_from_mcp(vantage_tools)
+        # The advisor (position/tax) plus the analyze-graph facets
+        # (technical/fundamental/news), all over the same vantage.* surface.
+        card, factory = advisor_registry_entry(bridged)
         registry.register(card, factory)
+        for card, factory in facet_registry_entries(bridged):
+            registry.register(card, factory)
     return registry
 
 

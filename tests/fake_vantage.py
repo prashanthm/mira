@@ -498,6 +498,82 @@ TRADE_STATS_RESULT = _envelope(
     ],
 )
 
+# ── analysis facets (bars / fundamentals / news) ─────────────────────────────
+# Shapes copied from the Vantage MCP surface: vantage.bars (levels), the new
+# vantage.fundamentals (valuation, nulls for ETFs), and vantage.news (aggregated
+# headlines + a headline sentiment lean, estimated=true).
+
+BARS_RESULT = _envelope(
+    "bars",
+    symbol="PLTR",
+    timeframe="daily",
+    no_bars=False,
+    bars=[
+        {"date": "2025-07-14", "open": 128.0, "high": 130.1, "low": 127.5,
+         "close": 129.3, "volume": 41_000_000},
+    ],
+    levels={
+        "support": [{"price": 128.63, "strength": 2.0, "kind": "support"}],
+        "resistance": [{"price": 132.56, "strength": 3.0, "kind": "resistance"}],
+    },
+    first_bar="2015-07-15",
+    last_bar="2025-07-14",
+    bar_count=2517,
+)
+
+FUNDAMENTALS_RESULT = _envelope(
+    "fundamentals",
+    symbol="PLTR",
+    no_data=False,
+    fundamentals={
+        "symbol": "PLTR",
+        "name": "Palantir Technologies Inc.",
+        "sector": "Technology",
+        "market_cap": 295_000_000_000.0,
+        "pe": 210.5,
+        "forward_pe": 180.2,
+        "week52_low": 20.33,
+        "week52_high": 133.49,
+        "target_mean": 98.4,
+        "dividend_yield": None,
+        "beta": 2.65,
+    },
+)
+
+NEWS_RESULT = _envelope(
+    "news",
+    symbol="PLTR",
+    no_news=False,
+    news={
+        "symbol": "PLTR",
+        "items": [
+            {
+                "title": "Palantir surges after record profit and raised guidance",
+                "summary": "Strong quarter beats estimates.",
+                "publisher": "Reuters",
+                "published": "2025-07-14T13:00:00Z",
+                "url": "https://example.com/pltr-1",
+                "source": "yfinance",
+            },
+            {
+                "title": "Analysts debate Palantir's rich valuation",
+                "summary": "Bulls and bears weigh in.",
+                "publisher": "Bloomberg",
+                "published": "2025-07-13T18:30:00Z",
+                "url": "https://example.com/pltr-2",
+                "source": "yfinance",
+            },
+        ],
+        "sentiment": {
+            "score": 0.5,
+            "band": "positive",
+            "n_headlines": 2,
+            "method": "lexicon",
+            "estimated": True,
+        },
+    },
+)
+
 RESULTS: dict[str, dict[str, Any]] = {
     "vantage.positions": POSITIONS_RESULT,
     "vantage.allocation": ALLOCATION_RESULT,
@@ -509,6 +585,9 @@ RESULTS: dict[str, dict[str, Any]] = {
     "vantage.position_actions": POSITION_ACTIONS_RESULT,
     "vantage.roundtrips": ROUNDTRIPS_RESULT,
     "vantage.trade_stats": TRADE_STATS_RESULT,
+    "vantage.bars": BARS_RESULT,
+    "vantage.fundamentals": FUNDAMENTALS_RESULT,
+    "vantage.news": NEWS_RESULT,
 }
 
 _PERMISSIVE_SCHEMA: dict[str, Any] = {"type": "object", "additionalProperties": True}

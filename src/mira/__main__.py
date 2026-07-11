@@ -1,9 +1,12 @@
 """``python -m mira`` entrypoint (e03-f07).
 
 Builds the agent service composition via :func:`mira.app.build_app` and serves
-the warm service WSGI app over the stdlib :mod:`wsgiref` server for the local
-profile. ``--check`` boots the composition and exits 0 without binding a socket
-(a network-free boot smoke); the default action serves until interrupted.
+the warm service WSGI app. The default server is waitress (a real threaded WSGI
+server) — the stdlib wsgiref dev server is single-threaded and mishandles
+streamed (SSE) responses behind a Docker Desktop port-forward, silently
+returning empty /turn results. wsgiref remains a fallback only when waitress is
+unavailable. ``--check`` boots the composition and exits 0 without binding a
+socket (a network-free boot smoke); the default action serves until interrupted.
 """
 
 from __future__ import annotations
@@ -13,7 +16,6 @@ import os
 import sys
 from pathlib import Path
 from typing import Any
-from wsgiref.simple_server import make_server
 
 from mira.app import DEFAULT_PROFILE, build_app
 from mira.config.profiles import PROFILE_ENV
@@ -71,13 +73,38 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     app.service.register_sigterm_handler()
-    with make_server(args.host, args.port, app.wsgi_app) as httpd:
-        print(f"mira: serving on {args.host}:{args.port} (profile {app.profile.name!r})", file=sys.stderr)
+    _serve(app.wsgi_app, host=args.host, port=args.port, profile=app.profile.name,
+           on_shutdown=app.service.begin_shutdown)
+    return 0
+
+
+def _serve(wsgi_app: Any, *, host: str, port: int, profile: str,
+           on_shutdown) -> None:
+    """Serve the WSGI app — waitress (threaded, production) preferred, wsgiref
+    (single-threaded, dev-only) as a fallback when waitress is not installed."""
+    try:
+        from waitress import serve as _waitress_serve
+    except ImportError:
+        _waitress_serve = None
+
+    if _waitress_serve is not None:
+        print(f"mira: serving on {host}:{port} (profile {profile!r}, waitress)", file=sys.stderr)
+        try:
+            # threads: a handful is plenty for a single-user advisor; SSE turns
+            # can be long-running, so allow a few concurrent so health probes and
+            # the SPA's parallel fetches never head-of-line block a streamed turn.
+            _waitress_serve(wsgi_app, host=host, port=port, threads=8)
+        except KeyboardInterrupt:
+            on_shutdown()
+        return
+
+    from wsgiref.simple_server import make_server
+    with make_server(host, port, wsgi_app) as httpd:
+        print(f"mira: serving on {host}:{port} (profile {profile!r}, wsgiref dev)", file=sys.stderr)
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            app.service.begin_shutdown()
-    return 0
+            on_shutdown()
 
 
 if __name__ == "__main__":

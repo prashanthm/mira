@@ -232,10 +232,37 @@ def build_app(
     # domain. Reports generate on first request (a scheduled job hitting the
     # endpoint periodically keeps them warm); ?refresh=1 regenerates.
     insights_provider = None
+    analyze_provider = None
     if registry is not None:
         from mira.orchestration.insights import cached_insights_provider
 
         insights_provider = cached_insights_provider(registry)
+
+        # /analyze: multi-facet fan-out (technical/fundamental/news + advisor)
+        # synthesized by the LLM into grounded prose. Synthesis goes through the
+        # tier-aware gateway (ADR-052) as agent "synthesis" and asks for the
+        # deep tier, so MODEL_ROUTES picks the strong model; without routes the
+        # gateway passes through to the bundle's LLM unchanged.
+        from mira.orchestration.analyze import cached_analyze_provider
+
+        analyze_provider = cached_analyze_provider(
+            registry, llm=gateway.for_agent("synthesis"))
+
+    # /playbook: the daily 0DTE SPX playbook. Fetches the deterministic scaffold
+    # over the vantage.spx_playbook MCP tool and narrates it (templated draft +
+    # LLM plain-English polish on the light tier — it only rewrites an
+    # already-correct draft). Available whenever the tool was discovered —
+    # independent of the agent-card registry.
+    playbook_provider = None
+    playbook_tools = [t for t in tools
+                      if str(getattr(t, "name", "") or "") == "vantage.spx_playbook"]
+    if playbook_tools:
+        from mira.orchestration.mcp_bridge import registered_tools_from_mcp
+        from mira.orchestration.playbook import cached_playbook_provider
+
+        playbook_provider = cached_playbook_provider(
+            registered_tools_from_mcp(playbook_tools),
+            llm=gateway.for_agent("playbook"))
 
     # The service needs the /turn factory at construction time, but the factory
     # is a method of the App composed *around* the service — bind it through a
@@ -267,6 +294,8 @@ def build_app(
         deps_ready=lambda: True,
         turn_handler=_turn_handler,
         insights_provider=insights_provider,
+        analyze_provider=analyze_provider,
+        playbook_provider=playbook_provider,
         agent_cards=agent_cards,
         trace_store=trace_store,
     )

@@ -187,3 +187,112 @@ def test_register_sigterm_handler_is_idempotent(_restore_sigterm):
 
     assert callable(first) and callable(second)
     assert first is not signal.SIG_DFL and second is not signal.SIG_DFL
+
+
+# ── /analyze route (ADR-014 follow-on: multi-facet synthesis) ────────────────
+
+
+def _call_analyze(app, query_string="", method="GET", body=b""):
+    status_holder: list[str] = []
+
+    def start_response(status, headers):
+        status_holder.append(status)
+
+    environ = {
+        "REQUEST_METHOD": method,
+        "PATH_INFO": "/analyze",
+        "QUERY_STRING": query_string,
+        "wsgi.input": BytesIO(body),
+        "wsgi.errors": None,
+        "wsgi.url_scheme": "http",
+        "SERVER_NAME": "localhost",
+        "SERVER_PORT": "80",
+        "CONTENT_LENGTH": str(len(body)),
+    }
+    out = b"".join(app(environ, start_response))
+    return int(status_holder[0].split()[0]), json.loads(out.decode("utf-8"))
+
+
+def test_analyze_unconfigured_returns_503():
+    service = WarmService(deps_ready=lambda: True)
+    status, payload = _call_analyze(service.wsgi_app, "symbol=PLTR")
+    assert status == 503
+    assert payload["error"] == "analyze_unavailable"
+
+
+def test_analyze_missing_symbol_returns_400():
+    service = WarmService(deps_ready=lambda: True,
+                          analyze_provider=lambda s, q, r: {"synthesis": "x"})
+    status, payload = _call_analyze(service.wsgi_app, "")
+    assert status == 400
+    assert payload["error"] == "missing_parameter"
+
+
+def test_analyze_invalid_symbol_returns_404():
+    service = WarmService(deps_ready=lambda: True, analyze_provider=lambda s, q, r: None)
+    status, payload = _call_analyze(service.wsgi_app, "symbol=not+a+ticker")
+    assert status == 404
+    assert payload["error"] == "invalid_symbol"
+
+
+def test_analyze_get_returns_synthesis():
+    captured = {}
+
+    def provider(symbol, question, refresh):
+        captured["args"] = (symbol, question, refresh)
+        return {"query": f"analyze {symbol}", "results": [], "synthesis": "grounded prose"}
+
+    service = WarmService(deps_ready=lambda: True, analyze_provider=provider)
+    status, payload = _call_analyze(service.wsgi_app, "symbol=PLTR&question=overvalued%3F&refresh=1")
+    assert status == 200
+    assert payload["synthesis"] == "grounded prose"
+    assert captured["args"] == ("PLTR", "overvalued?", True)
+
+
+def test_analyze_post_returns_synthesis():
+    def provider(symbol, question, refresh):
+        return {"symbol": symbol, "question": question, "synthesis": "post prose"}
+
+    service = WarmService(deps_ready=lambda: True, analyze_provider=provider)
+    body = json.dumps({"symbol": "PLTR", "question": "news?"}).encode("utf-8")
+    status, payload = _call_analyze(service.wsgi_app, method="POST", body=body)
+    assert status == 200
+    assert payload["synthesis"] == "post prose"
+    assert payload["question"] == "news?"
+
+
+# ── /playbook route (0DTE SPX playbook) ──────────────────────────────────────
+
+
+def _call_path(app, path, query_string=""):
+    from io import BytesIO
+    holder = []
+    def sr(s, h): holder.append(s)
+    env = {"REQUEST_METHOD": "GET", "PATH_INFO": path, "QUERY_STRING": query_string,
+           "wsgi.input": BytesIO(b""), "wsgi.url_scheme": "http",
+           "SERVER_NAME": "l", "SERVER_PORT": "80"}
+    body = b"".join(app(env, sr))
+    return int(holder[0].split()[0]), json.loads(body.decode("utf-8"))
+
+
+def test_playbook_unconfigured_returns_503():
+    from mira.core.service import PLAYBOOK_PATH
+    service = WarmService(deps_ready=lambda: True)
+    status, payload = _call_path(service.wsgi_app, PLAYBOOK_PATH)
+    assert status == 503
+    assert payload["error"] == "playbook_unavailable"
+
+
+def test_playbook_serves_provider_result():
+    from mira.core.service import PLAYBOOK_PATH
+    captured = {}
+
+    def provider(date, refresh):
+        captured["args"] = (date, refresh)
+        return {"available": True, "session": "2026-07-08", "narrative": "prose"}
+
+    service = WarmService(deps_ready=lambda: True, playbook_provider=provider)
+    status, payload = _call_path(service.wsgi_app, PLAYBOOK_PATH, "date=2026-07-07&refresh=1")
+    assert status == 200
+    assert payload["narrative"] == "prose"
+    assert captured["args"] == ("2026-07-07", True)

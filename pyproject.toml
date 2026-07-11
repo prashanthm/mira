@@ -13,6 +13,10 @@ dependencies = [
     # Loose bounds (langgraph>=0.2 + langchain-core>=0.3) make pip backtrack for hours.
     "langgraph>=0.3,<0.4",
     "langchain-core>=0.3.36,<0.4",
+    # Production WSGI server. The stdlib wsgiref dev server is single-threaded and
+    # mishandles streamed (SSE) responses behind a Docker Desktop port-forward —
+    # /turn silently returns empty. waitress is a real threaded WSGI server.
+    "waitress>=3.0",
 ]
 
 [project.scripts]
