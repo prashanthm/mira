@@ -20,11 +20,11 @@ extensions) on top of that boundary.
 
 ## ADRs — Mira
 
-All ADRs (001–048) are **Accepted** — with ADR-015 and ADR-016 landing in Phase F, the catalog
+All ADRs (001–051) are **Accepted** — with ADR-015 and ADR-016 landing in Phase F, the catalog
 is fully Accepted and no pending stubs remain. Summaries are one decision-oriented sentence;
 `(Phase X)` marks the roadmap phase a decision landed in: **B** supervisor + evals, **C**
 retrieval (028–030), **D** safety & trust (036, 038–041), **E** AgentOps (042–044), **F** dynamic
-composition & scaffolding (015, 016). `(pending ADR)` marks decisions whose recorded direction
+composition & scaffolding (015, 016), **Fed** federation contracts & foreign adapters (049–051). `(pending ADR)` marks decisions whose recorded direction
 still awaits a future revisit.
 
 ### Foundation & Platform
@@ -109,3 +109,11 @@ still awaits a future revisit.
 |----|-------|--------|---------|
 | ADR-047 | [Deployment Profiles & Packaging](./adr-047-deployment-profiles-and-packaging.md) | Accepted | Ship the same artifact across managed SaaS, standalone, AWS Outposts, and customer Kubernetes via deployment profiles; the packaging path (Helm/operator) and profile mechanism are pending ADR. |
 | ADR-048 | [Secure Cloud Runtime & Network Isolation](./adr-048-secure-cloud-runtime-and-network-isolation.md) | Accepted | Select the secure runtime and network isolation model; VPC private mode, WAF, restricted egress, and ECS Fargate/EKS are the current direction (pending ADR). |
+
+### Federation (Fed)
+
+| ID | Title | Status | Summary |
+|----|-------|--------|---------|
+| ADR-049 | [Public Execution Envelope & Trace/Result Contracts](./adr-049-public-execution-envelope-and-trace-contracts.md) | Accepted | Two versioned, agent-agnostic document contracts (ExecutionEnvelope v1, TraceResult v1) in a new `mira_contracts` package — dataclass + JSON Schema dual representation, fail-closed validation; internals adapt via a bridge, never the reverse. |
+| ADR-050 | [In-Repo Federation Extraction (Contracts & Harness Packages)](./adr-050-in-repo-federation-extraction.md) | Accepted | Extract the governance & improvement planes (policy detectors, cost attribution, trace scoring, generic gate, versioning) into top-level `mira_contracts`/`mira_harness` packages with a lint-enforced one-way import direction and re-export shims at every old path. |
+| ADR-051 | [Foreign-Agent Adapter Experiment](./adr-051-foreign-agent-adapter-experiment.md) | Accepted | Wrap exactly one foreign agent (deterministic offline stub + optional subprocess CLI adapter) as a supervisor-routable specialist via the public contracts, held to the same golden gate, to empirically test envelope-normalization tractability. |

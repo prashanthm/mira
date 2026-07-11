@@ -86,6 +86,23 @@ its tools at boot (`connectors/mcp_registry.py`, `orchestration/mcp_tools.py`).
 Discovery failures degrade to zero-MCP rather than failing boot. Cloud SDKs go behind
 a provider in `providers/` — never in the connector.
 
+## Wrapping a foreign agent (ADR-051)
+
+A domain does not have to be a Mira specialist. Any agent that implements the
+`mira_contracts.agent.EnvelopeRunner` Protocol (`card()`, `run(envelope) -> TraceResult`) can be
+registered as a routable specialist:
+
+- Implement the runner against `mira_contracts` only — the ExecutionEnvelope carries the
+  objective, tool grants, budget, and constraints; the TraceResult must carry
+  provenance-attributed answers and `plan_step` events to pass the eval gate.
+- Wrap it with `mira.orchestration.foreign.ForeignSpecialist` and register via
+  `foreign_card(...)` + `registry.register` — the supervisor is untouched. Policy-in,
+  envelope/trace validation, and cost attribution are applied by the wrapper, fail-closed.
+- For an out-of-process agent, use `mira_harness.cli_adapter.CliAgentAdapter` (envelope JSON on
+  stdin → trace JSON on stdout, timeout-bounded) and set `FOREIGN_AGENT_CMD`.
+- Add golden cases under `evals/goldens/` — foreign specialists are held to the same
+  trace-score bar and gate promotions like natives.
+
 ## Checklist
 
 - [ ] `make lint` (import boundaries + sanitize-check) passes

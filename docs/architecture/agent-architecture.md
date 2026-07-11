@@ -43,9 +43,12 @@ the diagrams can stay complete without overstating what ships.
 | XAI engine (decision traces, uncertainty, `/explain` API) | **Implemented** (`mira.core.decision_trace`, `/explain`) | **D** | ADR-040, ADR-041 |
 | AgentOps (cost attribution, SLOs/error budgets, incidents) | **Implemented** (`mira.model.cost_attribution`, `mira.config.slos`, `mira.core.incidents`) | **E** | ADR-042, ADR-043, ADR-044 |
 | Dynamic workflow composition + agent scaffolding/generation | **Designed / planned** | **F** | ADR-015, ADR-016 |
+| Public execution-envelope + trace contracts (versioned, agent-agnostic) | **Implemented** (`mira_contracts`) | **Fed** | ADR-049 |
+| Extracted governance planes (policy detectors, cost ledger, scoring, gate, versioning) | **Implemented** (`mira_harness`; shims at old paths) | **Fed** | ADR-050 |
+| Foreign-agent adapter (stub + subprocess CLI, supervisor-routable, eval-gated) | **Implemented** (`mira.orchestration.foreign`, `mira_harness.stub_agent`) | **Fed** | ADR-051 |
 
 Phase letters: **B** supervisor + evals · **C** retrieval / RAG / graph · **D** safety / XAI ·
-**E** AgentOps · **F** composition / scaffolding.
+**E** AgentOps · **F** composition / scaffolding · **Fed** federation contracts & adapters.
 
 ---
 

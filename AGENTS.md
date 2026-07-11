@@ -14,13 +14,19 @@ Python ≥ 3.12, src-layout package `mira`. Core deps are deliberately light: `l
 Planning artifacts live **in this repo** under `docs/` (ADR catalog in `docs/adr/`,
 architecture in `docs/architecture/`, the extension walkthrough in
 `docs/extension-guide.md`). Check `docs/adr/adr-list.md` before proposing new
-architecture — decisions are numbered ADR-001…ADR-048 and code docstrings cite them
+architecture — decisions are numbered ADR-001…ADR-051 and code docstrings cite them
 by number.
 
-## Code layout (`src/mira/`)
+## Code layout (`src/`)
+
+Three top-level packages with a strictly one-way, lint-enforced import direction
+(ADR-050): `mira` may import `mira_harness`, which may import `mira_contracts`;
+nothing in the two new packages may import `mira.*`.
 
 | Package | Responsibility | Boundary rule |
 |---|---|---|
+| `mira_contracts/` | public ExecutionEnvelope/TraceResult schemas + tool contract (ADR-049) | imports stdlib + jsonschema only — never `mira.*` or `mira_harness` |
+| `mira_harness/` | governance & improvement planes: policy detectors, cost ledger, trace scoring, generic gate, versioning, foreign-agent adapters (ADR-050/051) | may import `mira_contracts` only — never `mira.*` |
 | `app.py`, `__main__.py` | composition root + `python -m mira` entrypoint | framework-free |
 | `chat.py` | `mira-chat` CLI (LLM + MCP tools) | framework-free |
 | `core/` | warm service, streaming + SSE, attribution, middleware, memory, resilience | framework-free |
@@ -55,6 +61,10 @@ of the original extraction.
 - **Adding a domain** is registration, not core surgery: connector (`SourceConnector`)
   → typed tool contracts (`export_tools`, fail-closed entitlements) → specialist
   (`DomainSpec` + `build_specialist_subgraph`). See `docs/extension-guide.md`.
+- **Where governance code lands (ADR-050):** contract schemas go in `mira_contracts`;
+  agent-agnostic governance planes go in `mira_harness`; Mira-specific wiring stays in
+  `mira.*`. Modules moved out of `mira.*` leave a re-export shim at the old path —
+  never fork a shim; new symbols land in the new module only.
 - **Branching:** trunk-based, short-lived branches named `<type>/<slug>`
   (e.g. `feat/supervisor-routing`), PRs into `main`.
 
@@ -69,7 +79,8 @@ make lint           # lint-imports + sanitize-check
 python -m mira --check   # boot-and-exit smoke (no socket)
 ```
 
-CI (`.github/workflows/ci.yml`) runs `make lint` and `make test` on Python 3.12.
+CI (`.github/workflows/ci.yml`) runs `make lint`, `make test`, and the blocking
+`make eval` gate (ADR-045) on Python 3.12.
 
 ## Current-state caveats (true today)
 
