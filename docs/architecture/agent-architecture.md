@@ -46,6 +46,7 @@ the diagrams can stay complete without overstating what ships.
 | Public execution-envelope + trace contracts (versioned, agent-agnostic) | **Implemented** (`mira_contracts`) | **Fed** | ADR-049 |
 | Extracted governance planes (policy detectors, cost ledger, scoring, gate, versioning) | **Implemented** (`mira_harness`; shims at old paths) | **Fed** | ADR-050 |
 | Foreign-agent adapter (stub + subprocess CLI, supervisor-routable, eval-gated) | **Implemented** (`mira.orchestration.foreign`, `mira_harness.stub_agent`) | **Fed** | ADR-051 |
+| Per-agent model tiers + quality-triggered model-tier escalation | **Implemented** (`mira.model.tiering`, `mira.orchestration.tier_escalation`, `mira_harness.quality`; opt-in via `MODEL_ROUTES`/`ENABLE_TIER_ESCALATION`) | — | ADR-052 |
 
 Phase letters: **B** supervisor + evals · **C** retrieval / RAG / graph · **D** safety / XAI ·
 **E** AgentOps · **F** composition / scaffolding · **Fed** federation contracts & adapters.
