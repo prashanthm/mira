@@ -15,9 +15,9 @@ from __future__ import annotations
 import re
 from collections.abc import Callable, Iterable
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, Protocol
 
-from mira.orchestration.specialist_scaffold import DomainSpec, SpecialistSubgraph
+from mira.orchestration.specialist_scaffold import DomainSpec, SpecialistResult
 
 _WORD = re.compile(r"[a-z0-9][a-z0-9\-\.]*")
 
@@ -76,7 +76,18 @@ def card_for_domain(
     )
 
 
-SpecialistFactory = Callable[[], SpecialistSubgraph]
+class RoutableAgent(Protocol):
+    """Anything the supervisor can dispatch to (ADR-051 widening).
+
+    ``SpecialistSubgraph`` satisfies this natively; a
+    :class:`~mira.orchestration.foreign.ForeignSpecialist` satisfies it for
+    agents behind the public contracts.
+    """
+
+    def invoke(self, query: str, *, thread_id: str) -> SpecialistResult: ...
+
+
+SpecialistFactory = Callable[[], RoutableAgent]
 
 
 class AgentCardRegistry:
@@ -89,7 +100,7 @@ class AgentCardRegistry:
     def __init__(self) -> None:
         self._cards: dict[str, AgentCard] = {}
         self._factories: dict[str, SpecialistFactory] = {}
-        self._instances: dict[str, SpecialistSubgraph] = {}
+        self._instances: dict[str, RoutableAgent] = {}
 
     def register(self, card: AgentCard, factory: SpecialistFactory) -> None:
         """Register ``card`` + specialist ``factory``; later registration overrides."""
@@ -103,7 +114,7 @@ class AgentCardRegistry:
         """All registered cards in registration order."""
         return tuple(self._cards.values())
 
-    def resolve(self, name: str) -> SpecialistSubgraph:
+    def resolve(self, name: str) -> RoutableAgent:
         """Instantiate (once) and return the specialist registered as ``name``."""
         if name not in self._factories:
             raise UnknownAgentError(name, known=tuple(self._factories))
@@ -132,6 +143,7 @@ __all__ = [
     "AgentCard",
     "AgentCardRegistry",
     "CARD_SCHEMA_VERSION",
+    "RoutableAgent",
     "SpecialistFactory",
     "UnknownAgentError",
     "card_for_domain",

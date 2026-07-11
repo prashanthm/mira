@@ -11,7 +11,8 @@ CASES = load_golden_cases(GOLDENS_DIR)
 
 
 def test_golden_set_is_nonempty():
-    assert len(CASES) >= 6
+    # 6 demo-domain cases + 2 foreign-specialist cases (ADR-051).
+    assert len(CASES) >= 8
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])

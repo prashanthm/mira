@@ -22,13 +22,29 @@ from mira_harness.gate import (
     load_golden_cases as _load_golden_cases,
 )
 
+from mira.orchestration.agent_cards import AgentCardRegistry
 from mira.orchestration.contracts_bridge import trace_from_specialist_result
+from mira.orchestration.foreign import register_foreign_stub
 from mira.orchestration.specialist_scaffold import SpecialistResult
 from mira.orchestration.specialists.demo import build_demo_registry
 from mira.orchestration.supervisor import Supervisor
 
 GOLDENS_DIR = Path(__file__).parent / "goldens"
 _FIXTURES = Path(__file__).parent.parent / "tests" / "fixtures"
+
+
+def build_eval_registry() -> AgentCardRegistry:
+    """The registry every eval runs against: demo domains + the ADR-051 foreign stub.
+
+    Shared by the pytest fixture (``evals/conftest.py``) and this gate's
+    default supervisor so the golden set — foreign cases included — gates
+    ADR-012 promotions.
+    """
+    registry = build_demo_registry(
+        str(_FIXTURES / "handbook.md"), str(_FIXTURES / "ledger.csv")
+    )
+    register_foreign_stub(registry)
+    return registry
 
 
 def load_golden_cases(goldens_dir: Path | str = GOLDENS_DIR) -> list[dict[str, Any]]:
@@ -67,9 +83,7 @@ def run_gate(
     An empty golden set fails the gate — a gate that checks nothing must not
     green-light a promotion.
     """
-    resolved = supervisor or Supervisor(
-        build_demo_registry(str(_FIXTURES / "handbook.md"), str(_FIXTURES / "ledger.csv"))
-    )
+    resolved = supervisor or Supervisor(build_eval_registry())
     report = GateReport()
     for case in load_golden_cases(goldens_dir):
         report.total += 1
@@ -84,4 +98,11 @@ def eval_gate() -> bool:
     return run_gate().passed
 
 
-__all__ = ["GateReport", "MIN_TRACE_SCORE", "eval_gate", "load_golden_cases", "run_gate"]
+__all__ = [
+    "GateReport",
+    "MIN_TRACE_SCORE",
+    "build_eval_registry",
+    "eval_gate",
+    "load_golden_cases",
+    "run_gate",
+]

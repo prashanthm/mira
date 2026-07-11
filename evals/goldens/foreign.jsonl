@@ -1,0 +1,2 @@
+{"id": "foreign-echo-basic", "query": "delegate to the external echo partner: middleware", "domain": "foreign-echo", "expect": {"echo": "middleware"}}
+{"id": "foreign-echo-summary", "query": "delegate to the external echo partner: quarterly-summary", "domain": "foreign-echo", "expect": {"echo": "quarterly-summary"}}
