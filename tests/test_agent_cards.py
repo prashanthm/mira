@@ -102,3 +102,26 @@ def test_match_ties_resolve_to_first_registered():
     registry.register(a, lambda: None)
     registry.register(b, lambda: None)
     assert registry.match("a shared keyword").name == "a"
+
+
+# --- ADR-052: model_hint ------------------------------------------------------
+
+
+def test_model_hint_defaults_empty_and_surfaces_in_capabilities():
+    from mira.orchestration.specialist_scaffold import DomainSpec
+
+    spec = DomainSpec(domain_id="x", tool_prefixes=frozenset({"x."}))
+    plain = card_for_domain(spec, description="d", keywords=("k",))
+    hinted = card_for_domain(spec, description="d", keywords=("k",), model_hint="deep")
+    assert plain.model_hint == ""
+    assert hinted.model_hint == "deep"
+    assert hinted.to_dict()["capabilities"]["model_hint"] == "deep"
+
+
+def test_demo_and_advisor_cards_declare_tiers():
+    from mira.orchestration.specialists.advisor import ADVISOR_CARD
+    from mira.orchestration.specialists.demo import FINANCE_CARD, RESEARCH_CARD
+
+    assert RESEARCH_CARD.model_hint == "light"
+    assert FINANCE_CARD.model_hint == "standard"
+    assert ADVISOR_CARD.model_hint == "deep"

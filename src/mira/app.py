@@ -199,9 +199,7 @@ def build_app(
         # cloud SDK; otherwise fall back to the profile's platform.
         bundle = get_providers(_platform_or_default(resolved))
 
-    gateway = Gateway(bundle)
     tools = _discover_mcp_tools(resolved)
-    runtime = AgentRuntime(gateway, bundle.state_store, tools=tools)
 
     # Advisor domain (ADR-014 Phase V3): when MCP discovery yielded a vantage.*
     # tool surface, bridge it and register the advisor card so /turn routes
@@ -213,6 +211,14 @@ def build_app(
     # that speaks the envelope→trace contract over stdin/stdout. Absent env ⇒
     # zero behavior change; failures degrade like advisor registration.
     registry = _registry_with_foreign(registry)
+
+    # Tier-aware gateway (ADR-052, optional): MODEL_ROUTES turns on the router
+    # with a TierPolicy derived from the registry's card model_hints; absent env
+    # ⇒ Gateway(bundle) exactly as before. Built after registry enrichment so
+    # advisor/foreign hints participate. General turns carry the "general" agent
+    # identity, so un-hinted prompts resolve through the difficulty heuristic.
+    gateway = _gateway_from_env(bundle, registry)
+    runtime = AgentRuntime(gateway.for_agent("general"), bundle.state_store, tools=tools)
 
     supervisor = Supervisor(registry) if registry is not None else None
 
@@ -336,6 +342,58 @@ def _registry_with_advisor(
             file=sys.stderr,
         )
         return registry
+
+
+def _gateway_from_env(
+    bundle: ProviderBundle,
+    registry: AgentCardRegistry | None,
+) -> Gateway:
+    """Build the gateway, tier-aware when ``MODEL_ROUTES`` is set (ADR-052).
+
+    ``MODEL_ROUTES`` is a JSON list of route objects (``provider``, ``model``,
+    optional ``tier``/``cost_per_1k_tokens``/``latency_ms_p50``/
+    ``quota_remaining``); ``MODEL_ROUTING_STRATEGY`` optionally names the
+    ranking strategy (default ``cost``). Absent/empty env ⇒ ``Gateway(bundle)``
+    byte-identical to before. Malformed JSON is genuine misconfiguration and
+    propagates (same contract as the MCP registry parse).
+    """
+    import json
+    import os
+
+    raw = (os.environ.get("MODEL_ROUTES") or "").strip()
+    if not raw:
+        return Gateway(bundle)
+
+    from mira.model.routing import ModelRoute, Router, RoutingStrategy
+    from mira.model.tiering import TierPolicy, classify_difficulty
+
+    routes = [
+        ModelRoute(
+            provider=str(entry["provider"]),
+            model=str(entry["model"]),
+            cost_per_1k_tokens=float(entry.get("cost_per_1k_tokens", 0.0)),
+            latency_ms_p50=float(entry.get("latency_ms_p50", 0.0)),
+            quota_remaining=entry.get("quota_remaining"),
+            tier=str(entry.get("tier", "")),
+        )
+        for entry in json.loads(raw)
+    ]
+    strategy = RoutingStrategy(os.environ.get("MODEL_ROUTING_STRATEGY", "cost"))
+
+    agent_tiers: dict[str, str] = {}
+    domain_keywords: dict[str, frozenset[str]] = {}
+    if registry is not None:
+        for card in registry.cards():
+            if card.model_hint:
+                agent_tiers[card.name] = card.model_hint
+            domain_keywords[card.name] = card.keywords
+    policy = TierPolicy(
+        agent_tiers=agent_tiers,
+        classifier=lambda prompt: classify_difficulty(
+            prompt, domain_keywords=domain_keywords
+        ),
+    )
+    return Gateway(bundle, router=Router(strategy=strategy, routes=routes), tier_policy=policy)
 
 
 def _registry_with_foreign(

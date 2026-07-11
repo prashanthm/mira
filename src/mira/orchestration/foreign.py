@@ -134,6 +134,7 @@ def foreign_card(
     *,
     keywords: Sequence[str],
     description: str | None = None,
+    model_hint: str = "",
 ) -> AgentCard:
     """Build the discovery card for a foreign runner from its own card()."""
     card = runner.card()
@@ -143,6 +144,7 @@ def foreign_card(
         description=description if description is not None else str(card["description"]),
         tool_prefixes=frozenset(str(p) for p in capabilities.get("tool_prefixes", ())),
         keywords=frozenset(k.strip().lower() for k in keywords if k.strip()),
+        model_hint=model_hint,
     )
 
 

@@ -23,12 +23,14 @@ RESEARCH_CARD: AgentCard = card_for_domain(
     RESEARCH_DOMAIN,
     description="Answers questions over the document corpus with citable section anchors.",
     keywords=("handbook", "docs", "document", "documentation", "section", "middleware", "architecture"),
+    model_hint="light",
 )
 
 FINANCE_CARD: AgentCard = card_for_domain(
     FINANCE_DOMAIN,
     description="Answers spend questions over the transaction ledger with denominated totals.",
     keywords=("spend", "travel", "ledger", "total", "cost", "category", "budget"),
+    model_hint="standard",
 )
 
 

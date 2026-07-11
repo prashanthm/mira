@@ -112,3 +112,68 @@ def test_one_end_to_end_turn_reaches_a_result() -> None:
     # One non-streaming turn produced a response and paused at the human gate.
     assert result["response"] == "echo:hello agent"
     assert app.runtime.is_paused(result)
+
+
+# --- ADR-052: tier-aware gateway wiring ---------------------------------------
+
+
+def test_gateway_from_env_is_plain_gateway_without_model_routes(monkeypatch):
+    from mira.app import _gateway_from_env
+    from mira.providers.local import build_local_bundle
+
+    monkeypatch.delenv("MODEL_ROUTES", raising=False)
+    gateway = _gateway_from_env(build_local_bundle(), None)
+    # No router/policy wired: the tier kwarg is inert and delegation is direct.
+    assert gateway._router is None and gateway._tier_policy is None
+
+
+def test_gateway_from_env_builds_router_and_policy_from_cards(monkeypatch):
+    import json
+
+    from mira.app import _gateway_from_env
+    from mira.orchestration.agent_cards import AgentCardRegistry
+    from mira.orchestration.specialists.demo import FINANCE_CARD, RESEARCH_CARD
+    from mira.providers.local import build_local_bundle
+
+    monkeypatch.setenv(
+        "MODEL_ROUTES",
+        json.dumps(
+            [
+                {"provider": "d", "model": "cheap", "tier": "light", "cost_per_1k_tokens": 0.3},
+                {"provider": "d", "model": "big", "tier": "deep", "cost_per_1k_tokens": 2.0},
+            ]
+        ),
+    )
+    registry = AgentCardRegistry()
+    registry.register(RESEARCH_CARD, lambda: None)
+    registry.register(FINANCE_CARD, lambda: None)
+    gateway = _gateway_from_env(build_local_bundle(), registry)
+    assert gateway._router is not None
+    assert gateway._tier_policy.agent_tiers == {"research": "light", "finance": "standard"}
+    # Card hint resolves; explicit tier still wins.
+    assert gateway._tier_policy.resolve("q", agent="research") == "light"
+    assert gateway._tier_policy.resolve("q", agent="research", explicit="deep") == "deep"
+
+
+def test_gateway_from_env_raises_on_malformed_json(monkeypatch):
+    import pytest as _pytest
+
+    from mira.app import _gateway_from_env
+    from mira.providers.local import build_local_bundle
+
+    monkeypatch.setenv("MODEL_ROUTES", "{not json")
+    with _pytest.raises(Exception):
+        _gateway_from_env(build_local_bundle(), None)
+
+
+def test_build_app_binds_runtime_to_general_agent_identity(monkeypatch):
+    from mira.app import build_app
+    from mira.model.gateway import _AgentBoundLLM
+    from mira.providers.local import build_local_bundle
+
+    monkeypatch.delenv("MODEL_ROUTES", raising=False)
+    app = build_app("kubernetes", bundle=build_local_bundle())
+    assert isinstance(app.runtime._llm, _AgentBoundLLM)
+    assert app.runtime._llm._agent == "general"
+    # And a turn still works end to end through the bound view.
+    assert app.run_turn("hello")["response"]

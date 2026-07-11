@@ -39,7 +39,9 @@ class AgentCard:
 
     ``keywords`` are the routing hints the supervisor's deterministic classifier
     scores against; ``tool_prefixes`` mirror the specialist's allow-list so a
-    caller can see the tool surface without invoking the agent.
+    caller can see the tool surface without invoking the agent. ``model_hint``
+    (ADR-052) names the model *tier* this agent prefers — a tier name, never a
+    model id, so cards stay deployment-agnostic; empty means no preference.
     """
 
     name: str
@@ -47,6 +49,7 @@ class AgentCard:
     tool_prefixes: frozenset[str] = field(default_factory=frozenset)
     keywords: frozenset[str] = field(default_factory=frozenset)
     version: str = CARD_SCHEMA_VERSION
+    model_hint: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         """A2A-shaped card payload for discovery surfaces."""
@@ -57,6 +60,7 @@ class AgentCard:
             "capabilities": {
                 "tool_prefixes": sorted(self.tool_prefixes),
                 "keywords": sorted(self.keywords),
+                "model_hint": self.model_hint,
             },
         }
 
@@ -66,6 +70,7 @@ def card_for_domain(
     *,
     description: str,
     keywords: Iterable[str],
+    model_hint: str = "",
 ) -> AgentCard:
     """Build a card from a :class:`DomainSpec` so identity stays single-sourced."""
     return AgentCard(
@@ -73,6 +78,7 @@ def card_for_domain(
         description=description,
         tool_prefixes=spec.tool_prefixes,
         keywords=frozenset(k.strip().lower() for k in keywords if k.strip()),
+        model_hint=model_hint,
     )
 
 
