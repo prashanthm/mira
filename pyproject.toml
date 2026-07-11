@@ -38,6 +38,9 @@ mcp = ["mcp>=1.23", "langchain-mcp-adapters>=0.1.14,<0.2"]
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+mira_contracts = ["schemas/*.json"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src", "."]

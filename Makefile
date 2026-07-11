@@ -41,7 +41,7 @@ eval:
 lint: lint-imports sanitize-check
 
 lint-imports:
-	$(PY) tools/lint_imports.py src/mira
+	$(PY) tools/lint_imports.py src/mira src/mira_contracts src/mira_harness
 
 # Guard against upstream-extraction strings reappearing (see tools/sanitize_extract.py).
 # Patterns use [ ] character classes so this rule never matches itself.

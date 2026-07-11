@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import-isolation linter for src/mira layer boundaries (ADR-001, ADR-007)."""
+"""Import-isolation linter for src layer boundaries (ADR-001, ADR-007, ADR-050)."""
 
 from __future__ import annotations
 
@@ -40,13 +40,32 @@ def _is_orchestration_module(module: str) -> bool:
     return any(_module_matches(module, p) for p in ORCHESTRATION_PREFIXES)
 
 
+def _package_for_path(path: Path) -> str | None:
+    """ADR-050 extraction packages: 'contracts', 'harness', or None."""
+    parts = path.as_posix().split("/")
+    if "mira_contracts" in parts:
+        return "contracts"
+    if "mira_harness" in parts:
+        return "harness"
+    return None
+
+
 def _layer_for_path(path: Path) -> str:
+    # The extraction packages are always "business" — a directory named
+    # orchestration/ or providers/ inside them must NOT inherit framework or
+    # cloud-SDK rights (ADR-050).
+    if _package_for_path(path) is not None:
+        return "business"
     parts = path.as_posix().split("/")
     if "providers" in parts:
         return "providers"
     if "orchestration" in parts:
         return "orchestration"
     return "business"
+
+
+def _is_mira_module(module: str) -> bool:
+    return module == "mira" or module.startswith("mira.")
 
 
 def _iter_import_modules(tree: ast.AST) -> list[str]:
@@ -68,8 +87,25 @@ def _check_file(path: Path) -> list[Violation]:
     except SyntaxError as exc:
         return [Violation(path, "<syntax>", f"syntax error: {exc}")]
 
+    package = _package_for_path(path)
     violations: list[Violation] = []
     for module in _iter_import_modules(tree):
+        if package is not None and _is_mira_module(module):
+            violations.append(
+                Violation(
+                    path,
+                    module,
+                    "mira import not allowed under mira_contracts/mira_harness (ADR-050)",
+                )
+            )
+        if package == "contracts" and _module_matches(module, "mira_harness"):
+            violations.append(
+                Violation(
+                    path,
+                    module,
+                    "mira_harness import not allowed under mira_contracts (ADR-050)",
+                )
+            )
         if layer != "providers" and _is_cloud_module(module):
             violations.append(
                 Violation(

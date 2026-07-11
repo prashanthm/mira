@@ -20,7 +20,7 @@ def _run(*paths: str) -> subprocess.CompletedProcess[str]:
 
 
 def test_clean_src_saa_passes() -> None:
-    result = _run("src/mira")
+    result = _run("src/mira", "src/mira_contracts", "src/mira_harness")
     assert result.returncode == 0, result.stdout + result.stderr
 
 
@@ -34,3 +34,21 @@ def test_bad_langchain_import_fails() -> None:
     result = _run("tests/fixtures/lint/bad_langchain_import")
     assert result.returncode != 0
     assert "langchain" in result.stdout
+
+
+def test_harness_importing_mira_fails() -> None:
+    result = _run("tests/fixtures/lint/bad_harness_imports_mira")
+    assert result.returncode != 0
+    assert "ADR-050" in result.stdout
+
+
+def test_contracts_importing_harness_fails() -> None:
+    result = _run("tests/fixtures/lint/bad_contracts_imports_harness")
+    assert result.returncode != 0
+    assert "mira_harness" in result.stdout
+
+
+def test_orchestration_dir_inside_harness_gets_no_langgraph_rights() -> None:
+    result = _run("tests/fixtures/lint/harness_orchestration_dir")
+    assert result.returncode != 0
+    assert "langgraph" in result.stdout
