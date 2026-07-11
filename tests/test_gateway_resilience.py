@@ -269,3 +269,96 @@ class _EchoModelProvider:
 
     def embed(self, text: str) -> list[float]:
         return [0.0]
+
+
+# --- ADR-052: tier-aware gateway ---------------------------------------------
+
+
+class ModelRecordingProvider:
+    """Backend that records the model= it was asked for, for both call shapes."""
+
+    def __init__(self) -> None:
+        self.completed_with: list[str | None] = []
+        self.chatted_with: list[str | None] = []
+
+    def complete(self, prompt: str, *, model: str | None = None) -> str:
+        self.completed_with.append(model)
+        return f"ok:{model}"
+
+    def chat(self, messages, *, model=None, tools=None, tool_choice="auto"):
+        self.chatted_with.append(model)
+
+        class _Result:
+            text = f"chat-ok:{model}"
+            tool_calls = ()
+
+        return _Result()
+
+    def embed(self, text: str) -> list[float]:
+        return [1.0]
+
+
+def _tiered_gateway(backend, **kwargs) -> Gateway:
+    from mira.model.tiering import TierPolicy
+
+    routes = [
+        ModelRoute("d", "cheap-model", cost_per_1k_tokens=0.3, tier="light"),
+        ModelRoute("d", "deep-model", cost_per_1k_tokens=2.2, tier="deep"),
+    ]
+    policy = TierPolicy(
+        agent_tiers={"advisor": "deep"}, classifier=lambda prompt: "light"
+    )
+    return Gateway(
+        FakeBundle(backend),  # type: ignore[arg-type]
+        router=Router(strategy=RoutingStrategy.COST, routes=routes),
+        tier_policy=policy,
+        **kwargs,
+    )
+
+
+def test_no_config_gateway_ignores_tier_kwarg():
+    backend = FakeLLMProvider()
+    gateway = Gateway(FakeBundle(backend))  # type: ignore[arg-type]
+    assert gateway.complete("hi", tier="deep") == "fake:hi"
+
+
+def test_tier_resolution_explicit_beats_agent_hint_beats_heuristic():
+    backend = ModelRecordingProvider()
+    gateway = _tiered_gateway(backend)
+    gateway.complete("q")  # heuristic -> light
+    gateway.complete("q", agent="advisor")  # hint -> deep
+    gateway.complete("q", agent="advisor", tier="light")  # explicit wins
+    assert backend.completed_with == ["cheap-model", "deep-model", "cheap-model"]
+
+
+def test_for_agent_binds_identity_for_complete_and_chat():
+    backend = ModelRecordingProvider()
+    gateway = _tiered_gateway(backend)
+    bound = gateway.for_agent("advisor")
+    bound.complete("q")
+    bound.chat([{"role": "user", "content": "q"}])
+    assert backend.completed_with == ["deep-model"]
+    assert backend.chatted_with == ["deep-model"]
+
+
+def test_chat_routes_and_emits_span():
+    backend = ModelRecordingProvider()
+    observer = RecordingObserver()
+    gateway = _tiered_gateway(backend, span_observer=observer)
+    result = gateway.chat([{"role": "user", "content": "q"}], agent="advisor")
+    assert result.text == "chat-ok:deep-model"
+    assert [span.model for span in observer.spans] == ["deep-model"]
+
+
+def test_chat_on_text_only_backend_degrades_to_routed_completion():
+    backend = ScriptingProvider([])  # has complete, no chat
+    gateway = Gateway(
+        FakeBundle(backend),  # type: ignore[arg-type]
+        router=Router(
+            strategy=RoutingStrategy.COST,
+            routes=[ModelRoute("d", "cheap-model", cost_per_1k_tokens=0.3, tier="light")],
+        ),
+    )
+    result = gateway.chat([{"role": "user", "content": "hello"}])
+    assert result.text.startswith("ok:")
+    assert result.tool_calls == ()

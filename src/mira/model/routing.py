@@ -19,13 +19,19 @@ class RoutingStrategy(str, Enum):
 
 @dataclass(frozen=True, slots=True)
 class ModelRoute:
-    """A routable provider/model pair with cost and latency metadata."""
+    """A routable provider/model pair with cost and latency metadata.
+
+    ``tier`` is an optional capability class (ADR-052, e.g. ``light``/
+    ``standard``/``deep``); empty means untiered. Tier is a selection
+    *preference*, orthogonal to the ranking strategy.
+    """
 
     provider: str
     model: str
     cost_per_1k_tokens: float = 0.0
     latency_ms_p50: float = 0.0
     quota_remaining: int | None = None
+    tier: str = ""
 
 
 class BudgetExceeded(Exception):
@@ -139,8 +145,16 @@ class Router:
         budget_cap: BudgetCap | None = None,
         estimated_tokens: float = 1000.0,
         window: str = "default",
+        tier: str | None = None,
     ) -> ModelRoute:
         """Choose provider/model per strategy; downgrade or reject on budget exceed.
+
+        ``tier`` (ADR-052) is a capability preference: tier-matching routes are
+        stably partitioned ahead of the rest *after* strategy ranking, so a
+        requested tier wins when available and selection degrades to the plain
+        ranking when it is not — capability never makes selection fail. The
+        budget gate runs over that ordering and its downgrade search spans the
+        full ranked list, so budget caps beat capability by construction.
 
         Budget gating estimates this call's cost via ``estimated_tokens`` using
         the same per-1k-token formula as :meth:`record_call`, so a route cannot
@@ -150,6 +164,10 @@ class Router:
             raise ValueError("Router has no routes configured")
 
         ranked = _rank_routes(self.strategy, list(self.routes))
+        if tier:
+            ranked = [r for r in ranked if r.tier == tier] + [
+                r for r in ranked if r.tier != tier
+            ]
         primary = ranked[0]
 
         if budget_cap is None or self.budget_tracker is None:

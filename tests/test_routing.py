@@ -133,3 +133,51 @@ def test_budget_tracker_window_isolates_spend():
     tracker.record("t", "a", 5.0, window="2026-06-29")
     assert tracker.spent("t", "a", window="2026-06-29") == 5.0
     assert tracker.spent("t", "a", window="2026-06-30") == 0.0
+
+
+# --- ADR-052: tier-aware selection ------------------------------------------
+
+
+def _tiered_routes() -> list[ModelRoute]:
+    return [
+        ModelRoute("deepseek", "deepseek-chat", cost_per_1k_tokens=0.3, tier="light"),
+        ModelRoute("deepseek", "deepseek-reasoner", cost_per_1k_tokens=2.2, tier="deep"),
+        ModelRoute("deepseek", "deepseek-v3", cost_per_1k_tokens=1.0, tier="standard"),
+    ]
+
+
+def test_tier_preference_partitions_matching_routes_first():
+    router = Router(strategy=RoutingStrategy.COST, routes=_tiered_routes())
+    assert router.select(tier="deep").model == "deepseek-reasoner"
+    assert router.select(tier="standard").model == "deepseek-v3"
+    # No tier requested -> plain strategy ranking (cheapest).
+    assert router.select().model == "deepseek-chat"
+
+
+def test_missing_tier_falls_back_to_full_ranking():
+    router = Router(strategy=RoutingStrategy.COST, routes=_tiered_routes())
+    assert router.select(tier="colossal").model == "deepseek-chat"
+
+
+def test_budget_downgrade_crosses_tiers():
+    """Budget beats capability: an unaffordable deep tier degrades to any
+    affordable route, tier notwithstanding (ADR-052)."""
+    tracker = BudgetTracker()
+    tracker.record("t1", "a1", 9.5)  # remaining 0.5 affords light (0.3), not deep (2.2)
+    cap = BudgetCap(max_cost=10.0, on_exceed="downgrade")
+    router = Router(
+        strategy=RoutingStrategy.COST, routes=_tiered_routes(), budget_tracker=tracker
+    )
+    selected = router.select(tenant="t1", agent="a1", budget_cap=cap, tier="deep")
+    assert selected.model == "deepseek-chat"  # cheapest affordable, not the deep route
+
+
+def test_budget_reject_still_raises_with_tier():
+    tracker = BudgetTracker()
+    tracker.record("t1", "a1", 10.0)
+    cap = BudgetCap(max_cost=10.0, on_exceed="reject")
+    router = Router(
+        strategy=RoutingStrategy.COST, routes=_tiered_routes(), budget_tracker=tracker
+    )
+    with pytest.raises(BudgetExceeded):
+        router.select(tenant="t1", agent="a1", budget_cap=cap, tier="deep")
