@@ -88,7 +88,44 @@ consumers can weigh trust accordingly.
   which contract assumption breaks.
 - The golden gate gets stricter: a foreign-stub bug blocks ADR-012 promotions. Intentional —
   that is federation governance working; a one-line registry change removes it if needed.
-- *(To be filled by the experiment write-up: answers to the seven questions above.)*
+
+### Experiment results (answers to the seven questions)
+
+The experiment landed with both adapters (stub in-process, CLI cross-process) routing through
+the real ``/turn`` path, streaming plan events, recording decision traces for ``/explain``,
+and passing the golden gate at trace score 1.0.
+
+1. **Provenance grounding: yes, cheaply — for structured agents.** Both the stub and the CLI
+   child satisfy the recursive rule by attaching one ``provenance`` mapping per claim. No
+   Trace v2 citations alternative is needed for agents that emit structured answers; an agent
+   producing free text would need its adapter to synthesize the mapping, which is where the
+   real cost would sit.
+2. **Budgets: one shape holds, three enforcement strengths.** ``BudgetSpec``/``BudgetConsumed``
+   accommodated measured (native), self-reported (stub), and externally-bounded (CLI wall-clock
+   timeout — the only budget the harness can *enforce* cross-process) without variant fields.
+   Consumption exceeding spec is representable but not sanctioned for foreign agents; the
+   harness treats it as data, not a violation.
+3. **Tool grants: declaratively sufficient, not cross-process actionable.** ``name_prefix`` +
+   entitlement scoped the foreign domains cleanly (and fed topic-drift ownership), but a
+   subprocess cannot reach in-process handlers — grants become *actionable* across a process
+   boundary only with MCP endpoint references. Confirmed follow-on work, not a v1 change.
+4. **Event vocabulary: expressive enough, if anything under-demanding.** A non-ReAct agent
+   earns ``has_plan`` with any non-empty ``plan_step`` sequence; the phases are free-form
+   strings. ``score_trace`` does not over-index on the ReAct shape — the risk runs the other
+   way (structural, not semantic, plan evidence).
+5. **Cost blending: totals blend; trust does not yet.** Self-reported foreign costs land in the
+   same ledger and aggregate correctly by domain/tenant, but ``AttributedSpan`` does not carry
+   the ``self_reported`` flag — once recorded, anomaly detection cannot discount unverified
+   numbers. Recorded as a known gap: propagate the flag into the ledger before foreign costs
+   are non-zero in practice.
+6. **Violations surface best at the wrapper's two validation points.** Pre-dispatch (envelope)
+   and post-run (trace) failures both degrade to structured ``SpecialistResult`` errors that
+   flow through synthesis visibly (``[domain] error: …``), keeping the stream and ``/explain``
+   coherent; no supervisor-level surfacing was needed.
+7. **Normalization glue: small — federation is tractable.** The stub is ~70 lines of logic, the
+   generic CLI adapter ~90, and the reusable ``ForeignSpecialist`` wrapper ~100; the *marginal*
+   cost of one more adapter is roughly the CLI adapter's size. No per-agent special cases
+   leaked into the supervisor, gate, scoring, or policy plane.
 
 ## Applies To
 

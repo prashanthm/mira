@@ -12,9 +12,9 @@ Ordered implementation units.
 
 ## Loop AC
 
-- [ ] AC-1: stub imports contracts only; deterministic grounded answers; zero-step budget ⇒ `bound_exceeded`
+- [x] AC-1: stub imports contracts only; deterministic grounded answers; zero-step budget ⇒ `bound_exceeded`
   - verify: `pytest tests/test_stub_agent.py -q`
-- [ ] AC-2: injection blocked pre-call; invalid trace ⇒ structured error; ledger attribution by domain
+- [x] AC-2: injection blocked pre-call; invalid trace ⇒ structured error; ledger attribution by domain
   - verify: `pytest tests/test_foreign_specialist.py -q`
 
 ---
@@ -25,7 +25,7 @@ Goldens + shared eval registry + foreign-specific eval assertions.
 
 ## Loop AC
 
-- [ ] AC-1: foreign goldens route via supervisor and score 1.0; `eval_gate()` covers them
+- [x] AC-1: foreign goldens route via supervisor and score 1.0; `eval_gate()` covers them
   - verify: `make eval`
 
 ---
@@ -36,5 +36,5 @@ Subprocess envelope→trace adapter + `FOREIGN_AGENT_CMD` wiring.
 
 ## Loop AC
 
-- [ ] AC-1: subprocess-of-self round-trip; timeout/bad-JSON ⇒ `status="error"`; absent flag ⇒ no change
+- [x] AC-1: subprocess-of-self round-trip; timeout/bad-JSON ⇒ `status="error"`; absent flag ⇒ no change
   - verify: `pytest tests/test_cli_adapter.py -q`

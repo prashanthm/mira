@@ -13,9 +13,9 @@ linter/Makefile/pyproject wiring.
 
 ## Loop AC
 
-- [ ] AC-1: round-trip + fail-closed validation
+- [x] AC-1: round-trip + fail-closed validation
   - verify: `pytest tests/test_contracts_envelope.py tests/test_contracts_trace.py -q`
-- [ ] AC-2: boundary rules enforced (including the nested-`orchestration`-dir trap)
+- [x] AC-2: boundary rules enforced (including the nested-`orchestration`-dir trap)
   - verify: `pytest tests/test_lint_imports.py -q`
 
 ---
@@ -26,7 +26,7 @@ linter/Makefile/pyproject wiring.
 
 ## Loop AC
 
-- [ ] AC-1: `SpecialistResult → TraceResult → SpecialistResult` is `to_dict()`-byte-equal
+- [x] AC-1: `SpecialistResult → TraceResult → SpecialistResult` is `to_dict()`-byte-equal
   - verify: `pytest tests/test_contracts_bridge.py -q`
 
 ---
@@ -37,7 +37,7 @@ versioning, scoring, tooling, guardrail detectors, cost attribution, generic gat
 
 ## Loop AC
 
-- [ ] AC-1: every old import path re-exports identical objects
+- [x] AC-1: every old import path re-exports identical objects
   - verify: `pytest tests/test_harness_shims.py -q`
-- [ ] AC-2: pre-existing tests pass unmodified
+- [x] AC-2: pre-existing tests pass unmodified
   - verify: `make test && make eval`
