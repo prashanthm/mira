@@ -3,49 +3,37 @@
 This is the callable the versioning registry's eval-gated promotion consumes
 (ADR-012 ``eval_gate``) and the release preflight runs before any tag. It uses
 no pytest machinery so it can gate promotions in-process.
+
+The agent-agnostic core (case loading, envelope lifting, criteria checking)
+lives in :mod:`mira_harness.gate` (ADR-050); this module is the Mira wiring on
+top: the default demo supervisor and the Mira-only routing assertion.
 """
 
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
+from mira_harness.gate import (
+    MIN_TRACE_SCORE,
+    GateReport,
+    check_success_criteria,
+    envelope_from_case,
+    load_golden_cases as _load_golden_cases,
+)
+
+from mira.orchestration.contracts_bridge import trace_from_specialist_result
+from mira.orchestration.specialist_scaffold import SpecialistResult
 from mira.orchestration.specialists.demo import build_demo_registry
 from mira.orchestration.supervisor import Supervisor
 
-from evals.trace_scoring import score_trace
-
 GOLDENS_DIR = Path(__file__).parent / "goldens"
 _FIXTURES = Path(__file__).parent.parent / "tests" / "fixtures"
-MIN_TRACE_SCORE = 1.0  # goldens must produce structurally perfect traces
-
-
-@dataclass
-class GateReport:
-    """Outcome of one regression-gate run."""
-
-    total: int = 0
-    failures: list[dict[str, Any]] = field(default_factory=list)
-
-    @property
-    def passed(self) -> bool:
-        return self.total > 0 and not self.failures
-
-    def to_dict(self) -> dict[str, Any]:
-        return {"total": self.total, "passed": self.passed, "failures": self.failures}
 
 
 def load_golden_cases(goldens_dir: Path | str = GOLDENS_DIR) -> list[dict[str, Any]]:
     """Load all golden cases from ``*.jsonl`` files under ``goldens_dir``."""
-    cases: list[dict[str, Any]] = []
-    for path in sorted(Path(goldens_dir).glob("*.jsonl")):
-        for line in path.read_text().splitlines():
-            line = line.strip()
-            if line:
-                cases.append(json.loads(line))
-    return cases
+    return _load_golden_cases(goldens_dir)
 
 
 def _check_case(supervisor: Supervisor, case: dict[str, Any]) -> dict[str, Any] | None:
@@ -59,17 +47,13 @@ def _check_case(supervisor: Supervisor, case: dict[str, Any]) -> dict[str, Any] 
     if not result.results:
         return {"id": case["id"], "reason": "no specialist result collected"}
 
-    answer = result.results[0].get("answer") or {}
-    for key, expected in case["expect"].items():
-        if answer.get(key) != expected:
-            return {
-                "id": case["id"],
-                "reason": f"answer[{key!r}] = {answer.get(key)!r}, expected {expected!r}",
-            }
-
-    trace = score_trace(result.results[0])
-    if trace.score < MIN_TRACE_SCORE:
-        return {"id": case["id"], "reason": f"trace score {trace.score} < {MIN_TRACE_SCORE}"}
+    envelope = envelope_from_case(case)
+    trace = trace_from_specialist_result(
+        SpecialistResult(**result.results[0]), task_id=envelope.task_id
+    )
+    reason = check_success_criteria(trace, envelope.success_criteria)
+    if reason:
+        return {"id": case["id"], "reason": reason}
     return None
 
 
@@ -100,4 +84,4 @@ def eval_gate() -> bool:
     return run_gate().passed
 
 
-__all__ = ["GateReport", "eval_gate", "load_golden_cases", "run_gate"]
+__all__ = ["GateReport", "MIN_TRACE_SCORE", "eval_gate", "load_golden_cases", "run_gate"]

@@ -15,7 +15,29 @@ SHIMS = [
     ("mira.model.versioning", "mira_harness.versioning"),
     ("evals.trace_scoring", "mira_harness.scoring"),
     ("mira.tools.contract", "mira_contracts.tooling"),
+    ("mira.model.cost_attribution", "mira_harness.cost"),
 ]
+
+# Not a pure shim — guardrails keeps the middleware halves — but every
+# extracted detector name must still be the mira_harness.policy object.
+DETECTOR_NAMES = (
+    "GuardrailViolation",
+    "ViolationFinding",
+    "InjectionDetector",
+    "ToolAbuseDetector",
+    "GroundednessChecker",
+    "TopicDriftDetector",
+    "INJECTION_CODE",
+    "UNGROUNDED_CODE",
+    "TOPIC_DRIFT_CODE",
+)
+
+
+def test_guardrails_reexports_policy_detectors():
+    guardrails = importlib.import_module("mira.core.guardrails")
+    policy = importlib.import_module("mira_harness.policy")
+    for name in DETECTOR_NAMES:
+        assert getattr(guardrails, name) is getattr(policy, name)
 
 
 @pytest.mark.parametrize("old_path,new_path", SHIMS, ids=[old for old, _ in SHIMS])
