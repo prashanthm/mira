@@ -48,13 +48,28 @@ from mira.orchestration.specialists.domains import (
     THESIS_DOMAIN,
 )
 
-# Ticker extraction — same convention as the advisor (2-6 uppercase letters).
+# Ticker extraction. The analyze fan-out query is "analyze <SUB>[: question]",
+# so an anchored match handles every ticker length — including one-letter names
+# (O, F, T) that the free-form pattern must not attempt, because in
+# conversational text ("what should I do…") one uppercase letter is usually a
+# pronoun, not a ticker. Free-form fallback stays 2-6 letters for that reason.
+_ANALYZE_SUBJECT = re.compile(r"\banalyze\s+([A-Z][A-Z.]{0,5})\b")
 _TICKER = re.compile(r"\b[A-Z]{2,6}\b")
 
 
-def _symbol(action: str) -> dict[str, Any]:
+def extract_ticker(action: str) -> str | None:
+    """The ticker an action names: anchored ``analyze <SUB>`` first, then the
+    free-form 2-6 letter convention (shared with the advisor)."""
+    anchored = _ANALYZE_SUBJECT.search(action)
+    if anchored:
+        return anchored.group(1)
     match = _TICKER.search(action)
-    return {"symbol": match.group(0)} if match else {}
+    return match.group(0) if match else None
+
+
+def _symbol(action: str) -> dict[str, Any]:
+    ticker = extract_ticker(action)
+    return {"symbol": ticker} if ticker else {}
 
 
 def _call(registry: dict[str, RegisteredTool], name: str, payload: dict[str, Any]) -> dict[str, Any] | None:

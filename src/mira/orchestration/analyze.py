@@ -62,13 +62,16 @@ DEFAULT_GROUP = "equity"
 #: live participant set is resolved from the registry by group.
 DEFAULT_ANALYZE_DOMAINS: tuple[str, ...] = (*FACET_DOMAIN_IDS, ADVISOR_DOMAIN_ID)
 
-_TICKER = re.compile(r"\b[A-Z]{2,6}\b")
+# Equity subjects are explicit (typed by the caller), so one-letter tickers
+# (O, F, T) are unambiguous here — unlike free-text extraction, which stays
+# conservative (see specialists.facets.extract_ticker).
+_EQUITY_SUBJECT = re.compile(r"[A-Z]{1,6}(\.[A-Z])?")
 
 #: Group -> subject validator/normalizer. A group absent here accepts any
 #: non-blank subject verbatim (stripped). Validation is transport hygiene;
 #: subject *semantics* belong to the group's domains.
 _SUBJECT_RULES: dict[str, tuple[Callable[[str], bool], Callable[[str], str]]] = {
-    "equity": (lambda s: bool(_TICKER.fullmatch(s.upper())), str.upper),
+    "equity": (lambda s: bool(_EQUITY_SUBJECT.fullmatch(s.upper())), str.upper),
 }
 
 

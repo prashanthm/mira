@@ -160,3 +160,17 @@ def test_facet_registry_entries_register_all_six():
     assert tech.domain_spec.domain_id == "technical"
     thesis = registry.resolve("thesis")
     assert thesis.invoke("analyze PLTR", thread_id="r").answer["facet"] == "thesis"
+
+
+# ------------------------------------------------------------ ticker extraction
+
+def test_extract_ticker_anchored_handles_one_letter_tickers():
+    from mira.orchestration.specialists.facets import extract_ticker
+
+    # the analyze fan-out query names the subject right after "analyze"
+    assert extract_ticker("analyze O: what should I do about O") == "O"
+    assert extract_ticker("analyze BRK.B") == "BRK.B"
+    assert extract_ticker("analyze PLTR: is it overvalued?") == "PLTR"
+    # free-form text stays conservative: one uppercase letter is a pronoun
+    assert extract_ticker("what should I do about PLTR?") == "PLTR"
+    assert extract_ticker("what should I do?") is None

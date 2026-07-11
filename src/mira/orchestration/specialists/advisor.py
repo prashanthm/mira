@@ -108,19 +108,20 @@ ADVISOR_CARD: AgentCard = card_for_domain(
 # Intent → (tool name, payload builder). Ordered: TLH phrasing is checked before
 # the generic wash/harvest phrasing so "tax-loss-harvest candidates" reaches
 # vantage.tlh_candidates rather than the wash check it also mentions.
-_TICKER = re.compile(r"\b[A-Z]{2,6}\b")
-
-
 def _wash_payload(action: str) -> dict[str, Any]:
     """Symbol payload when the action names an uppercase ticker, else all symbols."""
-    match = _TICKER.search(action)
-    return {"symbol": match.group(0)} if match else {}
+    from mira.orchestration.specialists.facets import extract_ticker
+
+    ticker = extract_ticker(action)
+    return {"symbol": ticker} if ticker else {}
 
 
 def _symbol_payload(action: str) -> dict[str, Any]:
     """Symbol filter when the action names an uppercase ticker, else all symbols."""
-    match = _TICKER.search(action)
-    return {"symbol": match.group(0)} if match else {}
+    from mira.orchestration.specialists.facets import extract_ticker
+
+    ticker = extract_ticker(action)
+    return {"symbol": ticker} if ticker else {}
 
 
 # Intent → (tool, payload builder), evaluated in order — first match wins.

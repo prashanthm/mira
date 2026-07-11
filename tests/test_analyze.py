@@ -209,3 +209,8 @@ def test_cached_analyze_provider_threads_llm():
     provider = cached_analyze_provider(_full_registry(), llm=llm)
     out = provider("PLTR")
     assert out["synthesis"] == "cached prose"
+
+
+def test_one_letter_equity_subjects_are_valid():
+    assert normalize_subject("o", "equity") == "O"
+    assert normalize_subject("brk.b", "equity") == "BRK.B"
