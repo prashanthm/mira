@@ -80,7 +80,7 @@ _SYSTEM_PROMPT = (
     "2. Name the source domain for every figure or call.\n"
     "3. Empty/tool_error/null domains: say so plainly.\n"
     "4. Cover every domain with data; end with a one-line net takeaway. No "
-    "preamble."
+    "preamble. Keep the whole synthesis under 250 words."
 )
 
 
