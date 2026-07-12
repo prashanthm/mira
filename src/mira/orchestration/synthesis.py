@@ -72,19 +72,15 @@ def _invoke(llm: ILLMProvider, system: str, user: str, *, tier: str) -> str:
 # ``synthesis_hint`` and is assembled into the prompt below only when the
 # domain actually returned results. A new domain never edits this module.
 _SYSTEM_PROMPT = (
-    "You are a synthesis node. You are given the raw results of several "
-    "specialist DOMAINS for one subject, each already grounded in read-only "
-    "tools. Write a concise, decision-useful synthesis for the user.\n\n"
+    "You synthesize grounded specialist DOMAIN results into a concise, "
+    "decision-useful answer.\n"
     "HARD RULES:\n"
-    "1. Use ONLY facts present in the domain results below. Never invent or "
-    "estimate a number, price, date, or recommendation the tools did not "
-    "return.\n"
-    "2. When you state a figure or a call, name the domain it came from.\n"
-    "3. If a domain returned nothing useful (empty, tool_error, or nulls), say "
-    "so plainly rather than filling the gap.\n"
-    "4. Be direct and comprehensive: cover every domain that returned data, "
-    "then a one-line net takeaway. No preamble, no disclaimers beyond what "
-    "the rules require."
+    "1. Only facts from the domain results — never invent numbers, dates, or "
+    "recommendations.\n"
+    "2. Name the source domain for every figure or call.\n"
+    "3. Empty/tool_error/null domains: say so plainly.\n"
+    "4. Cover every domain with data; end with a one-line net takeaway. No "
+    "preamble."
 )
 
 
@@ -99,7 +95,8 @@ def _guidance_block(
     """
     if not hints:
         return ""
-    present = [r.get("domain") for r in results or []]
+    present = [r.get("domain") for r in results or []
+               if _has_data(_trim(r.get("answer") if isinstance(r.get("answer"), Mapping) else {}))]
     lines = [f"- {d}: {hints[d].strip()}"
              for d in present if hints.get(d, "").strip()]
     if not lines:
@@ -126,8 +123,24 @@ def _facet_digest(results: list[dict[str, Any]]) -> str:
         answer = result.get("answer")
         answer = answer if isinstance(answer, Mapping) else {}
         trimmed = _trim(answer)
+        if not _has_data(trimmed):
+            blocks.append(f"### {domain}\nno_data")
+            continue
         blocks.append(f"### {domain}\n{json.dumps(trimmed, sort_keys=True, default=str)}")
     return "\n\n".join(blocks)
+
+
+def _has_data(value: Any) -> bool:
+    """True when a trimmed digest carries any informative (non-null, non-flag)
+    value — a payload of nulls and no_data markers digests to one line."""
+    if isinstance(value, Mapping):
+        return any(_has_data(v) for k, v in value.items()
+                   if k not in ("facet", "symbol", "no_data", "no_news", "has_plan"))
+    if isinstance(value, list):
+        return any(_has_data(v) for v in value)
+    if isinstance(value, bool):
+        return False
+    return value not in (None, "", {})
 
 
 def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
@@ -338,7 +351,7 @@ def synthesize_analysis(
     guidance = _guidance_block(results, hints)
     if guidance:
         system = f"{system}\n\n{guidance}"
-    user_parts = [f"Subject: {symbol}", f"User question: {ask}"]
+    user_parts = [f"User question ({symbol}): {ask}"]
     if context and context.strip():
         user_parts.append(f"Prior conversation:\n{context.strip()}")
     user_parts.append("Domain results:\n" + _facet_digest(results))
