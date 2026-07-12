@@ -37,7 +37,7 @@ from mira.providers.protocols import ILLMProvider
 #: tool calls (no LLM); weaving them into decision-useful prose is the hard,
 #: quality-sensitive step — so synthesis asks for the deep tier. Playbook polish
 #: only rewrites an already-correct templated draft — light is plenty.
-SYNTHESIS_TIER = ModelTier.DEEP.value
+SYNTHESIS_TIER = ModelTier.LIGHT.value
 PLAYBOOK_TIER = ModelTier.LIGHT.value
 
 

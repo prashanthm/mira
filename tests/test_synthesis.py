@@ -103,11 +103,13 @@ class _ChatCapturingLLM:
         return [0.0]
 
 
-def test_synthesis_requests_deep_tier_via_chat():
+def test_synthesis_requests_light_tier_via_chat():
+    # goal(analyze-cost) H4: light tier measured -39.6% median tokens with
+    # quality holding on the conflict case; the deep tier is one constant away.
     llm = _ChatCapturingLLM()
     out = synthesize_analysis(llm, "PLTR", _results())
     assert out == "SYNTH: multi-facet prose here."
-    assert llm.tiers == ["deep"]
+    assert llm.tiers == ["light"]
     # system/user separation is preserved on the chat path
     roles = [m["role"] for m in llm.messages[0]]
     assert roles == ["system", "user"]
