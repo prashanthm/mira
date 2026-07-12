@@ -44,8 +44,7 @@ ADVISOR_CARD: AgentCard = card_for_domain(
     model_hint="deep",
     analyze_group="equity",
     synthesis_hint=(
-        "The position/tax angle: cover the wash-sale status and any loss/credit "
-        "math it returned before endorsing an action."
+        "Cover wash-sale status and loss/credit math before endorsing an action."
     ),
     description=(
         "Answers portfolio questions (holdings, allocation, wash-sale windows, "

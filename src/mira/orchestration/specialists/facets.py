@@ -106,8 +106,7 @@ TECHNICAL_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "The recommendation is RULE-BASED from the nightly journal (name the "
-        "rule); it is a timing signal, not a thesis judgment."
+        "Rule-based timing signal — name the rule; not a thesis judgment."
     ),
 )
 
@@ -169,11 +168,9 @@ NEWS_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "Sentiment is an ESTIMATED headline lean, not fact. EARNINGS GATE: if "
-        "the earnings block shows a report within about a week (days_until <= "
-        "7), surface it prominently and make any 'act now' advice explicitly "
-        "conditional on it; if future_date_known is false, say the next "
-        "earnings date is unknown — never assume there is none."
+        "Sentiment is an ESTIMATED lean. EARNINGS GATE: days_until<=7 makes "
+        "act-now advice conditional on the report; future_date_known=false "
+        "means date unknown, never 'none'; state next_date when known."
     ),
 )
 
@@ -210,8 +207,7 @@ GROWTH_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "Quote rule_of_40 with its stated basis; statement-derived TTM figures, "
-        "so they lag the current quarter."
+        "Quote rule_of_40 with its basis; TTM figures lag the current quarter."
     ),
 )
 
@@ -240,11 +236,9 @@ EXPECTATIONS_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "Implied-growth figures are MODEL-DERIVED — cite the stated assumptions "
-        "(discount rate, terminal growth, horizon) when quoting them; "
-        "status=negative_fcf means implied growth is undefined (say so, never "
-        "guess). Compare the implied bar against the growth facet's actual "
-        "trajectory."
+        "Implied growth is MODEL-DERIVED: cite discount/terminal/horizon "
+        "assumptions; negative_fcf = undefined (say so). Compare the bar to "
+        "actual growth."
     ),
 )
 
@@ -273,11 +267,8 @@ THESIS_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "When a stored plan exists, explicitly weigh any close/sell "
-        "recommendation against the stated thesis and its target/stop "
-        "invalidation levels, and state whether the thesis is BROKEN or INTACT "
-        "on the evidence from the other domains. When no plan is on file, note "
-        "that — never invent one."
+        "Weigh close/sell calls against the stored thesis and its target/stop; "
+        "say BROKEN or INTACT. No plan on file: say so, never invent one."
     ),
 )
 

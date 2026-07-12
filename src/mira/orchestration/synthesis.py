@@ -135,7 +135,7 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
     structural trims decide WHAT survives it — decision cores instead of
     evidence trees, tax/wash essentials instead of full action payloads.
     Truncation is the last resort, not the mechanism."""
-    out = dict(answer)
+    out = _strip_envelope(dict(answer))
     # The technical facet nests bars under levels.bars — heavy and unneeded for
     # synthesis (the model reasons over the computed levels, not raw OHLCV).
     levels = out.get("levels")
@@ -173,6 +173,20 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
     if len(blob) > _MAX_FACET_JSON:
         return {"_truncated": blob[:_MAX_FACET_JSON]}
     return out
+
+
+_ENVELOPE_KEYS = ("provenance", "as_of", "source", "stale")
+
+
+def _strip_envelope(value):
+    """Digest-only copy without transport envelope keys (attribution stays on
+    the API result; the prompt never cites source_id strings)."""
+    if isinstance(value, Mapping):
+        return {k: _strip_envelope(v) for k, v in value.items()
+                if k not in _ENVELOPE_KEYS}
+    if isinstance(value, list):
+        return [_strip_envelope(v) for v in value]
+    return value
 
 
 def _decision_core(decision: Mapping[str, Any]) -> dict[str, Any]:
