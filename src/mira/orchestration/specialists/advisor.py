@@ -44,7 +44,8 @@ ADVISOR_CARD: AgentCard = card_for_domain(
     model_hint="deep",
     analyze_group="equity",
     synthesis_hint=(
-        "Cover wash-sale status and loss/credit math before endorsing an action."
+        "Cover wash-sale status, loss/credit math, and position size context "
+        "(weight_pct / x_median_position) before endorsing an action."
     ),
     description=(
         "Answers portfolio questions (holdings, allocation, wash-sale windows, "

@@ -149,7 +149,10 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
     structural trims decide WHAT survives it — decision cores instead of
     evidence trees, tax/wash essentials instead of full action payloads.
     Truncation is the last resort, not the mechanism."""
+    note = _staleness_note(answer)
     out = _strip_envelope(dict(answer))
+    if note:
+        out["_stale"] = note  # analyst discipline: stale data is a fact too
     # The technical facet nests bars under levels.bars — heavy and unneeded for
     # synthesis (the model reasons over the computed levels, not raw OHLCV).
     levels = out.get("levels")
@@ -206,6 +209,26 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
 
 
 _ENVELOPE_KEYS = ("provenance", "as_of", "source", "stale")
+
+
+def _staleness_note(value) -> str | None:
+    """One line when any nested envelope flags stale data — re-entered into
+    the digest AFTER envelope stripping (the H9 trim was over-eager: acting
+    on stale data is a different decision, so staleness must be visible)."""
+    if isinstance(value, Mapping):
+        if value.get("stale"):
+            as_of = value.get("as_of")
+            return f"stale data (as_of {as_of})" if as_of else "stale data"
+        for v in value.values():
+            note = _staleness_note(v)
+            if note:
+                return note
+    elif isinstance(value, list):
+        for v in value:
+            note = _staleness_note(v)
+            if note:
+                return note
+    return None
 
 
 def _strip_envelope(value):
@@ -348,6 +371,7 @@ def synthesize_analysis(
     question: str | None = None,
     context: str | None = None,
     hints: Mapping[str, str] | None = None,
+    tier: str | None = None,
 ) -> str:
     """Weave fan-out ``results`` into grounded multi-domain prose via the LLM.
 
@@ -375,10 +399,47 @@ def synthesize_analysis(
     user_prompt = "\n\n".join(user_parts)
 
     try:
-        text = _invoke(llm, system, user_prompt, tier=SYNTHESIS_TIER)
+        text = _invoke(llm, system, user_prompt, tier=tier or SYNTHESIS_TIER)
         return text or _fallback(symbol, results)
     except Exception:  # noqa: BLE001 — any LLM/adapter failure degrades, never blanks
         return _fallback(symbol, results)
+
+
+_PREMORTEM_PROMPT = (
+    "You are the pre-mortem: given a draft recommendation and the domain "
+    "results it came from, construct the STRONGEST argument that the draft's "
+    "conclusion is wrong — from the same facts only.\n"
+    "HARD RULES:\n"
+    "1. Only facts present in the domain results; never invent numbers.\n"
+    "2. Attack the conclusion, not the phrasing: what evidence cuts against "
+    "it, what would have to be true for it to fail, which cited signal has "
+    "the weakest record.\n"
+    "3. 60-100 words, no preamble. If the facts offer no real counter-case, "
+    "say exactly that in one sentence."
+)
+
+
+def premortem_analysis(
+    llm: ILLMProvider | None,
+    symbol: str,
+    results: list[dict[str, Any]],
+    draft: str,
+    *,
+    tier: str | None = None,
+) -> str:
+    """The adversarial second pass for conflicted cases (deep tier, thinking
+    on when routes provide it): the strongest counter-argument to ``draft``
+    from the same digests. Returns "" on any failure or missing LLM — the
+    section is omitted, never fabricated."""
+    if llm is None or not draft.strip() or not results:
+        return ""
+    user = (f"Subject: {symbol}\n\nDraft recommendation:\n{draft.strip()}"
+            f"\n\nDomain results:\n{_facet_digest(results)}")
+    try:
+        return _invoke(llm, _PREMORTEM_PROMPT, user,
+                       tier=tier or ModelTier.DEEP.value).strip()
+    except Exception:  # noqa: BLE001 — the pre-mortem degrades to absent
+        return ""
 
 
 # ============================================================ 0DTE SPX playbook
@@ -508,6 +569,7 @@ def _trim_scaffold(scaffold: Mapping[str, Any]) -> dict[str, Any]:
 
 __all__ = [
     "PLAYBOOK_TIER",
+    "premortem_analysis",
     "SYNTHESIS_TIER",
     "playbook_template",
     "synthesize_analysis",

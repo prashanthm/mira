@@ -226,3 +226,59 @@ def test_facet_error_kept_visible_in_fallback():
     results = [{"domain": "news", "answer": {}, "error": "specialist blew up"}]
     out = synthesize_analysis(None, "PLTR", results)
     assert "news: error — specialist blew up" in out
+
+
+# ------------------------------------------------------------ M1 staleness re-entry
+
+
+def test_stale_data_reenters_the_digest():
+    results = [{"domain": "technical", "answer": {
+        "facet": "technical",
+        "analysis": {"as_of": "2026-07-08", "stale": True,
+                     "decisions": [{"recommendation": "MONITOR"}]},
+    }, "error": None}]
+    llm = _ChatCapturingLLM()
+    synthesize_analysis(llm, "PLTR", results)
+    user = llm.messages[0][1]["content"]
+    assert "_stale" in user and "2026-07-08" in user
+
+
+def test_fresh_data_carries_no_stale_marker():
+    llm = _ChatCapturingLLM()
+    synthesize_analysis(llm, "PLTR", _results())
+    assert "_stale" not in llm.messages[0][1]["content"]
+
+
+# ------------------------------------------------------------ M4/M5 premortem + tier
+
+
+def test_tier_override_reaches_provider():
+    llm = _ChatCapturingLLM()
+    synthesize_analysis(llm, "PLTR", _results(), tier="deep")
+    assert llm.tiers == ["deep"]
+
+
+def test_premortem_runs_deep_and_carries_draft():
+    from mira.orchestration.synthesis import premortem_analysis
+
+    llm = _ChatCapturingLLM(reply="counter-case here")
+    out = premortem_analysis(llm, "PLTR", _results(), "DRAFT: close the position")
+    assert out == "counter-case here"
+    assert llm.tiers == ["deep"]
+    user = llm.messages[0][1]["content"]
+    assert "DRAFT: close the position" in user
+    system = llm.messages[0][0]["content"]
+    assert "counter" in system.lower() or "wrong" in system.lower()
+
+
+def test_premortem_degrades_to_absent():
+    from mira.orchestration.synthesis import premortem_analysis
+
+    assert premortem_analysis(None, "PLTR", _results(), "draft") == ""
+    assert premortem_analysis(_ChatCapturingLLM(), "PLTR", [], "draft") == ""
+
+    class _Boom:
+        def chat(self, *a, **k):
+            raise RuntimeError("down")
+
+    assert premortem_analysis(_Boom(), "PLTR", _results(), "draft") == ""

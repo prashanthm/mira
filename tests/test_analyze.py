@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from mira.orchestration.analyze import (
     DEFAULT_ANALYZE_DOMAINS,
+    detect_conflict,
     analyze_groups,
     analyze_subject,
     analyze_symbol,
@@ -193,7 +194,7 @@ class _FakeLLM:
 def test_analyze_with_llm_replaces_synthesis_with_prose():
     llm = _FakeLLM()
     result = analyze_symbol(_full_registry(), "PLTR", llm=llm).to_dict()
-    assert result["synthesis"] == "grounded multi-facet synthesis"
+    assert result["synthesis"].startswith("grounded multi-facet synthesis")
     # the facets' grounded facts reached the synthesis prompt
     assert "HOLD_AND_SELL_CALL" in llm.prompts[0] or "recommendation" in llm.prompts[0]
 
@@ -208,9 +209,124 @@ def test_cached_analyze_provider_threads_llm():
     llm = _FakeLLM(reply="cached prose")
     provider = cached_analyze_provider(_full_registry(), llm=llm)
     out = provider("PLTR")
-    assert out["synthesis"] == "cached prose"
+    assert out["synthesis"].startswith("cached prose")
 
 
 def test_one_letter_equity_subjects_are_valid():
     assert normalize_subject("o", "equity") == "O"
     assert normalize_subject("brk.b", "equity") == "BRK.B"
+
+
+# ------------------------------------------------------------ conflict detection (M5)
+
+
+def _res(domain, answer):
+    return {"domain": domain, "answer": answer, "error": None}
+
+
+def _conflicted_results(hit_rate=0.62, loss=-695.0, has_plan=True, rr_status="ok"):
+    return [
+        _res("technical", {
+            "facet": "technical",
+            "analysis": {"decisions": [{"symbol": "PLTR",
+                                        "recommendation": "CLOSE_AND_BOOK_LOSS",
+                                        "rule": "rule2_freefall_close",
+                                        "action_detail": {"unrealized_loss": loss}}]},
+            "scorecard": {"scorecard": {"rules": [
+                {"rule": "rule2_freefall_close", "hit_rate": hit_rate}]}},
+        }),
+        _res("thesis", {
+            "facet": "thesis",
+            "plan": {"has_plan": has_plan,
+                     "plan": {"target": 180.0, "stop": 95.0},
+                     "risk_reward": {"status": rr_status, "rr_ratio": 1.67}},
+        }),
+        _res("advisor", {"actions": [{"symbol": "PLTR",
+                                      "recommendation": "CLOSE_AND_BOOK_LOSS",
+                                      "action_detail": {"unrealized_loss": loss}}]}),
+    ]
+
+
+def test_detect_conflict_bearish_vs_intact_thesis():
+    reasons = detect_conflict(_conflicted_results())
+    assert "bearish_signal_vs_intact_thesis" in reasons
+    assert "large_unrealized_loss" not in reasons  # |695| < 1000
+    assert "weak_rule_record" not in reasons       # 0.62 >= 0.55
+
+
+def test_detect_conflict_large_loss_and_weak_rule():
+    reasons = detect_conflict(_conflicted_results(hit_rate=0.48, loss=-1500.0))
+    assert "large_unrealized_loss" in reasons
+    assert "weak_rule_record" in reasons
+
+
+def test_detect_conflict_routine_when_no_plan():
+    reasons = detect_conflict(_conflicted_results(has_plan=False))
+    assert "bearish_signal_vs_intact_thesis" not in reasons
+
+
+def test_detect_conflict_routine_when_thesis_breached():
+    reasons = detect_conflict(_conflicted_results(rr_status="stop_breached"))
+    assert "bearish_signal_vs_intact_thesis" not in reasons
+
+
+def test_detect_conflict_empty_results():
+    assert detect_conflict([]) == []
+
+
+# ------------------------------------------------------------ escalation + pre-mortem (M4/M5)
+
+
+class _TierChatLLM:
+    """Chat-capable fake recording the tier of every call."""
+
+    def __init__(self):
+        self.tiers = []
+
+    def chat(self, messages, *, model=None, tools=None, tool_choice="auto", tier=None):
+        self.tiers.append(tier)
+        n = len(self.tiers)
+
+        class _Reply:
+            text = f"call-{n} prose"
+            tool_calls = ()
+
+        return _Reply()
+
+    def embed(self, text):
+        return [0.0]
+
+
+def test_conflicted_case_escalates_and_gets_premortem():
+    # fixture data IS a conflicted case: CLOSE signal + intact thesis (rr ok)
+    llm = _TierChatLLM()
+    result = analyze_symbol(_full_registry(), "PLTR", llm=llm).to_dict()
+    assert llm.tiers == ["deep", "deep"]  # escalated synthesis + pre-mortem
+    assert "**Pre-mortem**" in result["synthesis"]
+    assert "bearish_signal_vs_intact_thesis" in result["synthesis"]
+
+
+def test_routine_case_stays_light_no_premortem():
+    from mira.orchestration.agent_cards import AgentCard
+
+    class _Stub:
+        def __init__(self, domain, answer):
+            self._d, self._a = domain, answer
+
+        def invoke(self, query, *, thread_id, context=None, **kw):
+            d, a = self._d, self._a
+
+            class _R:
+                def to_dict(_self):
+                    return {"domain": d, "answer": a, "error": None}
+            return _R()
+
+    registry = AgentCardRegistry()
+    registry.register(
+        AgentCard(name="technical", description="t", analyze_group="equity"),
+        lambda: _Stub("technical", {"analysis": {"decisions": [
+            {"symbol": "SQQQ", "recommendation": "MONITOR", "rule": "rule3_monitor"}]}}))
+    llm = _TierChatLLM()
+    result = analyze_subject(registry, "SQQQ", llm=llm).to_dict()
+    assert llm.tiers == ["light"]  # light default, single call, no pre-mortem
+    assert "**Pre-mortem**" not in result["synthesis"]

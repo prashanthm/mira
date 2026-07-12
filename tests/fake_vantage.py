@@ -344,6 +344,10 @@ POSITION_ACTIONS_RESULT = _envelope(
             "recommendation": d["recommendation"],
             "rationale": d["rationale"],
             "action_detail": d["action_detail"],
+            # V3 position context: sizing is decision-critical for add/close
+            "position_context": {
+                "weight_pct": 6.2, "value": 12_679.0, "x_median_position": 3.1,
+            },
         }
         for d in _DECISIONS
     ],
@@ -649,6 +653,11 @@ TICKER_PLAN_RESULT = _envelope(
     "ticker_plan",
     symbol="PLTR",
     has_plan=True,
+    risk_reward={
+        "price": 126.79, "target": 180.0, "stop": 95.0,
+        "upside": 53.21, "downside": 31.79, "rr_ratio": 1.67,
+        "upside_pct": 42.0, "downside_pct": 25.1, "status": "ok",
+    },
     plan={
         "thesis": "AIP land-and-expand converts gov credibility into commercial "
                   "growth; hold while US commercial revenue accelerates.",
@@ -661,6 +670,41 @@ TICKER_PLAN_RESULT = _envelope(
         {"created_at": "2025-06-20T10:00:00", "kind": "note",
          "payload": {"text": "Trimmed 10% into strength at 142."}},
     ],
+)
+
+RELATIVE_STRENGTH_RESULT = _envelope(
+    "relative_strength",
+    symbol="PLTR",
+    no_data=False,
+    relative_strength={
+        "symbol": "PLTR", "sector_etf": "XLK",
+        "r_1w": -0.06, "r_1m": -0.12, "r_3m": -0.05,
+        "spy_r_1w": -0.01, "spy_r_1m": -0.02, "spy_r_3m": 0.03,
+        "sector_r_1w": -0.02, "sector_r_1m": -0.04, "sector_r_3m": 0.01,
+        "beta_spy": 1.8, "idio_r_1m": -0.084,
+        "basis": "idio_r_1m = r_1m - beta_spy * spy_r_1m (daily closes)",
+        "benchmark_available": True,
+    },
+)
+
+REC_SCORECARD_RESULT = _envelope(
+    "rec_scorecard",
+    no_data=False,
+    scorecard={
+        "rules": [
+            {"rule": "rule2_freefall_close", "recommendation": "CLOSE_AND_BOOK_LOSS",
+             "n_scored": 34, "hit_rate": 0.62, "n_calls": 34,
+             "avg_fwd_5d": -0.012, "avg_fwd_20d": -0.031},
+            {"rule": "rule1_strong_at_support", "recommendation": "HOLD_AND_SELL_CALL",
+             "n_scored": 21, "hit_rate": 0.71, "n_calls": 21,
+             "avg_fwd_5d": 0.004, "avg_fwd_20d": 0.018},
+        ],
+        "n_pending": 5,
+        "hit_basis": "bearish calls (CLOSE_*) hit when +20d return < 0; "
+                     "constructive calls (HOLD_*) hit when +20d >= 0; "
+                     "MONITOR excluded from hit rates",
+        "horizons_days": [5, 20],
+    },
 )
 
 RESULTS: dict[str, dict[str, Any]] = {
@@ -681,6 +725,8 @@ RESULTS: dict[str, dict[str, Any]] = {
     "vantage.expectations": EXPECTATIONS_RESULT,
     "vantage.earnings": EARNINGS_RESULT,
     "vantage.ticker_plan": TICKER_PLAN_RESULT,
+    "vantage.relative_strength": RELATIVE_STRENGTH_RESULT,
+    "vantage.rec_scorecard": REC_SCORECARD_RESULT,
 }
 
 _PERMISSIVE_SCHEMA: dict[str, Any] = {"type": "object", "additionalProperties": True}

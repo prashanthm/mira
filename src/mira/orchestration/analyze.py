@@ -48,7 +48,7 @@ from langgraph.graph import END, START, StateGraph
 from mira.orchestration.agent_cards import AgentCardRegistry
 from mira.orchestration.specialists.facets import FACET_DOMAIN_IDS
 from mira.orchestration.supervisor import SupervisorResult, _synthesize
-from mira.orchestration.synthesis import synthesize_analysis
+from mira.orchestration.synthesis import premortem_analysis, synthesize_analysis
 from mira.providers.protocols import ILLMProvider
 
 # The advisor rides along so the equity analyze includes the position/tax read.
@@ -105,6 +105,74 @@ def analyze_groups(registry: AgentCardRegistry) -> list[str]:
     return seen
 
 
+#: |unrealized loss| at/above this makes a case "conflicted" (real money at
+#: stake -> deep tier + pre-mortem). Deployment-tunable via env later if needed.
+CONFLICT_LOSS_THRESHOLD = 1000.0
+#: A firing rule with a scorecard hit rate below this is a weak mandate.
+CONFLICT_WEAK_RULE = 0.55
+
+
+def detect_conflict(results: list[dict[str, Any]]) -> list[str]:
+    """Deterministic escalation triggers over the fan-out results (M5).
+
+    Returns the reasons a case is CONFLICTED (empty = routine): a bearish
+    signal against an intact thesis, a large unrealized loss at stake, or the
+    firing rule having a weak track record. Conflicted cases get the deep
+    tier + a pre-mortem; routine cases keep the cheap light-tier path.
+    """
+    by: dict[str, dict[str, Any]] = {}
+    for r in results or []:
+        answer = r.get("answer")
+        if isinstance(answer, dict):
+            by[str(r.get("domain"))] = answer
+
+    reasons: list[str] = []
+    decision = _first_decision(by.get("technical", {}))
+    action = _first_action(by.get("advisor", {}))
+    rec = str((decision or {}).get("recommendation")
+              or (action or {}).get("recommendation") or "")
+    bearish = rec.startswith("CLOSE") or "SELL" in rec.upper().replace("_CALL", "")
+
+    plan_env = by.get("thesis", {}).get("plan")
+    rr = plan_env.get("risk_reward") if isinstance(plan_env, dict) else None
+    thesis_intact = bool(
+        isinstance(plan_env, dict) and plan_env.get("has_plan")
+        and isinstance(rr, dict) and rr.get("status") == "ok"
+    )
+    if bearish and thesis_intact:
+        reasons.append("bearish_signal_vs_intact_thesis")
+
+    detail = (action or {}).get("action_detail") or (decision or {}).get("action_detail")
+    loss = (detail or {}).get("unrealized_loss") if isinstance(detail, dict) else None
+    try:
+        if loss is not None and abs(float(loss)) >= CONFLICT_LOSS_THRESHOLD:
+            reasons.append("large_unrealized_loss")
+    except (TypeError, ValueError):
+        pass
+
+    rule = str((decision or {}).get("rule") or "")
+    scorecard = by.get("technical", {}).get("scorecard")
+    rows = (scorecard or {}).get("scorecard", {}).get("rules")         if isinstance(scorecard, dict) else None
+    for row in rows or []:
+        if (isinstance(row, dict) and row.get("rule") == rule
+                and isinstance(row.get("hit_rate"), (int, float))
+                and row["hit_rate"] < CONFLICT_WEAK_RULE):
+            reasons.append("weak_rule_record")
+            break
+    return reasons
+
+
+def _first_decision(technical: dict[str, Any]) -> dict[str, Any] | None:
+    analysis = technical.get("analysis")
+    decisions = analysis.get("decisions") if isinstance(analysis, dict) else None
+    return decisions[0] if isinstance(decisions, list) and decisions else None
+
+
+def _first_action(advisor: dict[str, Any]) -> dict[str, Any] | None:
+    actions = advisor.get("actions")
+    return actions[0] if isinstance(actions, list) and actions else None
+
+
 class AnalyzeState(TypedDict, total=False):
     """Graph state: the fan-out query in, accumulated results out.
 
@@ -116,6 +184,7 @@ class AnalyzeState(TypedDict, total=False):
     thread_id: str
     results: Annotated[list[dict[str, Any]], operator.add]
     synthesis: str
+    conflict: list[str]
 
 
 def _query_for(subject: str, question: str | None) -> str:
@@ -178,19 +247,40 @@ def build_analyze_graph(
 
     def synthesize(state: AnalyzeState) -> dict[str, Any]:
         results = _ordered(state.get("results") or [], domains)
+        conflict = detect_conflict(results)
         if llm is None:
-            return {"synthesis": _synthesize(results)}
-        return {"synthesis": synthesize_analysis(
+            return {"synthesis": _synthesize(results), "conflict": conflict}
+        # M5: conflicted cases escalate to the deep tier (thinking, when the
+        # routes provide it); routine cases keep the cheap light-tier path.
+        return {"conflict": conflict, "synthesis": synthesize_analysis(
             llm, subject, results,
-            question=question, context=context, hints=hints)}
+            question=question, context=context, hints=hints,
+            tier="deep" if conflict else None)}
+
+    def premortem(state: AnalyzeState) -> dict[str, Any]:
+        # M4: the adversarial second pass, ONLY for conflicted cases — the
+        # strongest counter-argument from the same facts, appended so the
+        # reader sees the bear case for the bull call (and vice versa).
+        conflict = state.get("conflict") or []
+        draft = state.get("synthesis") or ""
+        if llm is None or not conflict or not draft:
+            return {}
+        counter = premortem_analysis(
+            llm, subject, _ordered(state.get("results") or [], domains), draft)
+        if not counter:
+            return {}
+        tags = ", ".join(conflict)
+        return {"synthesis": f"{draft}\n\n**Pre-mortem** ({tags}): {counter}"}
 
     graph = StateGraph(AnalyzeState)
     graph.add_node("synthesize", synthesize)
+    graph.add_node("premortem", premortem)
     for domain in domains:
         graph.add_node(domain, _domain_node(domain))
         graph.add_edge(START, domain)
         graph.add_edge(domain, "synthesize")
-    graph.add_edge("synthesize", END)
+    graph.add_edge("synthesize", "premortem")
+    graph.add_edge("premortem", END)
     return graph.compile()
 
 

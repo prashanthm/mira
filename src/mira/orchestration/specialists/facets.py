@@ -106,12 +106,18 @@ TECHNICAL_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "Rule-based timing signal — name the rule; not a thesis judgment."
+        "Rule-based timing signal — name the rule and weigh it by its "
+        "scorecard hit rate (a ~50% rule is a coin flip). Attribute the move "
+        "first: idio_r_1m vs the sector/market returns says whether the NAME "
+        "is moving or its factor is."
     ),
 )
 
 
 def _infer_technical(action: str, registry: dict[str, RegisteredTool]) -> dict[str, Any] | None:
+    """Signal + its context: the journal decision, levels, the factor
+    decomposition (is the NAME moving or its sector?), and the rules' own
+    track record (scorecard) so synthesis weighs the signal by its history."""
     payload = _symbol(action)
     analysis = _call(registry, "vantage.analysis", payload)
     bars = _call(registry, "vantage.bars", payload)
@@ -122,6 +128,12 @@ def _infer_technical(action: str, registry: dict[str, RegisteredTool]) -> dict[s
         out["analysis"] = analysis
     if bars is not None:
         out["levels"] = bars
+    rel = _call(registry, "vantage.relative_strength", payload)
+    if rel is not None:
+        out["relative_strength"] = rel
+    scorecard = _call(registry, "vantage.rec_scorecard", {})
+    if scorecard is not None:
+        out["scorecard"] = scorecard
     return out
 
 
@@ -268,7 +280,8 @@ THESIS_CARD: AgentCard = card_for_domain(
     analyze_group="equity",
     synthesis_hint=(
         "Weigh close/sell calls against the stored thesis and its target/stop; "
-        "say BROKEN or INTACT. No plan on file: say so, never invent one."
+        "say BROKEN or INTACT and state the risk_reward ratio when a plan "
+        "exists. No plan on file: say so, never invent one."
     ),
 )
 
