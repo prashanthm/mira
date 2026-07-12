@@ -1,7 +1,8 @@
 # Analyst Upgrade Plan — Vantage + Mira
 
-*2026-07-11 · Status: READY, awaiting go-ahead (user's Vantage goals must
-complete first — do not touch the Vantage repo until then).*
+*2026-07-11 · Status: IMPLEMENTED (V1-V4 + M1-M5 same day; V5 skipped — no
+clean data source; M6 comparative mode remains open). Measurements in the
+analyze-cost goal log's post-goal appendix (H27/H28).*
 
 ## Context
 
