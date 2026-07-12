@@ -107,7 +107,7 @@ def _guidance_block(
     return ("DOMAIN GUIDANCE (each line is that domain's own HARD RULE for "
             "how its results may be used):\n" + "\n".join(lines))
 
-_MAX_FACET_JSON = 700  # cap each facet digest so the prompt stays bounded
+_MAX_FACET_JSON = 450  # cap each facet digest so the prompt stays bounded
 
 
 def _facet_digest(results: list[dict[str, Any]]) -> str:
@@ -131,7 +131,10 @@ def _facet_digest(results: list[dict[str, Any]]) -> str:
 
 
 def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
-    """Drop the heaviest keys (raw bar arrays) so a facet digest stays bounded."""
+    """Structure each digest to fit the cap: the cap sets the token bound,
+    structural trims decide WHAT survives it — decision cores instead of
+    evidence trees, tax/wash essentials instead of full action payloads.
+    Truncation is the last resort, not the mechanism."""
     out = dict(answer)
     # The technical facet nests bars under levels.bars — heavy and unneeded for
     # synthesis (the model reasons over the computed levels, not raw OHLCV).
@@ -140,10 +143,56 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
         levels = dict(levels)
         levels["bars"] = f"<{len(levels['bars'])} bars omitted>"
         out["levels"] = levels
+    # Decision journal (technical facet) and advisor actions both carry full
+    # per-timeframe evidence trees per decision; synthesis reasons over the
+    # decision CORE — recommendation, rule, rationale, conviction, nearest
+    # levels, tax/wash math.
+    analysis = out.get("analysis")
+    if isinstance(analysis, Mapping) and isinstance(analysis.get("decisions"), list):
+        analysis = dict(analysis)
+        analysis["decisions"] = [
+            _decision_core(d) if isinstance(d, Mapping) else d
+            for d in analysis["decisions"]
+        ]
+        out["analysis"] = analysis
+    if isinstance(out.get("actions"), list):
+        out["actions"] = [
+            _decision_core(a) if isinstance(a, Mapping) else a
+            for a in out["actions"]
+        ]
+    # Expectations: the implied bar + assumptions are the content; the scenario
+    # ladder's endpoints suffice for "what would justify the price".
+    expectations = out.get("expectations")
+    if isinstance(expectations, Mapping):
+        scenarios = expectations.get("scenarios")
+        if isinstance(scenarios, list) and len(scenarios) > 2:
+            expectations = dict(expectations)
+            expectations["scenarios"] = [scenarios[0], scenarios[-1]]
+            out["expectations"] = expectations
     blob = json.dumps(out, default=str)
     if len(blob) > _MAX_FACET_JSON:
         return {"_truncated": blob[:_MAX_FACET_JSON]}
     return out
+
+
+def _decision_core(decision: Mapping[str, Any]) -> dict[str, Any]:
+    """A journal decision/action minus its evidence tree, keeping the nearest
+    levels and the full action math (wash/loss/credit — decision-critical)."""
+    core = {k: v for k, v in decision.items() if k not in ("evidence", "leg_actions")}
+    evidence = decision.get("evidence")
+    if isinstance(evidence, Mapping):
+        for key in ("nearest_support", "nearest_resistance",
+                    "broke_support_with_momentum", "at_support"):
+            if key in evidence:
+                core[key] = evidence[key]
+    legs = decision.get("leg_actions")
+    if isinstance(legs, list) and legs:
+        core["leg_actions"] = [
+            {k: leg.get(k) for k in ("occ_symbol", "action", "rationale")}
+            if isinstance(leg, Mapping) else leg
+            for leg in legs
+        ]
+    return core
 
 
 def _fallback(symbol: str, results: list[dict[str, Any]]) -> str:
