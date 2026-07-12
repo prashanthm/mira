@@ -254,8 +254,13 @@ def build_app(
 
         synthesis_llm = gateway.for_agent("synthesis")
         groups = analyze_groups(registry) or [DEFAULT_GROUP]
+        held_symbols = _held_symbols_fn(tools)
         providers = {
-            g: cached_analyze_provider(registry, llm=synthesis_llm, group=g)
+            g: cached_analyze_provider(
+                registry, llm=synthesis_llm, group=g,
+                # portfolio mode (subject=*) needs the held universe; only the
+                # equity group has one today (from vantage.positions).
+                held_symbols=held_symbols if g == DEFAULT_GROUP else None)
             for g in groups
         }
         default_group = groups[0]
@@ -335,6 +340,37 @@ def build_app(
     )
     app_holder.append(app)
     return app
+
+
+def _held_symbols_fn(tools: list[Any]):
+    """A callable returning the held equity underlyings, from the discovered
+    ``vantage.positions`` tool — or None when the tool wasn't discovered
+    (portfolio mode then 404s rather than guessing a universe)."""
+    import re as _re
+
+    positions_tool = next(
+        (t for t in tools
+         if str(getattr(t, "name", "") or "") == "vantage.positions"), None)
+    if positions_tool is None:
+        return None
+
+    from mira.orchestration.mcp_bridge import registered_tools_from_mcp
+
+    bridged = registered_tools_from_mcp([positions_tool])[0]
+    ticker = _re.compile(r"[A-Z]{1,6}(\.[A-Z])?")
+    sleeves = {"CASH", "CRYPTO", "FUTURES"}
+
+    def held() -> list[str]:
+        result = bridged.handler({"account": "all"})
+        rows = result.get("positions") if isinstance(result, dict) else None
+        out: set[str] = set()
+        for row in rows or []:
+            sym = str((row or {}).get("symbol") or "").upper().split(" ", 1)[0]
+            if sym and sym not in sleeves and ticker.fullmatch(sym):
+                out.add(sym)
+        return sorted(out)
+
+    return held
 
 
 def _discover_mcp_tools(profile: Profile) -> list[Any]:

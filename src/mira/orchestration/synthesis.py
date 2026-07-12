@@ -442,6 +442,64 @@ def premortem_analysis(
         return ""
 
 
+_PORTFOLIO_PROMPT = (
+    "You are a portfolio-level synthesis node. You are given one RANKED row "
+    "per held position (rank score basis is stated), each derived from that "
+    "name's grounded domain results. Write the comparative read: where the "
+    "next dollar goes, and which positions are the worst use of theirs.\n"
+    "HARD RULES:\n"
+    "1. Only facts from the rows; never invent numbers or names.\n"
+    "2. Name the top 2-3 close/trim candidates and top 2-3 add/hold "
+    "candidates WITH the row facts that justify each (score, R:R, rule + "
+    "hit rate, conviction, idio move, weight).\n"
+    "3. Note concentration: positions with x_median_position >= 3 or "
+    "weight_pct >= 5 deserve a sizing comment.\n"
+    "4. Conflicted rows (non-empty conflict) get a one-line caveat each.\n"
+    "5. End with a one-line net takeaway. Under 250 words, no preamble."
+)
+
+
+def _portfolio_fallback(rows: list[dict[str, Any]]) -> str:
+    """Deterministic ranked digest when no LLM is available — never fabricates."""
+    lines = ["Portfolio ranking (deterministic — no synthesis model):"]
+    for r in rows:
+        lines.append(
+            f"- {r.get('symbol')}: score {r.get('score')}, "
+            f"rec {r.get('recommendation') or 'n/a'}, "
+            f"rr {r.get('rr_ratio') if r.get('rr_ratio') is not None else 'n/a'}, "
+            f"weight {r.get('weight_pct') if r.get('weight_pct') is not None else 'n/a'}%"
+        )
+    return "\n".join(lines)
+
+
+def synthesize_portfolio(
+    llm: ILLMProvider | None,
+    rows: list[dict[str, Any]],
+    *,
+    group: str,
+    question: str | None = None,
+    basis: str = "",
+) -> str:
+    """One comparative synthesis over the ranked per-name rows (deep tier —
+    cross-position judgment is the hard step; per-name grounding was free)."""
+    if not rows:
+        return "No positions to rank."
+    if llm is None:
+        return _portfolio_fallback(rows)
+    ask = question.strip() if question and question.strip() else \
+        "Where is the next dollar best deployed, and what is the worst use of its dollars?"
+    user_parts = [f"Group: {group}", f"User question: {ask}"]
+    if basis:
+        user_parts.append(f"Rank score basis: {basis}")
+    user_parts.append("Ranked rows (best first):\n" + json.dumps(rows, default=str))
+    try:
+        text = _invoke(llm, _PORTFOLIO_PROMPT, "\n\n".join(user_parts),
+                       tier=ModelTier.DEEP.value)
+        return text or _portfolio_fallback(rows)
+    except Exception:  # noqa: BLE001 — degrade to the ranked digest, never blank
+        return _portfolio_fallback(rows)
+
+
 # ============================================================ 0DTE SPX playbook
 
 _PLAYBOOK_SYSTEM_PROMPT = (
@@ -570,6 +628,7 @@ def _trim_scaffold(scaffold: Mapping[str, Any]) -> dict[str, Any]:
 __all__ = [
     "PLAYBOOK_TIER",
     "premortem_analysis",
+    "synthesize_portfolio",
     "SYNTHESIS_TIER",
     "playbook_template",
     "synthesize_analysis",

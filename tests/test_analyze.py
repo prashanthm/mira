@@ -330,3 +330,90 @@ def test_routine_case_stays_light_no_premortem():
     result = analyze_subject(registry, "SQQQ", llm=llm).to_dict()
     assert llm.tiers == ["light"]  # light default, single call, no pre-mortem
     assert "**Pre-mortem**" not in result["synthesis"]
+
+
+# ------------------------------------------------------------ M6 portfolio mode
+
+
+def test_rank_metrics_extracts_and_scores():
+    from mira.orchestration.analyze import rank_metrics
+
+    row = rank_metrics("PLTR", _conflicted_results())
+    assert row["symbol"] == "PLTR"
+    assert row["recommendation"] == "CLOSE_AND_BOOK_LOSS"
+    assert row["hit_rate"] == 0.62
+    assert row["rr_ratio"] == 1.67
+    assert "bearish_signal_vs_intact_thesis" in row["conflict"]
+    assert isinstance(row["score"], float)
+
+
+def test_analyze_portfolio_ranks_and_synthesizes_once():
+    from mira.orchestration.agent_cards import AgentCard
+    from mira.orchestration.analyze import analyze_portfolio
+
+    class _Stub:
+        def __init__(self, answers):
+            self._answers = answers  # symbol -> answer
+
+        def invoke(self, query, *, thread_id, context=None, **kw):
+            sym = query.split()[1].rstrip(":")
+            a = self._answers.get(sym, {})
+
+            class _R:
+                def to_dict(_self):
+                    return {"domain": "technical", "answer": a, "error": None}
+            return _R()
+
+    strong = {"analysis": {"decisions": [{"symbol": "AAA", "recommendation":
+              "HOLD_AND_SELL_CALL", "rule": "r1",
+              "conviction": {"score": 0.8, "label": "strong"}}]},
+              "scorecard": {"scorecard": {"rules": [{"rule": "r1", "hit_rate": 0.9}]}}}
+    weak = {"analysis": {"decisions": [{"symbol": "BBB", "recommendation":
+            "CLOSE_AND_BOOK_LOSS", "rule": "r2",
+            "conviction": {"score": -1.0, "label": "freefall"}}]},
+            "scorecard": {"scorecard": {"rules": [{"rule": "r2", "hit_rate": 0.9}]}}}
+
+    registry = AgentCardRegistry()
+    registry.register(
+        AgentCard(name="technical", description="t", analyze_group="equity"),
+        lambda: _Stub({"AAA": strong, "BBB": weak}))
+
+    llm = _TierChatLLM()
+    out = analyze_portfolio(registry, ["BBB", "AAA"], llm=llm)
+    assert [r["symbol"] for r in out["rows"]] == ["AAA", "BBB"]  # ranked, not input order
+    assert out["rows"][0]["score"] > out["rows"][1]["score"]
+    assert llm.tiers == ["deep"]  # exactly ONE model call for the whole portfolio
+    assert out["synthesis"] == "call-1 prose"
+    assert out["basis"].startswith("score =")
+
+
+def test_portfolio_provider_sentinel_and_cache():
+    from mira.orchestration.agent_cards import AgentCard
+
+    calls = {"n": 0}
+
+    class _Stub:
+        def invoke(self, query, *, thread_id, context=None, **kw):
+            calls["n"] += 1
+
+            class _R:
+                def to_dict(_self):
+                    return {"domain": "technical", "answer": {}, "error": None}
+            return _R()
+
+    registry = AgentCardRegistry()
+    registry.register(
+        AgentCard(name="technical", description="t", analyze_group="equity"),
+        lambda: _Stub())
+    provider = cached_analyze_provider(
+        registry, held_symbols=lambda: ["AAA", "BBB"])
+    out = provider("*")
+    assert out is not None and len(out["rows"]) == 2
+    n = calls["n"]
+    assert provider("*") is out or calls["n"] == n  # cached
+    assert provider("*", refresh=True) is not None and calls["n"] > n
+
+
+def test_portfolio_mode_unwired_returns_none():
+    provider = cached_analyze_provider(AgentCardRegistry())
+    assert provider("*") is None

@@ -48,7 +48,11 @@ from langgraph.graph import END, START, StateGraph
 from mira.orchestration.agent_cards import AgentCardRegistry
 from mira.orchestration.specialists.facets import FACET_DOMAIN_IDS
 from mira.orchestration.supervisor import SupervisorResult, _synthesize
-from mira.orchestration.synthesis import premortem_analysis, synthesize_analysis
+from mira.orchestration.synthesis import (
+    premortem_analysis,
+    synthesize_analysis,
+    synthesize_portfolio,
+)
 from mira.providers.protocols import ILLMProvider
 
 # The advisor rides along so the equity analyze includes the position/tax read.
@@ -331,6 +335,127 @@ def analyze_subject(
     )
 
 
+#: The portfolio-mode sentinel subject: /analyze?subject=*&group=equity fans
+#: across every held name in the group and answers comparatively (M6).
+PORTFOLIO_SUBJECT = "*"
+
+#: Transparent, documented ranking basis — deterministic math over facet data.
+RANK_BASIS = (
+    "score = conviction*signal_weight + rr_component + idio_momentum "
+    "- concentration_penalty; signal_weight = scorecard hit_rate for the "
+    "firing rule (0.5 when unscored); rr_component = 0.25*(rr_ratio-1) "
+    "clamped [-0.5, 0.5] when a plan exists; idio_momentum = 5*idio_r_1m "
+    "clamped [-1, 1]; concentration_penalty = 0.5 when x_median_position>=3. "
+    "Higher = better use of its dollars."
+)
+
+
+def _clamp(v: float, lo: float, hi: float) -> float:
+    return max(lo, min(hi, v))
+
+
+def rank_metrics(symbol: str, results: list[dict[str, Any]]) -> dict[str, Any]:
+    """Per-name ranking row extracted from one fan-out's grounded results."""
+    by: dict[str, dict[str, Any]] = {}
+    for r in results or []:
+        answer = r.get("answer")
+        if isinstance(answer, dict):
+            by[str(r.get("domain"))] = answer
+
+    decision = _first_decision(by.get("technical", {})) or {}
+    action = _first_action(by.get("advisor", {})) or {}
+    conviction = decision.get("conviction")
+    conv_score = float(conviction.get("score", 0.0)) if isinstance(conviction, dict) else 0.0
+    rule = str(decision.get("rule") or "")
+
+    hit_rate = None
+    scorecard = by.get("technical", {}).get("scorecard")
+    rows = (scorecard or {}).get("scorecard", {}).get("rules") \
+        if isinstance(scorecard, dict) else None
+    for row in rows or []:
+        if isinstance(row, dict) and row.get("rule") == rule:
+            hit_rate = row.get("hit_rate")
+            break
+
+    plan_env = by.get("thesis", {}).get("plan")
+    rr = plan_env.get("risk_reward") if isinstance(plan_env, dict) else None
+    rr_ratio = rr.get("rr_ratio") if isinstance(rr, dict) else None
+    rr_status = rr.get("status") if isinstance(rr, dict) else None
+
+    rel = by.get("technical", {}).get("relative_strength")
+    rel_inner = rel.get("relative_strength") if isinstance(rel, dict) else None
+    idio = rel_inner.get("idio_r_1m") if isinstance(rel_inner, dict) else None
+
+    ctx = action.get("position_context") if isinstance(action, dict) else None
+    weight = ctx.get("weight_pct") if isinstance(ctx, dict) else None
+    x_median = ctx.get("x_median_position") if isinstance(ctx, dict) else None
+    detail = action.get("action_detail") if isinstance(action, dict) else None
+    loss = detail.get("unrealized_loss") if isinstance(detail, dict) else None
+
+    signal_weight = float(hit_rate) if isinstance(hit_rate, (int, float)) else 0.5
+    score = conv_score * signal_weight
+    if isinstance(rr_ratio, (int, float)):
+        score += _clamp(0.25 * (float(rr_ratio) - 1.0), -0.5, 0.5)
+    if isinstance(idio, (int, float)):
+        score += _clamp(5.0 * float(idio), -1.0, 1.0)
+    if isinstance(x_median, (int, float)) and x_median >= 3:
+        score -= 0.5
+
+    return {
+        "symbol": symbol,
+        "score": round(score, 3),
+        "recommendation": decision.get("recommendation") or action.get("recommendation"),
+        "rule": rule or None,
+        "hit_rate": hit_rate,
+        "conviction": round(conv_score, 2),
+        "rr_ratio": rr_ratio,
+        "rr_status": rr_status,
+        "idio_r_1m": idio,
+        "weight_pct": weight,
+        "x_median_position": x_median,
+        "unrealized_loss": loss,
+        "conflict": detect_conflict(results),
+    }
+
+
+def analyze_portfolio(
+    registry: AgentCardRegistry,
+    symbols: list[str],
+    *,
+    group: str = DEFAULT_GROUP,
+    question: str | None = None,
+    llm: ILLMProvider | None = None,
+    max_workers: int = 4,
+) -> dict[str, Any]:
+    """M6 comparative mode: fan the group's domains across every held name,
+    rank deterministically, then ONE deep-tier comparative synthesis.
+
+    Per-name runs are LLM-free (ranking needs grounded facet DATA, not prose),
+    so the whole portfolio costs a single model call. Bounded concurrency
+    keeps the MCP server comfortable.
+    """
+    from concurrent.futures import ThreadPoolExecutor
+
+    subjects = [s for s in (normalize_subject(x, group) for x in symbols) if s]
+
+    def one(sym: str) -> dict[str, Any]:
+        result = analyze_subject(registry, sym, group=group, llm=None)
+        return rank_metrics(sym, result.results)
+
+    with ThreadPoolExecutor(max_workers=max(1, max_workers)) as pool:
+        rows = list(pool.map(one, subjects))
+    rows.sort(key=lambda r: r["score"], reverse=True)
+
+    return {
+        "group": group,
+        "subject": PORTFOLIO_SUBJECT,
+        "basis": RANK_BASIS,
+        "rows": rows,
+        "synthesis": synthesize_portfolio(
+            llm, rows, group=group, question=question, basis=RANK_BASIS),
+    }
+
+
 def analyze_symbol(
     registry: AgentCardRegistry,
     symbol: str,
@@ -353,6 +478,7 @@ def cached_analyze_provider(
     *,
     llm: ILLMProvider | None = None,
     group: str = DEFAULT_GROUP,
+    held_symbols: Callable[[], list[str]] | None = None,
 ) -> Callable[[str, str | None, bool], dict[str, Any] | None]:
     """In-memory ``{subject: analyze-result}`` cache over :func:`analyze_subject`.
 
@@ -365,6 +491,15 @@ def cached_analyze_provider(
     cache: dict[str, dict[str, Any]] = {}
 
     def provider(subject: str, question: str | None = None, refresh: bool = False) -> dict[str, Any] | None:
+        if (subject or "").strip() == PORTFOLIO_SUBJECT:
+            if held_symbols is None:
+                return None  # portfolio mode unwired for this group -> 404
+            key = f"{group}::*::{(question or '').strip()}"
+            if refresh or key not in cache:
+                cache[key] = analyze_portfolio(
+                    registry, held_symbols(), group=group,
+                    question=question, llm=llm)
+            return cache[key]
         sub = normalize_subject(subject, group)
         if sub is None:
             return None
@@ -379,6 +514,10 @@ def cached_analyze_provider(
 
 __all__ = [
     "ADVISOR_DOMAIN_ID",
+    "PORTFOLIO_SUBJECT",
+    "RANK_BASIS",
+    "analyze_portfolio",
+    "rank_metrics",
     "DEFAULT_ANALYZE_DOMAINS",
     "DEFAULT_GROUP",
     "AnalyzeState",
