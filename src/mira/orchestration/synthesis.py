@@ -78,7 +78,8 @@ _SYSTEM_PROMPT = (
     "1. Only facts from the domain results — never invent numbers, dates, or "
     "recommendations.\n"
     "2. Name the source domain for every figure or call.\n"
-    "3. Empty/tool_error/null domains: say so plainly.\n"
+    "3. Name EVERY domain, including empty/tool_error/no_data ones — one "
+    "line each ('<domain>: no data') — absence is information.\n"
     "4. Cover every domain with data; end with a one-line net takeaway. No "
     "preamble. Keep the whole synthesis under 250 words."
 )
