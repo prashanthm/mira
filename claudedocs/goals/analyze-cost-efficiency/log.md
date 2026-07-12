@@ -346,3 +346,30 @@ key learnings:
 5. Measurement noise collapsed from ~8% (reasoner era) to ~1-3% (light era)
    — replication (H14) recalibrated the verdict threshold mid-goal.
 
+
+---
+
+# POST-GOAL APPENDIX — H27/H28 (conflict-triggered escalation, analyst-upgrade plan M4/M5)
+
+## H27 blended cost with deterministic escalation
+prediction (pre-registered in analyst-upgrade-plan.md): escalation fires on
+~20-30% of held names; blended cost ~-50% vs E0; verdicts change on
+conflicted cases.
+experiment: detect_conflict (bearish-vs-intact-thesis, |loss|>=1k, weak rule)
+routes conflicted cases to deep tier + pre-mortem; routine stays light.
+result: escalation on 2/5 panel symbols (40% — above prediction; ACN's $1,125
+loss trips the money-at-stake trigger). Routine names 1551-1852 tokens;
+conflicted 4561-5021 (2 reasoner calls incl. pre-mortem). Blended:
+median 1852 (-59.0% vs E0 4514), mean 2963 (-30.6% vs E0 mean 4270).
+verdict: confirmed in shape (spend concentrates where money/conflict is);
+escalation rate and mean-basis cost ran above prediction — tune
+CONFLICT_LOSS_THRESHOLD if the book's typical loss size makes 40% the norm.
+kept: yes (mira 64f53b9 + vantage 4493ad2/838ec5a)
+
+## H28 deep tier catches what light misses (qualitative)
+result: on the same PLTR case, light-tier synthesis misquoted the R:R as
+0.42 (read upside_pct as the ratio); the escalated deep-tier run quoted
+1.67 correctly and the pre-mortem constructed a genuine counter-case
+("decline may be noise, not structural; booking a loss ignores strong
+upside while the signal is unreliable"). The escalation earns its tokens on
+exactly the cases it selects.
