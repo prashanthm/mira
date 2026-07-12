@@ -173,15 +173,31 @@ def _trim(answer: Mapping[str, Any]) -> dict[str, Any]:
             _decision_core(a) if isinstance(a, Mapping) else a
             for a in out["actions"]
         ]
-    # Expectations: the implied bar + assumptions are the content; the scenario
-    # ladder's endpoints suffice for "what would justify the price".
+    # Expectations: the implied bar + assumptions are the content; scenarios
+    # only restate them as a ladder.
     expectations = out.get("expectations")
-    if isinstance(expectations, Mapping):
-        scenarios = expectations.get("scenarios")
-        if isinstance(scenarios, list) and len(scenarios) > 2:
-            expectations = dict(expectations)
-            expectations["scenarios"] = [scenarios[0], scenarios[-1]]
-            out["expectations"] = expectations
+    if isinstance(expectations, Mapping) and expectations.get("scenarios"):
+        expectations = dict(expectations)
+        expectations.pop("scenarios", None)
+        out["expectations"] = expectations
+    # Thesis: the plan is the content; journal entries are history.
+    plan = out.get("plan")
+    if isinstance(plan, Mapping) and plan.get("journal"):
+        plan = dict(plan)
+        plan.pop("journal", None)
+        out["plan"] = plan
+    # News: top 3 headlines, headline fields only.
+    news = out.get("news")
+    inner = news.get("news") if isinstance(news, Mapping) else None
+    if isinstance(inner, Mapping) and isinstance(inner.get("items"), list):
+        news, inner = dict(news), dict(inner)
+        inner["items"] = [
+            {k: it.get(k) for k in ("title", "publisher", "published")}
+            if isinstance(it, Mapping) else it
+            for it in inner["items"][:3]
+        ]
+        news["news"] = inner
+        out["news"] = news
     blob = json.dumps(out, default=str)
     if len(blob) > _MAX_FACET_JSON:
         return {"_truncated": blob[:_MAX_FACET_JSON]}
