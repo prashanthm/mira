@@ -107,7 +107,7 @@ def _guidance_block(
     return ("DOMAIN GUIDANCE (each line is that domain's own HARD RULE for "
             "how its results may be used):\n" + "\n".join(lines))
 
-_MAX_FACET_JSON = 1400  # cap each facet's digest so the prompt stays bounded
+_MAX_FACET_JSON = 700  # cap each facet digest so the prompt stays bounded
 
 
 def _facet_digest(results: list[dict[str, Any]]) -> str:
