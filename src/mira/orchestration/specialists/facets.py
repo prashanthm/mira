@@ -180,9 +180,11 @@ NEWS_CARD: AgentCard = card_for_domain(
     model_hint="light",
     analyze_group="equity",
     synthesis_hint=(
-        "Sentiment is an ESTIMATED lean. EARNINGS GATE: days_until<=7 makes "
-        "act-now advice conditional on the report; future_date_known=false "
-        "means date unknown, never 'none'; state next_date when known."
+        "Sentiment is an ESTIMATED lean. CATALYST GATE: next_catalyst is the "
+        "nearest dated event (earnings / ex-dividend / OpEx). If its "
+        "days_until<=7, surface it and make act-now advice conditional on it; "
+        "state the next earnings date when known, and future_date_known=false "
+        "means the earnings date is unknown, never 'none'."
     ),
 )
 

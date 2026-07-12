@@ -646,6 +646,19 @@ EARNINGS_RESULT = _envelope(
         ],
         "dates_as_of": "2025-07-14",
         "future_date_known": True,
+        "catalyst_path": {
+            "events": [
+                {"kind": "opex", "date": "2025-07-18", "days_until": 3,
+                 "note": "monthly OpEx — dealer positioning rolls off"},
+                {"kind": "earnings", "date": "2025-07-20", "days_until": 5,
+                 "note": "quarterly earnings report — biggest single-name catalyst"},
+            ],
+            "next": {"kind": "opex", "date": "2025-07-18", "days_until": 3,
+                     "note": "monthly OpEx — dealer positioning rolls off"},
+            "horizon_days": 90,
+        },
+        "next_catalyst": {"kind": "opex", "date": "2025-07-18", "days_until": 3,
+                          "note": "monthly OpEx — dealer positioning rolls off"},
     },
 )
 
