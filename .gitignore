@@ -12,7 +12,12 @@ build/
 htmlcov/
 .venv/
 venv/
+# Local env with real secrets — never commit (.env.local holds the LLM API key)
 .env
+.env.local
+*.env.local
+deploy/.env
+deploy/.env.local
 *.swp
 .DS_Store
 

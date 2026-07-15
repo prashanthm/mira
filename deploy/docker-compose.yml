@@ -1,0 +1,54 @@
+# Mira agent — standalone local Docker deployment (owns its own stack).
+#
+# Mira is a self-contained service (ADR-047 runtime, 12-factor env). It runs on
+# :8080 and depends on TWO things it does NOT own:
+#   • a MODEL endpoint  — DeepSeek API (default here) or a host Ollama
+#   • an MCP server      — Vantage's tools, reached over the HOST published port
+#
+# Deliberately NOT wired into Vantage's compose: Vantage and Mira are separate
+# repos with separate deploy scripts. Vantage publishes vantage-mcp on host
+# :8640, so Mira reaches it via host.docker.internal:8640 — no shared network,
+# fully decoupled stacks. Bring up Vantage first (its mcp must be listening),
+# then `make -C deploy up` here.
+#
+# Config is env-layered: .env (template defaults) then .env.local (git-ignored,
+# your DeepSeek key/model — WINS). The Makefile passes both.
+
+services:
+  mira:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    image: mira:local
+    ports:
+      - "8080:8080"
+    environment:
+      # Deployment profile: `local` = in-memory providers, no cloud SDK — the
+      # right shape for a self-hosted container. WITHOUT it the /turn path
+      # degrades (empty synthesis, reasoning loop never runs).
+      DEPLOYMENT_PROFILE: "${DEPLOYMENT_PROFILE:-local}"
+      PLATFORM: "${PLATFORM:-local}"
+      # Vantage's MCP over the HOST published port (Vantage publishes 8640).
+      # NOT a container DNS name — the two stacks share no compose network.
+      MCP_BASE_URL: "${MCP_BASE_URL:-http://host.docker.internal:8640/mcp}"
+      # Model endpoint. Default here is DeepSeek (see .env). Point at a host
+      # Ollama by overriding LLM_BASE_URL=http://host.docker.internal:11434/v1
+      # in .env.local.
+      LLM_BASE_URL: "${LLM_BASE_URL:-https://api.deepseek.com/v1}"
+      LLM_MODEL: "${LLM_MODEL:-deepseek-chat}"
+      LLM_API_KEY: "${LLM_API_KEY:-}"
+      # Tier routing (ADR-052): /analyze synthesis asks the `deep` tier, the
+      # playbook narrator + facets ride `light`. Unset = everything on LLM_MODEL.
+      MODEL_ROUTES: "${MODEL_ROUTES:-}"
+      ENABLE_TIER_ESCALATION: "${ENABLE_TIER_ESCALATION:-}"
+      LOG_LEVEL: "${LOG_LEVEL:-INFO}"
+    extra_hosts:
+      # Linux needs this for host.docker.internal (no-op on Docker Desktop).
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=10).status==200 else 1)"]
+      interval: 30s
+      timeout: 15s
+      retries: 5
+      start_period: 20s
+    restart: unless-stopped
