@@ -123,6 +123,9 @@ def build_live_registry(
     from mira.orchestration.specialists.trade_analyst import (
         trade_analyst_registry_entry,
     )
+    from mira.orchestration.specialists.journal_analyst import (
+        journal_analyst_registry_entry,
+    )
 
     registry = base if base is not None else AgentCardRegistry()
 
@@ -137,6 +140,11 @@ def build_live_registry(
         # judges it. Registered here (with the bridged tools) so its inference
         # can reach that tool.
         card, factory = trade_analyst_registry_entry(bridged)
+        registry.register(card, factory)
+        # The journal-analyst: the AGGREGATE reviewer. Fetches the window's
+        # journal-analysis bundle via vantage.journal_analysis and narrates the
+        # SWOT + scored read. Same bridged vantage.* surface.
+        card, factory = journal_analyst_registry_entry(bridged)
         registry.register(card, factory)
         # The analyze-graph facets, then the advisor (position/tax), all over
         # the same vantage.* surface. Registration order matters: it is the
