@@ -120,8 +120,12 @@ def build_live_registry(
     from mira.orchestration.mcp_bridge import registered_tools_from_mcp
     from mira.orchestration.specialists.advisor import advisor_registry_entry
     from mira.orchestration.specialists.facets import facet_registry_entries
+    from mira.orchestration.specialists.trade_analyst import (
+        trade_analyst_registry_entry,
+    )
 
     registry = base if base is not None else AgentCardRegistry()
+
     vantage_tools = [
         tool
         for tool in mcp_tools
@@ -129,6 +133,11 @@ def build_live_registry(
     ]
     if vantage_tools:
         bridged = registered_tools_from_mcp(vantage_tools)
+        # The trade-analyst fetches the trade DNA via vantage.trade_dna, then
+        # judges it. Registered here (with the bridged tools) so its inference
+        # can reach that tool.
+        card, factory = trade_analyst_registry_entry(bridged)
+        registry.register(card, factory)
         # The analyze-graph facets, then the advisor (position/tax), all over
         # the same vantage.* surface. Registration order matters: it is the
         # "equity" analyze group's fan-out AND synthesis order — facets frame

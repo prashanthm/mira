@@ -89,3 +89,24 @@ def test_routing_is_discovery_driven_not_hardcoded():
     supervisor = Supervisor(registry)
     assert supervisor.invoke(REPRESENTATIVE_RESEARCH_QUERY, thread_id="d1").routed_domain == "research"
     assert supervisor.invoke(REPRESENTATIVE_FINANCE_QUERY, thread_id="d2").routed_domain is None
+
+
+def test_trade_analyst_registered_but_routing_disabled():
+    """The trade_analyst card + its vantage.trade_dna tool are registered, but
+    routing is intentionally OFF (empty keywords) until Mira's turn path
+    synthesizes with a live model — today's specialist loop is a deterministic
+    scaffold that would echo tool JSON, not prose, so trade reviews fall
+    through to the direct model turn instead."""
+    from mira.orchestration.specialists.demo import build_live_registry
+    from mira.orchestration.specialists.trade_analyst import (
+        REPRESENTATIVE_TRADE_QUERY,
+    )
+    from tests.test_advisor_specialist import fake_vantage_mcp_tools
+
+    registry = build_live_registry(fake_vantage_mcp_tools())
+    # the card IS registered (infrastructure ready) ...
+    assert "trade_analyst" in {c.name for c in registry.cards()}
+    # ... but a trade review does NOT route to it yet (falls to direct model)
+    result = Supervisor(registry).invoke(REPRESENTATIVE_TRADE_QUERY,
+                                         thread_id="route-trade")
+    assert result.routed_domain != "trade_analyst"
