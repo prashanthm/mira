@@ -91,12 +91,10 @@ def test_routing_is_discovery_driven_not_hardcoded():
     assert supervisor.invoke(REPRESENTATIVE_FINANCE_QUERY, thread_id="d2").routed_domain is None
 
 
-def test_trade_analyst_registered_but_routing_disabled():
-    """The trade_analyst card + its vantage.trade_dna tool are registered, but
-    routing is intentionally OFF (empty keywords) until Mira's turn path
-    synthesizes with a live model — today's specialist loop is a deterministic
-    scaffold that would echo tool JSON, not prose, so trade reviews fall
-    through to the direct model turn instead."""
+def test_routes_trade_review_to_trade_analyst():
+    """A trade-review prompt routes to the dedicated trade_analyst (Option A:
+    the supervisor synthesizes routed answers with the model, so routing is
+    live). It must NOT be hijacked by the equity facets."""
     from mira.orchestration.specialists.demo import build_live_registry
     from mira.orchestration.specialists.trade_analyst import (
         REPRESENTATIVE_TRADE_QUERY,
@@ -104,9 +102,47 @@ def test_trade_analyst_registered_but_routing_disabled():
     from tests.test_advisor_specialist import fake_vantage_mcp_tools
 
     registry = build_live_registry(fake_vantage_mcp_tools())
-    # the card IS registered (infrastructure ready) ...
     assert "trade_analyst" in {c.name for c in registry.cards()}
-    # ... but a trade review does NOT route to it yet (falls to direct model)
     result = Supervisor(registry).invoke(REPRESENTATIVE_TRADE_QUERY,
                                          thread_id="route-trade")
-    assert result.routed_domain != "trade_analyst"
+    assert result.routed_domain == "trade_analyst"
+
+
+def test_synthesize_uses_the_model_when_present():
+    """Option A: with an LLM, the synthesize node writes prose from the
+    specialist result + the card's synthesis_hint — not the deterministic
+    [domain]{json} echo. Without an LLM, the deterministic path is unchanged."""
+    class _Echo:
+        def complete(self, prompt, *, model=None):
+            return f"MODEL_SYNTHESIS<<{prompt}>>"     # echoes the whole prompt
+
+    registry = build_demo_registry(
+        str(FIXTURES / "handbook.md"), str(FIXTURES / "ledger.csv"))
+
+    # with a model → prose synthesis (the fake wraps the prompt)
+    withllm = Supervisor(registry, llm=_Echo()).invoke(
+        REPRESENTATIVE_RESEARCH_QUERY, thread_id="synth-llm")
+    assert withllm.synthesis.startswith("MODEL_SYNTHESIS")
+    # the model saw the specialist payload (the prompt carries the [research]
+    # result) — synthesis is grounded, not free-form
+    assert "[research]" in withllm.synthesis
+    assert "Middleware Ordering" in withllm.synthesis
+
+    # without a model → the deterministic digest, unchanged
+    plain = Supervisor(registry).invoke(
+        REPRESENTATIVE_RESEARCH_QUERY, thread_id="synth-plain")
+    assert plain.synthesis.startswith("[research]")
+
+
+def test_synthesis_falls_back_when_the_model_errors():
+    """A model failure must degrade to the deterministic digest, never blank
+    the answer."""
+    class _Boom:
+        def complete(self, prompt, *, model=None):
+            raise RuntimeError("model down")
+
+    registry = build_demo_registry(
+        str(FIXTURES / "handbook.md"), str(FIXTURES / "ledger.csv"))
+    result = Supervisor(registry, llm=_Boom()).invoke(
+        REPRESENTATIVE_RESEARCH_QUERY, thread_id="synth-boom")
+    assert result.synthesis.startswith("[research]")   # deterministic fallback

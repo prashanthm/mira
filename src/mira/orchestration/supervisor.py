@@ -70,11 +70,64 @@ def _synthesize(results: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+#: The system prompt for a ROUTED-turn synthesis (one specialist, not the
+#: analyze fan-out). Grounded, no fabrication; the per-card synthesis_hint
+#: carries any domain-specific shape (e.g. the trade-analyst's review
+#: structure). Domain-generic on purpose — a new card never edits this.
+_TURN_SYSTEM_PROMPT = (
+    "You are the answer synthesizer. A specialist gathered structured DATA for "
+    "the user's request; write the decision-useful answer from it.\n"
+    "HARD RULES:\n"
+    "1. Use ONLY facts in the specialist data — never invent numbers, dates, "
+    "levels, or recommendations.\n"
+    "2. Be specific: cite the actual figures from the data.\n"
+    "3. If the specialist returned an error or no data, say so plainly.\n"
+    "4. No preamble, no disclaimers. Answer directly."
+)
+
+
+def _synthesis_hint(registry: AgentCardRegistry, domain: str | None) -> str:
+    """The routed card's own synthesis instruction (its review structure /
+    caveats), or empty when unavailable."""
+    if not domain:
+        return ""
+    try:
+        for card in registry.cards():
+            if card.name == domain:
+                return card.synthesis_hint or ""
+    except Exception:  # noqa: BLE001 — a registry probe must never break synthesis
+        pass
+    return ""
+
+
+def _synthesize_with_model(llm: Any, query: str, results: list[dict[str, Any]],
+                           hint: str) -> str:
+    """Weave the routed specialist's answer into prose via the model. Returns
+    "" on any failure so the caller falls back to the deterministic digest —
+    synthesis must never blank the answer."""
+    from mira.orchestration.synthesis import SYNTHESIS_TIER, _invoke
+
+    payload = _synthesize(results)          # the [domain]{json} the model reads
+    user = f"USER REQUEST:\n{query}\n\nSPECIALIST DATA:\n{payload}"
+    if hint:
+        user += f"\n\nDOMAIN GUIDANCE (how to shape this answer):\n{hint}"
+    try:
+        return _invoke(llm, _TURN_SYSTEM_PROMPT, user, tier=SYNTHESIS_TIER).strip()
+    except Exception:  # noqa: BLE001 — degrade to deterministic, never crash
+        return ""
+
+
 class Supervisor:
     """Routing graph over an :class:`AgentCardRegistry` (ADR-014)."""
 
-    def __init__(self, registry: AgentCardRegistry) -> None:
+    def __init__(self, registry: AgentCardRegistry, *, llm: Any | None = None) -> None:
         self._registry = registry
+        # Optional model gateway view. When present, the synthesize node weaves
+        # the routed specialist's answer into decision-useful PROSE (ADR-014
+        # left synthesis deterministic — "[domain] {json}" — as a Phase-1
+        # placeholder; a live model turns it into a real answer). Absent (tests,
+        # offline, eval registry) → the deterministic digest, unchanged.
+        self._llm = llm
         self._app = self._build_graph().compile()
 
     def _build_graph(self) -> StateGraph:
@@ -101,7 +154,16 @@ class Supervisor:
             }
 
         def synthesize(state: SupervisorState) -> dict[str, Any]:
-            return {"synthesis": _synthesize(state.get("results") or [])}
+            results = state.get("results") or []
+            if self._llm is not None:
+                hint = _synthesis_hint(registry, state.get("routed_domain"))
+                prose = _synthesize_with_model(self._llm, state.get("query", ""),
+                                               results, hint)
+                if prose:
+                    return {"synthesis": prose}
+            # no model, or a model failure — the deterministic digest (never
+            # blanks the answer; the ADR-014 Phase-1 contract)
+            return {"synthesis": _synthesize(results)}
 
         def route_after_classify(state: SupervisorState) -> str:
             return "dispatch" if state.get("routed_domain") else "general"

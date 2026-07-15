@@ -226,7 +226,13 @@ def build_app(
     # registry never passes through here, so eval semantics are untouched.
     registry = _registry_with_tier_escalation(registry, resolved)
 
-    supervisor = Supervisor(registry) if registry is not None else None
+    # The supervisor synthesizes routed answers with the model (agent-bound
+    # "synthesis" view — deep tier via MODEL_ROUTES) instead of echoing the
+    # specialist's raw JSON. Absent a registry there is nothing to route.
+    supervisor = (
+        Supervisor(registry, llm=gateway.for_agent("synthesis"))
+        if registry is not None else None
+    )
 
     # /insights (ADR-006 Phase V3): lazy, cached advisory reports per registered
     # domain. Reports generate on first request (a scheduled job hitting the

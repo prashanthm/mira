@@ -73,20 +73,30 @@ TRADE_ANALYST_CARD: AgentCard = card_for_domain(
         "caught a knife; sold a spike vs gave it back; respected the plan or "
         "improvised) and returns one concrete lesson."
     ),
-    # ROUTING DELIBERATELY DISABLED (empty keyword set) until Mira's turn path
-    # synthesizes with a live model. The supervisor's specialist loop is a
-    # Phase-1 deterministic scaffold today (plan/act/reflect are string stubs,
-    # no LLM), so a routed trade review would echo the tool DNA as JSON rather
-    # than a prose read. Until model synthesis lands on /turn, trade reviews
-    # fall through to the direct model turn (which DOES produce prose). The
-    # card + the vantage.trade_dna tool stay registered so flipping this on is
-    # a one-line change (restore the keywords) once synthesis is live.
-    keywords=frozenset(),
+    # The classifier scores SINGLE-WORD keyword hits (registry.match tokenizes
+    # the query into a word set). These fire on a trade-review brief while
+    # staying off plain equity analysis — "trade"+"grade"/"critique"/"fill"/
+    # "entry"/"exit" together is a review; "analyze SPY" alone is not. Routing
+    # is now live because the supervisor synthesizes with the model (Option A):
+    # the analyst fetches the DNA via vantage.trade_dna, and the synthesize
+    # node — guided by the hint below — writes the prose review.
+    keywords=frozenset({
+        "trade", "trades", "grade", "critique", "fill", "fills",
+        "entry", "exit", "reentry", "review", "dna", "desk", "footprint",
+    }),
     synthesis_hint=(
-        "Judge the DECISION, not the outcome — a winning trade with a sloppy "
-        "entry is still a sloppy entry. Be specific with the numbers in the "
-        "DNA (points moved, volume, VWAP/RSI, distance to the forecast "
-        "level). No disclaimers."
+        "Write a tight desk review of this ONE trade from its DNA. Judge the "
+        "DECISION, not the outcome — a winning trade with a sloppy entry is "
+        "still sloppy. Structure it:\n"
+        "1. ENTRY quality — bought strength or caught a falling knife? At a "
+        "real forecast level? What did volume/VWAP say?\n"
+        "2. EXIT quality — sold into a spike or gave the move back? At a level? "
+        "Extended (VWAP/RSI)?\n"
+        "3. Did it RESPECT THE PLAN — enter and exit at forecast levels, in "
+        "line with the tape?\n"
+        "4. One concrete LESSON.\n"
+        "Cite the actual numbers from the DNA (points moved before/after each "
+        "fill, VWAP, RSI, relative volume, distance to the level). Be direct."
     ),
 )
 

@@ -152,9 +152,13 @@ def test_supervisor_routed_turn_streams_plan_steps_and_synthesis() -> None:
     # The specialist's recorded plan steps stream ahead of the synthesis token.
     assert names.count("plan_step") >= 1
     assert names.index("plan_step") < names.index("token")
+    # The synthesize node now weaves the specialist result with the model
+    # (Option A). The fake LLM echoes its prompt, so the token is the
+    # model-written synthesis grounded in the [research] specialist payload.
     token = _data(frames[names.index("token")])
-    assert token["text"].startswith("[research]")
-    assert "middleware" in token["text"]
+    assert token["text"].startswith("echo:")           # model was invoked
+    assert "[research]" in token["text"]               # ...over the specialist data
+    assert "middleware" in token["text"]               # ...and it is grounded
 
     done = _data(frames[-1])
     assert names[-1] == "done"
