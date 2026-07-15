@@ -68,18 +68,15 @@ JOURNAL_ANALYST_CARD: AgentCard = card_for_domain(
         "overall", "period", "compounding", "improving",
     }),
     synthesis_hint=(
-        "Write a JOURNAL ANALYSIS of this WINDOW of trades from the bundle. "
-        "Structure it exactly:\n"
-        "SWOT — Strengths (what's working, cite winning trades + $), Weaknesses "
-        "(the chronic mistakes, cite losing trades + $), Opportunities (the "
-        "fixable edge), Threats (what blows up the account if unaddressed).\n"
-        "THE PATTERN — the single root habit behind the weaknesses.\n"
-        "SCORES — read each rubric dimension's number; if a prior analysis "
-        "exists, state the direction of each score and whether the standing "
-        "recommendation is WORKING (improving / flat / worse).\n"
-        "DO THIS NEXT — 3-4 concrete mechanical changes, ranked by impact.\n"
-        "Cite actual trade labels, dollar amounts, and scores from the bundle. "
-        "Build on the prior analysis when present. Be direct; no disclaimers."
+        "Produce a JOURNAL ANALYSIS of this WINDOW of trades from the bundle as "
+        "a SINGLE JSON OBJECT (no prose, no markdown fences) — the Vantage UI "
+        "renders it into a SWOT grid. The exact JSON shape is given IN the "
+        "prompt (keys: headline, swot{strengths,weaknesses,opportunities,"
+        "threats}, pattern, scores_read, do_next); follow it exactly. Strengths "
+        "& weaknesses carry `cites` of real trade labels + $ from the bundle — "
+        "never invent a trade. Build on the prior analysis in `scores_read` "
+        "when present. Be direct; educational, not financial advice. Output the "
+        "JSON and nothing else."
     ),
 )
 
