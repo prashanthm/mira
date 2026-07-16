@@ -21,6 +21,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 from mira.orchestration.agent_cards import AgentCard, card_for_domain
+from mira.orchestration.ui_contract import with_contract
 from mira.orchestration.specialist_scaffold import (
     DomainSpec,
     ReasoningBudget,
@@ -67,16 +68,14 @@ JOURNAL_ANALYST_CARD: AgentCard = card_for_domain(
         "weekly", "monthly", "scorecard", "rubric", "patterns", "recurring",
         "overall", "period", "compounding", "improving",
     }),
-    synthesis_hint=(
-        "Produce a JOURNAL ANALYSIS of this WINDOW of trades from the bundle as "
-        "a SINGLE JSON OBJECT (no prose, no markdown fences) — the Vantage UI "
-        "renders it into a SWOT grid. The exact JSON shape is given IN the "
-        "prompt (keys: headline, swot{strengths,weaknesses,opportunities,"
-        "threats}, pattern, scores_read, do_next); follow it exactly. Strengths "
-        "& weaknesses carry `cites` of real trade labels + $ from the bundle — "
-        "never invent a trade. Build on the prior analysis in `scores_read` "
-        "when present. Be direct; educational, not financial advice. Output the "
-        "JSON and nothing else."
+    synthesis_hint=with_contract(
+        "Produce a JOURNAL ANALYSIS of this WINDOW of trades from the bundle. "
+        "Lead with a `swot` section (strengths/weaknesses/opportunities/threats), "
+        "each point carrying `cites` of REAL trade labels + $ from the bundle — "
+        "never invent a trade. Add a `scorecard` section from the rubric scores, "
+        "a `callout` for the recurring-mistake pattern, a `prose` section that "
+        "builds on the prior analysis so self-knowledge compounds, and a "
+        "`donext`. Be direct; educational, not financial advice."
     ),
 )
 

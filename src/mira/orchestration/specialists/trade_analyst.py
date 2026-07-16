@@ -23,6 +23,7 @@ from collections.abc import Callable, Sequence
 from typing import Any
 
 from mira.orchestration.agent_cards import AgentCard, card_for_domain
+from mira.orchestration.ui_contract import with_contract
 from mira.orchestration.specialist_scaffold import (
     DomainSpec,
     ReasoningBudget,
@@ -84,19 +85,21 @@ TRADE_ANALYST_CARD: AgentCard = card_for_domain(
         "trade", "trades", "grade", "critique", "fill", "fills",
         "entry", "exit", "reentry", "review", "dna", "desk", "footprint",
     }),
-    synthesis_hint=(
+    synthesis_hint=with_contract(
         "Write a tight desk review of this ONE trade from its DNA. Judge the "
         "DECISION, not the outcome — a winning trade with a sloppy entry is "
-        "still sloppy. Structure it:\n"
-        "1. ENTRY quality — bought strength or caught a falling knife? At a "
+        "still sloppy. Cover:\n"
+        "- ENTRY quality — bought strength or caught a falling knife? At a "
         "real forecast level? What did volume/VWAP say?\n"
-        "2. EXIT quality — sold into a spike or gave the move back? At a level? "
+        "- EXIT quality — sold into a spike or gave the move back? At a level? "
         "Extended (VWAP/RSI)?\n"
-        "3. Did it RESPECT THE PLAN — enter and exit at forecast levels, in "
+        "- Did it RESPECT THE PLAN — enter and exit at forecast levels, in "
         "line with the tape?\n"
-        "4. One concrete LESSON.\n"
+        "- One concrete LESSON.\n"
         "Cite the actual numbers from the DNA (points moved before/after each "
-        "fill, VWAP, RSI, relative volume, distance to the level). Be direct."
+        "fill, VWAP, RSI, relative volume, distance to the level). Be direct.\n"
+        "Shape suggestion: a keyvals section for entry/exit quality, a list for "
+        "plan-adherence, a callout for the verdict, a donext for the lesson."
     ),
 )
 
