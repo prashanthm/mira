@@ -720,6 +720,72 @@ REC_SCORECARD_RESULT = _envelope(
     },
 )
 
+# ── replay forecast grading (vantage.replay_forecasts) ───────────────────────
+# The graded-run bundle a forecast_grader reads: forecasts WITH their CODE-computed
+# scores + the deterministic calibration. The grader NARRATES these numbers — it
+# never computes them — so the fixture ships the scores already resolved. One
+# bucket (premarket) is deliberately below the min sample → insufficient, to prove
+# the grader says "insufficient sample" and never fabricates a rate.
+
+_REPLAY_STEPS = [
+    {"id": 1, "as_of": "2026-07-16T09:35:00-04:00", "time_bucket": "open (09:30-11:00)",
+     "price_at": 7500.0, "bias": "up", "target": 7525.0, "invalidation": 7480.0,
+     "tier": "A+", "verdict": "hit target", "moved_pt": 26.0, "hit": True},
+    {"id": 2, "as_of": "2026-07-16T10:05:00-04:00", "time_bucket": "open (09:30-11:00)",
+     "price_at": 7522.0, "bias": "up", "target": 7540.0, "invalidation": 7505.0,
+     "tier": "A+", "verdict": "hit target", "moved_pt": 19.0, "hit": True},
+    {"id": 3, "as_of": "2026-07-16T10:35:00-04:00", "time_bucket": "open (09:30-11:00)",
+     "price_at": 7538.0, "bias": "up", "target": 7555.0, "invalidation": 7520.0,
+     "tier": "none", "verdict": "direction correct", "moved_pt": 11.0, "hit": True},
+    {"id": 4, "as_of": "2026-07-16T12:05:00-04:00", "time_bucket": "midday (11:00-14:00)",
+     "price_at": 7548.0, "bias": "up", "target": 7565.0, "invalidation": 7530.0,
+     "tier": "none", "verdict": "invalidated", "moved_pt": -22.0, "hit": False},
+    {"id": 5, "as_of": "2026-07-16T13:05:00-04:00", "time_bucket": "midday (11:00-14:00)",
+     "price_at": 7526.0, "bias": "down", "target": 7505.0, "invalidation": 7545.0,
+     "tier": "B", "verdict": "hit target", "moved_pt": -24.0, "hit": True},
+    {"id": 6, "as_of": "2026-07-16T15:05:00-04:00", "time_bucket": "close (14:00-16:00)",
+     "price_at": 7503.0, "bias": "down", "target": 7488.0, "invalidation": 7520.0,
+     "tier": "B", "verdict": "direction wrong", "moved_pt": 9.0, "hit": False},
+]
+
+_REPLAY_BUNDLE = {
+    "run_id": "rf-SPX-2026-07-16-demo",
+    "day": "2026-07-16",
+    "underlying": "SPX",
+    "n_forecasts": 6,
+    "n_scored": 6,
+    "scores": {
+        "overall": {"n": 6, "wins": 4, "hit_rate": 0.667},
+        "by_time": {
+            "open (09:30-11:00)": {"n": 3, "wins": 3, "hit_rate": 1.0},
+            "midday (11:00-14:00)": {"n": 2, "insufficient": True},
+            "close (14:00-16:00)": {"n": 1, "insufficient": True},
+        },
+        "by_bias": {
+            "up": {"n": 4, "wins": 3, "hit_rate": 0.75},
+            "down": {"n": 2, "insufficient": True},
+        },
+        "by_tier": {
+            "A+": {"n": 2, "insufficient": True},
+            "B": {"n": 2, "insufficient": True},
+            "none": {"n": 2, "insufficient": True},
+        },
+    },
+    "steps": _REPLAY_STEPS,
+    "prior": None,
+}
+
+REPLAY_FORECASTS_RESULT = _envelope(
+    "replay_forecasts",
+    bundle=_REPLAY_BUNDLE,
+    prompt=(
+        "You are grading a REPLAY FORECAST run: the SPX-analyst was asked 'what "
+        "will price do?' at each interval step through SPX on 2026-07-16 "
+        "(6 forecasts, 6 resolved). SCORES — ALREADY COMPUTED IN CODE. Read and "
+        "narrate them; NEVER compute, alter, or invent a score or hit-rate."
+    ),
+)
+
 RESULTS: dict[str, dict[str, Any]] = {
     "vantage.positions": POSITIONS_RESULT,
     "vantage.allocation": ALLOCATION_RESULT,
@@ -740,6 +806,7 @@ RESULTS: dict[str, dict[str, Any]] = {
     "vantage.ticker_plan": TICKER_PLAN_RESULT,
     "vantage.relative_strength": RELATIVE_STRENGTH_RESULT,
     "vantage.rec_scorecard": REC_SCORECARD_RESULT,
+    "vantage.replay_forecasts": REPLAY_FORECASTS_RESULT,
 }
 
 _PERMISSIVE_SCHEMA: dict[str, Any] = {"type": "object", "additionalProperties": True}

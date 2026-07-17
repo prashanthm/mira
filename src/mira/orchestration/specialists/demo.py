@@ -129,6 +129,9 @@ def build_live_registry(
     from mira.orchestration.specialists.spx_analyst import (
         spx_analyst_registry_entry,
     )
+    from mira.orchestration.specialists.forecast_grader import (
+        forecast_grader_registry_entry,
+    )
 
     registry = base if base is not None else AgentCardRegistry()
 
@@ -152,6 +155,12 @@ def build_live_registry(
         # The SPX-analyst: 'what will price do?' from the intraday snapshot. Fetches
         # vantage.spx_snapshot and produces the structured directional forecast.
         card, factory = spx_analyst_registry_entry(bridged)
+        registry.register(card, factory)
+        # The forecast-grader: grades a whole REPLAY FORECAST run. Fetches
+        # vantage.replay_forecasts (rows WITH code-computed scores) and narrates
+        # the calibration — it never produces a score number (anti-reward-hacking),
+        # and its calibration memory is never fed back to the spx_analyst.
+        card, factory = forecast_grader_registry_entry(bridged)
         registry.register(card, factory)
         # The analyze-graph facets, then the advisor (position/tax), all over
         # the same vantage.* surface. Registration order matters: it is the

@@ -270,10 +270,11 @@ def test_build_live_registry_adds_advisor_alongside_base() -> None:
 
     assert registry is base
     # The advisor plus the six analysis facets, the trade/journal/spx analysts,
-    # all registered over the same vantage.* surface, alongside the base domains.
+    # the forecast-grader, all registered over the same vantage.* surface,
+    # alongside the base domains.
     assert {card.name for card in registry.cards()} == {
         "research", "trade_analyst", "journal_analyst", "spx_analyst",
-        "advisor", "technical", "fundamental",
+        "forecast_grader", "advisor", "technical", "fundamental",
         "growth", "expectations", "news", "thesis",
     }
     specialist = registry.resolve("advisor")

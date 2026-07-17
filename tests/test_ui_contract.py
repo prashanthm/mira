@@ -7,6 +7,7 @@ from mira.orchestration.ui_contract import (
 )
 from mira.orchestration.specialists.trade_analyst import TRADE_ANALYST_CARD
 from mira.orchestration.specialists.journal_analyst import JOURNAL_ANALYST_CARD
+from mira.orchestration.specialists.forecast_grader import FORECAST_GRADER_CARD
 
 
 def test_contract_lists_every_section_kind():
@@ -28,8 +29,13 @@ def test_analysts_emit_the_contract():
     # A2UI-renderable (prose fallback still handled by the SPA renderer)
     assert "OUTPUT FORMAT" in TRADE_ANALYST_CARD.synthesis_hint
     assert "OUTPUT FORMAT" in JOURNAL_ANALYST_CARD.synthesis_hint
+    assert "OUTPUT FORMAT" in FORECAST_GRADER_CARD.synthesis_hint
     # the journal analyst still leads with SWOT; the trade analyst does not force it
     assert "swot" in JOURNAL_ANALYST_CARD.synthesis_hint.lower()
+    # the forecast grader leads with a scorecard and forbids inventing scores
+    hint = FORECAST_GRADER_CARD.synthesis_hint.lower()
+    assert "scorecard" in hint
+    assert "never compute" in hint or "never" in hint and "invent" in hint
 
 
 def test_contract_forbids_invention_and_allows_prose_fallback():
