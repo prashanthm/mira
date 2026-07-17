@@ -86,19 +86,32 @@ SPX_ANALYST_CARD: AgentCard = card_for_domain(
         "(A+/B) and direction, and add a line to the Expected path — 'hourly "
         "setup present (tier, dir) → look to a lower timeframe (5m/1m) for entry "
         "timing'. This is a HEADS-UP, not a fired entry; do not present it as an "
-        "executed trade. Produce a SCOREABLE forecast:\n"
-        "- a `keyvals` section: Bias (up/down/range), Draw (the magnet + why), "
-        "Confidence (low/med/high).\n"
-        "- a `list` 'Expected path' — the ordered moves you expect, ONE STEP PER "
-        "list item, and EACH item MUST START with 'N) <price> <up|down> — <note>' "
-        "so it can be plotted on the chart. N is the step number (1,2,3…), <price> "
-        "is the single SPX level for that step, <up|down> is the move's direction, "
-        "and <note> is a short reason. Example items: '1) 7506 down — sweep SSL', "
-        "'2) 7529 up — reclaim to max-pain', '3) 7540 up — reaction target'. Give "
-        "2–5 steps in the order price should visit them.\n"
-        "- a `keyvals` 'Targets & invalidation': Target (the level(s) price "
-        "should reach), Invalidation (the level that voids the read).\n"
-        "- a `callout` one-line net call.\n"
+        "executed trade. Produce a SCOREABLE forecast.\n"
+        "\n"
+        "TWO OUTPUTS, both required:\n"
+        "\n"
+        "(A) The human-readable sections (as usual): a `keyvals` Bias/Draw/"
+        "Confidence, a `list` 'Expected path' (the ordered moves, in prose), a "
+        "`keyvals` 'Targets & invalidation', and a `callout` net call.\n"
+        "\n"
+        "(B) A machine-readable `plot` object at the TOP LEVEL of your JSON (a "
+        "sibling of `headline` and `sections`) — Vantage plots this DIRECTLY on the "
+        "chart, so it must be clean structured numbers, NOT prose:\n"
+        '  "plot": {\n'
+        '    "bias": "up" | "down" | "range",\n'
+        '    "target": <number>,          // the single primary destination level\n'
+        '    "invalidation": <number>,    // the level that voids the read\n'
+        '    "path": [                     // 2–5 ordered steps price should visit\n'
+        '      {"seq":1, "price":<number>, "dir":"up"|"down", "note":"<short reason>"},\n'
+        '      ... ] }\n'
+        "RULES for `plot`: every price is a bare number (no text). The `path` is the "
+        "ordered sequence price should trade through, and it MUST include the "
+        "`target` as one of its steps (the path has to visibly REACH the target — "
+        "if the target is the destination, it is the final step; if price overshoots "
+        "past it, include the target as an intermediate step). Keep `note` under ~6 "
+        "words. The path, target, and bias in `plot` must AGREE with what you wrote "
+        "in the human sections.\n"
+        "\n"
         "Be decisive but honest about confidence. Educational, not advice. Note "
         "the levels are the nightly EOD estimate, 0DTE-blind."
     ),
