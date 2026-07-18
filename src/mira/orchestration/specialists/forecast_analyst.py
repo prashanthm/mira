@@ -1,5 +1,6 @@
-"""The SPX-analyst specialist — answers "what will price do?" from an intraday
-snapshot.
+"""The forecast-analyst specialist — answers "what will price do?" from an
+intraday snapshot, for ANY ticker (SPX/QQQ/IWM/…, keyed on the snapshot's
+`underlying`).
 
 Given the chart-centric snapshot Vantage builds (current price + the coach's
 playbook levels + live technicals + the ICT structures: unswept liquidity,
@@ -13,8 +14,9 @@ Two-step, same shape as trade review: Vantage owns the DATA (vantage.
 spx_snapshot returns the snapshot); this specialist owns the JUDGMENT (the
 forecast). No fan-out — a routed /turn reasoning loop.
 
-The machine-readable ref line the inference parses:
-    SPX_SNAPSHOT_REF day=2026-07-16 as_of=2026-07-16T12:00:00-04:00 underlying=SPX
+The machine-readable ref line the inference parses (SPX_SNAPSHOT_REF is the wire
+marker name — it carries `underlying` for any ticker):
+    SPX_SNAPSHOT_REF day=2026-07-16 as_of=2026-07-16T12:00:00-04:00 underlying=QQQ
 """
 from __future__ import annotations
 
@@ -54,16 +56,16 @@ def _infer_snapshot(action: str, registry: dict[str, RegisteredTool]) -> dict[st
         return None
 
 
-SPX_DOMAIN = DomainSpec(
-    domain_id="spx_analyst",
+FORECAST_DOMAIN = DomainSpec(
+    domain_id="forecast_analyst",
     tool_prefixes=frozenset({"vantage."}),
 )
 
-SPX_ANALYST_CARD: AgentCard = card_for_domain(
-    SPX_DOMAIN,
+FORECAST_ANALYST_CARD: AgentCard = card_for_domain(
+    FORECAST_DOMAIN,
     model_hint="deep",
     description=(
-        "The SPX intraday analyst — answers 'what will price do?' from a chart "
+        "The intraday forecast analyst (any ticker) — answers 'what will price do?' from a chart "
         "snapshot (price, the playbook levels, live technicals, and the ICT "
         "structures: unswept liquidity, order blocks, fresh FVGs, the draw). "
         "Produces a structured, scoreable directional forecast: bias, expected "
@@ -123,35 +125,35 @@ SPX_ANALYST_CARD: AgentCard = card_for_domain(
     ),
 )
 
-REPRESENTATIVE_SPX_QUERY = "What will SPX price do from here based on the chart?"
+REPRESENTATIVE_FORECAST_QUERY = "What will SPX price do from here based on the chart?"
 
 
-def build_spx_analyst_specialist(
+def build_forecast_analyst_specialist(
     tools: list[RegisteredTool] | None = None,
     *,
     budget: ReasoningBudget | None = None,
 ) -> SpecialistSubgraph:
-    """The spx-analyst subgraph. Reasons over the snapshot carried in / fetched
+    """The forecast-analyst subgraph. Reasons over the snapshot carried in / fetched
     for the prompt; binds the vantage. tools for the spx_snapshot fetch."""
     return build_specialist_subgraph(
-        SPX_DOMAIN,
+        FORECAST_DOMAIN,
         list(tools or []),
         budget=budget or ReasoningBudget(max_steps=8),
         query_inference=_infer_snapshot,
     )
 
 
-def spx_analyst_registry_entry(
+def forecast_analyst_registry_entry(
     tools: Sequence[RegisteredTool] | None = None,
 ) -> tuple[AgentCard, Callable[[], SpecialistSubgraph]]:
     """Card + lazy factory, ready for ``AgentCardRegistry.register``."""
-    return SPX_ANALYST_CARD, lambda: build_spx_analyst_specialist(list(tools or []))
+    return FORECAST_ANALYST_CARD, lambda: build_forecast_analyst_specialist(list(tools or []))
 
 
 __all__ = [
-    "SPX_ANALYST_CARD",
-    "SPX_DOMAIN",
-    "REPRESENTATIVE_SPX_QUERY",
-    "build_spx_analyst_specialist",
-    "spx_analyst_registry_entry",
+    "FORECAST_ANALYST_CARD",
+    "FORECAST_DOMAIN",
+    "REPRESENTATIVE_FORECAST_QUERY",
+    "build_forecast_analyst_specialist",
+    "forecast_analyst_registry_entry",
 ]

@@ -113,7 +113,7 @@ def test_grader_tools_are_vantage_only() -> None:
 # ── anti-reward-hacking: the analyst never sees the grades ───────────────────
 
 def test_calibration_memory_is_absent_from_the_analyst_snapshot() -> None:
-    """The spx_analyst reasons over vantage.spx_snapshot; that payload must carry
+    """The forecast-analyst reasons over vantage.spx_snapshot; that payload must carry
     NO calibration / hit-rate — the grader's memory is grader-owned and read-only,
     so the forecaster can't be tuned toward its own grades."""
     from tests.fake_vantage import RESULTS

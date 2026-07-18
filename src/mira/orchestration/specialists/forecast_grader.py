@@ -1,6 +1,6 @@
 """The forecast-grader specialist — grades a REPLAY FORECAST run.
 
-Where the spx_analyst answers "what will price do?" at ONE moment, a Replay
+Where the forecast-analyst answers "what will price do?" at ONE moment, a Replay
 Forecast fires that question at every interval step through a chosen day. This
 specialist reads the deterministic bundle Vantage assembles for a run (every
 forecast WITH its CODE-computed accuracy score, the calibration hit-rates

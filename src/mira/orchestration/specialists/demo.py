@@ -126,8 +126,8 @@ def build_live_registry(
     from mira.orchestration.specialists.journal_analyst import (
         journal_analyst_registry_entry,
     )
-    from mira.orchestration.specialists.spx_analyst import (
-        spx_analyst_registry_entry,
+    from mira.orchestration.specialists.forecast_analyst import (
+        forecast_analyst_registry_entry,
     )
     from mira.orchestration.specialists.forecast_grader import (
         forecast_grader_registry_entry,
@@ -152,14 +152,14 @@ def build_live_registry(
         # SWOT + scored read. Same bridged vantage.* surface.
         card, factory = journal_analyst_registry_entry(bridged)
         registry.register(card, factory)
-        # The SPX-analyst: 'what will price do?' from the intraday snapshot. Fetches
-        # vantage.spx_snapshot and produces the structured directional forecast.
-        card, factory = spx_analyst_registry_entry(bridged)
+        # The forecast-analyst (any ticker): 'what will price do?' from the intraday
+        # snapshot. Fetches vantage.spx_snapshot and produces the structured forecast.
+        card, factory = forecast_analyst_registry_entry(bridged)
         registry.register(card, factory)
         # The forecast-grader: grades a whole REPLAY FORECAST run. Fetches
         # vantage.replay_forecasts (rows WITH code-computed scores) and narrates
         # the calibration — it never produces a score number (anti-reward-hacking),
-        # and its calibration memory is never fed back to the spx_analyst.
+        # and its calibration memory is never fed back to the forecast-analyst.
         card, factory = forecast_grader_registry_entry(bridged)
         registry.register(card, factory)
         # The analyze-graph facets, then the advisor (position/tax), all over
