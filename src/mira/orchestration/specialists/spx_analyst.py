@@ -136,7 +136,7 @@ def build_spx_analyst_specialist(
     return build_specialist_subgraph(
         SPX_DOMAIN,
         list(tools or []),
-        budget=budget or ReasoningBudget(max_steps=4),
+        budget=budget or ReasoningBudget(max_steps=8),
         query_inference=_infer_snapshot,
     )
 
