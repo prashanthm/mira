@@ -43,6 +43,10 @@ class GatewayChatModel(BaseChatModel):
         self._llm = llm
         # OpenAI tool specs captured by ``bind_tools``; empty = text-only path.
         self._tool_specs: list[dict[str, Any]] = []
+        # OpenAI/DeepSeek require function names to match ^[a-zA-Z0-9_-]+$, but
+        # MCP tool names are dotted (``vantage.positions``). We send a sanitized
+        # name to the provider and map the model's tool-call back to the real one.
+        self._tool_name_map: dict[str, str] = {}
 
     @property
     def _llm_type(self) -> str:
@@ -59,7 +63,18 @@ class GatewayChatModel(BaseChatModel):
         ``model.bind_tools(...)`` call site works. The specs are stored on the model; the
         provider must expose a tool-aware ``chat`` for them to take effect.
         """
-        self._tool_specs = [convert_to_openai_tool(tool) for tool in tools]
+        specs = [convert_to_openai_tool(tool) for tool in tools]
+        self._tool_name_map = {}
+        for spec in specs:
+            fn = spec.get("function") if isinstance(spec, dict) else None
+            if not isinstance(fn, dict):
+                continue
+            real = fn.get("name")
+            safe = _safe_tool_name(str(real or ""))
+            if safe != real:
+                fn["name"] = safe
+            self._tool_name_map[safe] = real
+        self._tool_specs = specs
         return self.bind(**kwargs)
 
     def _generate(
@@ -83,7 +98,7 @@ class GatewayChatModel(BaseChatModel):
             )
             tool_calls = [
                 {
-                    "name": call.name,
+                    "name": self._tool_name_map.get(call.name, call.name),
                     "args": _safe_json(call.arguments),
                     "id": call.id or str(uuid.uuid4()),
                     "type": "tool_call",
@@ -117,6 +132,13 @@ class GatewayChatModel(BaseChatModel):
             label = role_labels.get(message.type, message.type.capitalize())
             lines.append(f"{label}: {message.content}")
         return "\n".join(lines)
+
+
+def _safe_tool_name(name: str) -> str:
+    """Provider-safe function name: OpenAI/DeepSeek require ^[a-zA-Z0-9_-]+$, but
+    MCP tool names are dotted (``vantage.positions``). Replace every other char
+    with ``_`` so the dotted name round-trips (mapped back on the tool call)."""
+    return "".join(c if (c.isalnum() or c in "_-") else "_" for c in name)
 
 
 def _safe_json(arguments: str) -> dict[str, Any]:

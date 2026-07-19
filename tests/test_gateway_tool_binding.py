@@ -67,6 +67,33 @@ def test_bound_tools_route_through_chat_and_surface_tool_calls() -> None:
     assert provider.seen_tools[0]["function"]["name"] == "catalog_search"
 
 
+def test_dotted_tool_name_is_sanitized_for_provider_and_mapped_back() -> None:
+    # MCP tools are dotted (vantage.positions); OpenAI/DeepSeek reject '.' in a
+    # function name (^[a-zA-Z0-9_-]+$). The adapter must send a safe name and map
+    # the model's tool-call back to the real dotted name.
+    from langchain_core.tools import StructuredTool
+
+    dotted = StructuredTool.from_function(
+        lambda account="all": account, name="vantage.portfolio_snapshot",
+        description="portfolio DNA",
+    )
+    # the model replies referring to the SAFE name (what the provider saw).
+    result = ChatResult(
+        text="",
+        tool_calls=(ToolCall(id="c1", name="vantage_portfolio_snapshot",
+                             arguments='{"account":"all"}'),),
+    )
+    provider = FakeToolAwareProvider(result)
+    model = GatewayChatModel(provider).bind_tools([dotted])
+    message = model.invoke([HumanMessage(content="analyze my portfolio")])
+
+    # provider received a pattern-valid name (no dot)
+    assert provider.seen_tools[0]["function"]["name"] == "vantage_portfolio_snapshot"
+    # but the dispatched tool call carries the REAL dotted name
+    assert message.tool_calls[0]["name"] == "vantage.portfolio_snapshot"
+    assert message.tool_calls[0]["args"] == {"account": "all"}
+
+
 def test_malformed_tool_args_fall_back_to_raw() -> None:
     result = ChatResult(
         text="",
