@@ -132,6 +132,9 @@ def build_live_registry(
     from mira.orchestration.specialists.forecast_grader import (
         forecast_grader_registry_entry,
     )
+    from mira.orchestration.specialists.portfolio_analyst import (
+        portfolio_analyst_registry_entry,
+    )
 
     registry = base if base is not None else AgentCardRegistry()
 
@@ -161,6 +164,11 @@ def build_live_registry(
         # the calibration — it never produces a score number (anti-reward-hacking),
         # and its calibration memory is never fed back to the forecast-analyst.
         card, factory = forecast_grader_registry_entry(bridged)
+        registry.register(card, factory)
+        # The portfolio-analyst (HOLDINGS book): fetches the portfolio DNA via
+        # vantage.portfolio_snapshot and produces the health read + recommended
+        # ACTIONS. Same bridged vantage.* surface.
+        card, factory = portfolio_analyst_registry_entry(bridged)
         registry.register(card, factory)
         # The analyze-graph facets, then the advisor (position/tax), all over
         # the same vantage.* surface. Registration order matters: it is the
