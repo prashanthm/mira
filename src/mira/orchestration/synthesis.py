@@ -526,10 +526,12 @@ _PLAYBOOK_SYSTEM_PROMPT = (
     "'puts / put debit spread toward T1' or 'calls toward the flip'] (an idea, "
     "not an instruction)\n"
     "   · Wrong if: [invalidation level + what breaching it means]\n"
-    "   · Targets: T1 [level] then T2 [level], with points from trigger\n"
+    "   · Targets: copy the draft's target ladder VERBATIM (T1/T2/T3 with kind "
+    "and points from trigger) — the engine computed these from known levels; "
+    "never invent, drop, or replace them with only the far wall\n"
     "   · Watch: [the one confirmation cue before acting]\n"
-    "   Never emit a bare 'buy now'. If the draft's setup lacks a target or "
-    "invalidation, write 'not defined — size down or skip'.\n"
+    "   Never emit a bare 'buy now'. Only if the draft truly has NO targets "
+    "line, write 'not defined — size down or skip'.\n"
     "5. CLOSE with one 'right now' line: which setup's condition is met at the "
     "scaffold's spot, and what would flip it to the other setup.\n"
     "6. Simple words, short sentences. ~180-260 words total. Preserve the "
@@ -585,10 +587,17 @@ def playbook_template(scaffold: Mapping[str, Any]) -> str:
         lines.append("Key levels: " + " · ".join(
             f"{_fmt_num(r['price'])} ({r['kind']})" for r in ladder[:8]) + ".")
 
-    # setups
+    # setups — including the computed target ladder (the engine's intermediate
+    # levels; a setup must never read "target not defined" when these exist)
     for i, su in enumerate(scaffold.get("setups") or [], 1):
         trig = su.get("trigger", ""); struct = su.get("structure", "")
         lines.append(f"Setup {i} — {trig}: {struct}")
+        tgts = su.get("targets") or []
+        if tgts:
+            lines.append("  Targets: " + " → ".join(
+                f"T{n} {_fmt_num(t.get('price'))} ({t.get('kind', '?')}, "
+                f"{_fmt_num(t.get('pts_from_trigger'))}pt)"
+                for n, t in enumerate(tgts, 1)) + ".")
 
     # a lookback edge if present
     edge = ((scaffold.get("edges") or {}).get("gex_regime_next_day_range") or {})
