@@ -35,7 +35,7 @@ services:
       # Ollama by overriding LLM_BASE_URL=http://host.docker.internal:11434/v1
       # in .env.local.
       LLM_BASE_URL: "${LLM_BASE_URL:-https://api.deepseek.com/v1}"
-      LLM_MODEL: "${LLM_MODEL:-deepseek-chat}"
+      LLM_MODEL: "${LLM_MODEL:-deepseek-v4-flash}"
       LLM_API_KEY: "${LLM_API_KEY:-}"
       # Tier routing (ADR-052): /analyze synthesis asks the `deep` tier, the
       # playbook narrator + facets ride `light`. Unset = everything on LLM_MODEL.
