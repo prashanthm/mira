@@ -14,6 +14,7 @@ call; the graph never changes.
 from __future__ import annotations
 
 import json
+import logging
 from dataclasses import dataclass, field
 from typing import Any, TypedDict
 
@@ -114,6 +115,9 @@ def _synthesize_with_model(llm: Any, query: str, results: list[dict[str, Any]],
     try:
         return _invoke(llm, _TURN_SYSTEM_PROMPT, user, tier=SYNTHESIS_TIER).strip()
     except Exception:  # noqa: BLE001 — degrade to deterministic, never crash
+        # loud on the way down: a provider break (e.g. a retired model name)
+        # otherwise degrades EVERY routed turn to the raw digest, silently
+        logging.getLogger(__name__).exception("turn synthesis model call failed")
         return ""
 
 
