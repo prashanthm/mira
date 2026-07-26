@@ -70,10 +70,10 @@ FORECAST_GRADER_CARD: AgentCard = card_for_domain(
         "well-adapted. It NARRATES the already-computed scores; it never invents "
         "a number. Its calibration memory is never fed back to the forecaster."
     ),
+    # single tokens only (see forecast_analyst) — spaced keywords were dead.
     keywords=frozenset({
-        "grade", "grader", "replay", "calibration", "hit rate", "accuracy",
-        "forecast run", "how good", "evolved", "sequence", "scorecard",
-        "was the forecast right", "coach the analyst", "compounding",
+        "grade", "grader", "replay", "calibration", "accuracy", "accurate",
+        "evolved", "sequence", "scorecard", "compounding", "hit-rate",
     }),
     synthesis_hint=with_contract(
         "Grade this REPLAY FORECAST run from the bundle. The SCORES ARE ALREADY "

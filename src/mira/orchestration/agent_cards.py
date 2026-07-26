@@ -24,6 +24,41 @@ _WORD = re.compile(r"[a-z0-9][a-z0-9\-\.]*")
 CARD_SCHEMA_VERSION = "1"
 
 
+def _singularize(w: str) -> str:
+    """Conservative plural→singular fold so query tokens hit singular keywords
+    (accounts→account, catalysts→catalyst, harvesting→harvest). Only the safe,
+    high-frequency English endings — never touches short words or -ss."""
+    if len(w) <= 3:
+        return w
+    if w.endswith("ies") and len(w) > 4:
+        return w[:-3] + "y"        # opportunities→opportunity
+    if w.endswith("ing") and len(w) > 5:
+        return w[:-3]              # harvesting→harvest
+    if w.endswith("es") and len(w) > 4 and not w.endswith(("sses", "ses")):
+        return w[:-2]              # losses→loss? no: -ss guarded; catalysts handled below
+    if w.endswith("s") and not w.endswith("ss"):
+        return w[:-1]              # accounts→account, catalysts→catalyst
+    return w
+
+
+def _query_tokens(query: str) -> set[str]:
+    """The query's matchable token set. Each raw token also contributes its
+    hyphen/period SUB-tokens (so 'over-allocated' → over, allocated, allocation
+    via the fold) and a singular fold — matching stays whole-token equality
+    against card keywords, just over a richer, normalized query set. Card
+    keywords are untouched.
+    """
+    out: set[str] = set()
+    for raw in _WORD.findall(query.lower()):
+        parts = [raw, *re.split(r"[-.]", raw)]
+        for p in parts:
+            if not p:
+                continue
+            out.add(p)
+            out.add(_singularize(p))
+    return out
+
+
 class UnknownAgentError(KeyError):
     """Raised when the registry cannot resolve an agent by name."""
 
@@ -173,7 +208,7 @@ class AgentCardRegistry:
         zero hits → None (the supervisor falls back to its general path). Ties
         resolve to the earliest-registered card so routing is reproducible.
         """
-        words = set(_WORD.findall(query.lower()))
+        words = _query_tokens(query)
         best: AgentCard | None = None
         best_score = 0
         for card in self._cards.values():

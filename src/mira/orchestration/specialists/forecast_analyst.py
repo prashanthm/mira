@@ -72,10 +72,12 @@ FORECAST_ANALYST_CARD: AgentCard = card_for_domain(
         "path, level targets, invalidation, confidence. On-demand, persisted, "
         "later scored against the elapsed price action."
     ),
+    # single tokens only — the matcher splits the query on whitespace, so a
+    # space-containing keyword can NEVER match (routing audit 2026-07-25).
     keywords=frozenset({
-        "what will price do", "forecast", "spx", "0dte", "intraday", "draw",
-        "liquidity", "order block", "fvg", "sweep", "path", "propensity",
-        "where is price going", "bias", "snapshot", "next move",
+        "forecast", "spx", "0dte", "intraday", "draw", "liquidity", "fvg",
+        "sweep", "path", "propensity", "bias", "snapshot", "headed",
+        "afternoon", "close", "going", "move", "direction",
     }),
     synthesis_hint=with_contract(
         "Answer WHAT WILL PRICE DO from the snapshot. Reason like an ICT desk: "

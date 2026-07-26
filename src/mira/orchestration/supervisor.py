@@ -94,6 +94,38 @@ from mira.orchestration.ui_contract import with_contract as _with_contract  # no
 _TURN_SYSTEM_PROMPT = _with_contract(_TURN_SYSTEM_PROMPT)
 
 
+_CLASSIFY_SYSTEM = (
+    "You are a router. Given a user request and a list of specialist DOMAINS "
+    "(name: what it handles), reply with the single best domain NAME to handle "
+    "it, or the exact word NONE if none fits. Output ONLY the name — no prose, "
+    "no punctuation, no explanation."
+)
+
+
+def classify_with_model(llm: Any, query: str, cards) -> str | None:
+    """LLM intent-routing FALLBACK — used only when the deterministic keyword
+    matcher scores zero. Returns a valid card name from ``cards`` or None
+    (never a guess: a reply that isn't an exact card name → None → general
+    path). Pure + defensive: any model failure degrades to None, never raises,
+    so a flaky gateway can only fall back to today's behavior, never break the
+    route."""
+    cards = list(cards)
+    names = {c.name for c in cards}
+    catalog = "\n".join(f"- {c.name}: {c.description}" for c in cards)
+    user = f"REQUEST:\n{query}\n\nDOMAINS:\n{catalog}\n\nBest domain name (or NONE):"
+    try:
+        from mira.orchestration.synthesis import SYNTHESIS_TIER, _invoke
+        reply = (_invoke(llm, _CLASSIFY_SYSTEM, user, tier=SYNTHESIS_TIER) or "").strip()
+    except Exception:  # noqa: BLE001 — routing must never crash on a model failure
+        logging.getLogger(__name__).exception("llm route classify failed")
+        return None
+    token = reply.split()[0].strip().strip(".:,").lower() if reply else ""
+    for n in names:                       # exact (case-insensitive) card name only
+        if token == n.lower():
+            return n
+    return None
+
+
 def _synthesis_hint(registry: AgentCardRegistry, domain: str | None) -> str:
     """The routed card's own synthesis instruction (its review structure /
     caveats), or empty when unavailable."""
@@ -145,8 +177,19 @@ class Supervisor:
         registry = self._registry
 
         def classify(state: SupervisorState) -> dict[str, Any]:
-            card = registry.match(state.get("query", ""))
-            return {"routed_domain": card.name if card else FALLBACK_DOMAIN}
+            query = state.get("query", "")
+            card = registry.match(query)          # deterministic fast path
+            if card is not None:
+                return {"routed_domain": card.name}
+            # keyword miss → LLM intent fallback (only when a model is wired).
+            # Keeps the fast path pure/deterministic; the model call lands ONLY
+            # on the ambiguous tail keywords can't cover ("how well did I time
+            # that buy?"). A None result keeps today's general-path behavior.
+            if self._llm is not None:
+                name = classify_with_model(self._llm, query, registry.cards())
+                if name:
+                    return {"routed_domain": name}
+            return {"routed_domain": FALLBACK_DOMAIN}
 
         def dispatch(state: SupervisorState) -> dict[str, Any]:
             domain = state.get("routed_domain") or FALLBACK_DOMAIN

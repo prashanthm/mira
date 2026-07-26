@@ -146,3 +146,57 @@ def test_synthesis_falls_back_when_the_model_errors():
     result = Supervisor(registry, llm=_Boom()).invoke(
         REPRESENTATIVE_RESEARCH_QUERY, thread_id="synth-boom")
     assert result.synthesis.startswith("[research]")   # deterministic fallback
+
+
+def test_classify_with_model_returns_valid_card_or_none():
+    """The LLM route fallback returns an EXACT card name or None — never a
+    guess; a reply that isn't a card name (or a model error) → None."""
+    from mira.orchestration.supervisor import classify_with_model
+    from mira.orchestration.agent_cards import AgentCard
+    cards = [AgentCard(name="advisor", description="portfolio + tax questions",
+                       keywords=frozenset({"portfolio"})),
+             AgentCard(name="forecast_analyst", description="intraday price forecast",
+                       keywords=frozenset({"forecast"}))]
+
+    class _Pick:
+        def __init__(self, reply): self.reply = reply
+        def complete(self, prompt, *, model=None): return self.reply
+    assert classify_with_model(_Pick("advisor"), "am I over-allocated?", cards) == "advisor"
+    assert classify_with_model(_Pick("forecast_analyst\n"), "where's price headed?", cards) == "forecast_analyst"
+    assert classify_with_model(_Pick("NONE"), "what's the weather?", cards) is None
+    assert classify_with_model(_Pick("banana"), "gibberish", cards) is None  # not a card
+
+    class _Boom:
+        def complete(self, prompt, *, model=None): raise RuntimeError("down")
+    assert classify_with_model(_Boom(), "anything", cards) is None  # never raises
+
+
+def test_classify_node_uses_llm_fallback_only_on_keyword_miss():
+    """Keyword hit → deterministic route (no model call). Keyword miss + llm →
+    the model route. Keyword miss + no llm → general path (unchanged)."""
+    registry = build_demo_registry(
+        str(FIXTURES / "handbook.md"), str(FIXTURES / "ledger.csv"))
+
+    class _RouteTo:
+        # replies with the domain NAME to the classify prompt (contains
+        # "DOMAINS:"), and echoes for the synthesis call — mirroring the real
+        # two-call flow (route, then synthesize).
+        def __init__(self, name): self.name = name; self.calls = 0
+        def complete(self, prompt, *, model=None):
+            self.calls += 1
+            return self.name if "DOMAINS:" in prompt else f"MODEL_SYNTHESIS<<{prompt}>>"
+    # a query with NO keyword hit routes via the model to the named domain
+    # (>=1 model call: classify + synthesis; outcome is what matters — it
+    # reached the research specialist despite zero keyword hits)
+    picker = _RouteTo("research")
+    res = Supervisor(registry, llm=picker).invoke(
+        "tell me something obscure and unmatched xyzzy", thread_id="route-llm")
+    assert res.routed_domain == "research"
+    assert res.synthesis.startswith("MODEL_SYNTHESIS")   # synthesized, not general
+    assert "[research]" in res.synthesis                 # grounded in the specialist result
+    assert picker.calls >= 2                             # classify + synthesize
+    # a keyword miss with NO llm → general path, unchanged (no routing guess)
+    plain = Supervisor(registry).invoke(
+        "tell me something obscure and unmatched xyzzy", thread_id="route-none")
+    assert plain.routed_domain in ("", None)
+    assert plain.synthesis.startswith("[general]")

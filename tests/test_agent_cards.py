@@ -125,3 +125,30 @@ def test_demo_and_advisor_cards_declare_tiers():
     assert RESEARCH_CARD.model_hint == "light"
     assert FINANCE_CARD.model_hint == "standard"
     assert ADVISOR_CARD.model_hint == "deep"
+
+
+def test_token_normalization_hits_hyphen_and_plural(tmp_path):
+    """Routing audit 2026-07-25: hyphenated compounds split to sub-tokens and
+    plurals fold to singular, so natural operator phrasing routes."""
+    from mira.orchestration.agent_cards import _query_tokens
+    toks = _query_tokens("am I over-allocated to US equity across my accounts?")
+    # compound splits; plural folds
+    assert "over-allocated" in toks and "allocated" in toks
+    assert "accounts" in toks and "account" in toks
+    assert "equity" in toks
+    # a card whose keyword is the singular still matches the plural query token
+    card = AgentCard(name="c", description="", keywords=frozenset({"account", "equity"}))
+    reg = AgentCardRegistry()
+    reg.register(card, lambda: None)
+    assert reg.match("how are my accounts split across equity?").name == "c"
+
+
+def test_no_spaced_keywords_survive_anywhere():
+    """A keyword containing a space can NEVER match (the matcher splits on
+    whitespace) — guard against re-introducing dead multi-word keywords."""
+    from mira.orchestration.specialists.demo import build_live_registry
+    from tests.fake_vantage import fake_vantage_mcp_tools
+    reg = build_live_registry(fake_vantage_mcp_tools())
+    for card in reg.cards():
+        for kw in card.keywords:
+            assert " " not in kw, f"{card.name} has dead spaced keyword {kw!r}"
