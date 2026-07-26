@@ -26,9 +26,14 @@ RUN pip install ".[llm,mcp]"
 # plain runtime turn. Copied read-only; drop this layer for a minimal image.
 COPY tests/fixtures ./tests/fixtures
 
-# Non-root runtime user.
+# Non-root runtime user. /data is the durable-persistence mount (MIRA_DATA_DIR)
+# — create it owned by mira so an EMPTY named volume inherits that ownership on
+# first mount (Docker copies the image mountpoint's uid/gid), letting the
+# non-root process open mira.db. Without this the fresh volume mounts root-owned
+# and sqlite fails with "unable to open database file".
 RUN useradd --create-home --uid 10001 mira \
-    && chown -R mira:mira /app
+    && mkdir -p /data \
+    && chown -R mira:mira /app /data
 USER mira
 
 EXPOSE 8080

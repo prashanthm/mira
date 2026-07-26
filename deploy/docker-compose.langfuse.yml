@@ -1,0 +1,17 @@
+# Self-hosted Langfuse for Mira observability + eval + scoring.
+#   docker compose -f docker-compose.langfuse.yml up -d
+# Then set on the mira service (deploy/.env): LANGFUSE_HOST=http://host.docker.internal:3000
+# plus LANGFUSE_PUBLIC_KEY / LANGFUSE_SECRET_KEY from the Langfuse UI (create a
+# project on first launch). The mira exporter (model/langfuse_export.py) is a
+# no-op until those three are set — nothing here is required to run Mira.
+#
+# Langfuse v3 needs: web + worker + postgres + clickhouse + redis + minio.
+# This vendors the upstream compose; pin to a release rather than 'latest'.
+# Source: https://github.com/langfuse/langfuse/blob/main/docker-compose.yml
+# (kept out of the main mira stack on purpose — it's 6 services, opt-in.)
+#
+# PLACEHOLDER: fetch the pinned upstream file into this path when standing it up:
+#   curl -o docker-compose.langfuse.yml \
+#     https://raw.githubusercontent.com/langfuse/langfuse/v3/docker-compose.yml
+# then edit the secrets block. Left as a pointer, not a vendored 300-line blob,
+# so it tracks upstream and this repo stays reviewable.
