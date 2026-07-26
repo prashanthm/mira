@@ -1,0 +1,573 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e3050]:
+        - generic [ref=e3051]:
+          - generic [ref=e3052]:
+            - heading "Trading journal" [level=2] [ref=e3053]
+            - generic [ref=e3054]:
+              - button "Days" [ref=e3055] [cursor=pointer]
+              - button "Analysis" [ref=e3056] [cursor=pointer]
+          - button "📅 Jul" [ref=e3059] [cursor=pointer]
+        - generic [ref=e3060]:
+          - button "Wed Jul 1 +$316" [ref=e3118] [cursor=pointer]:
+            - generic [ref=e3062]: Wed
+            - generic [ref=e3063]: Jul 1
+            - generic [ref=e3064]: +$316
+          - button "Thu Jul 2 +$180" [ref=e3119] [cursor=pointer]:
+            - generic [ref=e3066]: Thu
+            - generic [ref=e3067]: Jul 2
+            - generic [ref=e3068]: +$180
+          - button "Fri Jul 3" [ref=e3069] [cursor=pointer]:
+            - generic [ref=e3070]: Fri
+            - generic [ref=e3071]: Jul 3
+          - button "Mon Jul 6 −$45" [ref=e3120] [cursor=pointer]:
+            - generic [ref=e3074]: Mon
+            - generic [ref=e3075]: Jul 6
+            - generic [ref=e3076]: −$45
+          - button "Tue Jul 7 +$4.3k" [ref=e3121] [cursor=pointer]:
+            - generic [ref=e3078]: Tue
+            - generic [ref=e3079]: Jul 7
+            - generic [ref=e3080]: +$4.3k
+          - button "Wed Jul 8 −$1.4k" [ref=e3122] [cursor=pointer]:
+            - generic [ref=e3082]: Wed
+            - generic [ref=e3083]: Jul 8
+            - generic [ref=e3084]: −$1.4k
+          - button "Thu Jul 9 −$12.6k" [ref=e3123] [cursor=pointer]:
+            - generic [ref=e3086]: Thu
+            - generic [ref=e3087]: Jul 9
+            - generic [ref=e3088]: −$12.6k
+          - button "Fri Jul 10 −$341" [ref=e3124] [cursor=pointer]:
+            - generic [ref=e3090]: Fri
+            - generic [ref=e3091]: Jul 10
+            - generic [ref=e3092]: −$341
+          - button "Mon Jul 13 +$57" [ref=e3125] [cursor=pointer]:
+            - generic [ref=e3094]: Mon
+            - generic [ref=e3095]: Jul 13
+            - generic [ref=e3096]: +$57
+          - button "Tue Jul 14 −$2.2k" [ref=e3126] [cursor=pointer]:
+            - generic [ref=e3098]: Tue
+            - generic [ref=e3099]: Jul 14
+            - generic [ref=e3100]: −$2.2k
+          - button "Wed Jul 15 +$3.1k" [ref=e3127] [cursor=pointer]:
+            - generic [ref=e3102]: Wed
+            - generic [ref=e3103]: Jul 15
+            - generic [ref=e3104]: +$3.1k
+          - button "Thu Jul 16 −$7.3k" [ref=e3128] [cursor=pointer]:
+            - generic [ref=e3106]: Thu
+            - generic [ref=e3107]: Jul 16
+            - generic [ref=e3108]: −$7.3k
+          - button "Fri Jul 17 −$2.0k" [ref=e3129] [cursor=pointer]:
+            - generic [ref=e3110]: Fri
+            - generic [ref=e3111]: Jul 17
+            - generic [ref=e3112]: −$2.0k
+          - button "Today Jul 20 +$18.6k" [ref=e3130] [cursor=pointer]:
+            - generic [ref=e3114]: Today
+            - generic [ref=e3115]: Jul 20
+            - generic [ref=e3116]: +$18.6k
+        - generic [ref=e3131]:
+          - generic [ref=e3132]:
+            - generic [ref=e3133]:
+              - generic [ref=e3134]: Today
+              - generic [ref=e3135]: 2026-07-20 playbook · vs. last night's forecast · forecast missed ✗
+            - button "delete" [ref=e3136] [cursor=pointer]
+          - generic [ref=e3137]:
+            - generic [ref=e3138]:
+              - heading "My trades — 23 decisions · click a trade to correlate it to the plan" [level=3] [ref=e3139]:
+                - text: My trades — 23 decisions
+                - generic [ref=e3140]: · click a trade to correlate it to the plan
+              - generic [ref=e3141]:
+                - combobox "Filter by ticker" [ref=e3142]:
+                  - option "All tickers" [selected]
+                  - option "SPX"
+                  - option "TQQQ"
+                  - option "NFLX"
+                  - option "ASTS"
+                  - option "IREN"
+                  - option "MA"
+                  - option "MU"
+                - button "🧬 Analyze today" [ref=e3143] [cursor=pointer]
+                - button "⟳" [ref=e3144] [cursor=pointer]
+            - generic [ref=e3145]:
+              - generic [ref=e3146]: P&L +$3,683
+              - generic [ref=e3147]: fills +$3,683
+              - generic [ref=e3148]: expiry +$0 · 4 worthless −$1,145
+              - generic [ref=e3149]: 10W / 9L
+              - generic [ref=e3150]:
+                - text: win rate
+                - generic [ref=e3151]: 53%
+              - generic [ref=e3152]: profit factor 2.35
+              - generic [ref=e3153]: SPX settled 7443
+              - generic [ref=e3154]:
+                - text: entered at level
+                - generic [ref=e3155]: 35%
+              - generic [ref=e3156]:
+                - text: exited at level
+                - generic [ref=e3157]: 11%
+            - generic [ref=e3158]:
+              - generic [ref=e3160] [cursor=pointer]:
+                - generic [ref=e3161]: 23:08
+                - generic [ref=e3162]:
+                  - 'generic "ticker: TQQQ" [ref=e3163]': TQQQ
+                  - text: limit ? ×50
+                  - 'generic "account: Robinhood" [ref=e3164]': Robinhood
+                - generic [ref=e3165]: TQQQ 69.55
+                - generic [ref=e3166]: —
+                - generic [ref=e3167]: +$59
+                - generic [ref=e3168]: closed
+                - generic [ref=e3169]: ▸
+              - generic [ref=e3171] [cursor=pointer]:
+                - generic [ref=e3172]: 08:07
+                - generic [ref=e3173]:
+                  - 'generic "ticker: NFLX" [ref=e3174]': NFLX
+                  - text: limit ? ×100
+                  - 'generic "account: Robinhood Margin" [ref=e3175]': Robinhood Margin
+                - generic [ref=e3176]: NFLX 67.84
+                - generic [ref=e3177]: —
+                - generic "open position — no realized P&L yet" [ref=e3178]: open
+                - generic [ref=e3179]: still open
+                - generic [ref=e3180]: ▸
+              - generic [ref=e3182] [cursor=pointer]:
+                - generic [ref=e3183]: 09:32
+                - generic [ref=e3184]:
+                  - 'generic "ticker: SPX" [ref=e3185]': SPX
+                  - text: long_put 7500 ×1
+                  - 'generic "account: Robinhood" [ref=e3186]': Robinhood
+                - generic [ref=e3187]: SPX 7505
+                - generic [ref=e3188]:
+                  - 'generic "entry: resistance round number + fib 50.0% + support (4x)" [ref=e3189]': ✓ 7504
+                  - text: →
+                  - 'generic "exit: resistance support (3x) + fib 38.2%" [ref=e3190]': "7482"
+                - generic [ref=e3191]: +$590
+                - generic [ref=e3192]: closed
+                - generic [ref=e3193]: ▸
+              - generic [ref=e3195] [cursor=pointer]:
+                - generic [ref=e3196]: 09:37
+                - generic [ref=e3197]:
+                  - 'generic "ticker: ASTS" [ref=e3198]': ASTS
+                  - text: market ? ×100
+                  - 'generic "account: Robinhood Margin" [ref=e3199]': Robinhood Margin
+                - generic [ref=e3200]: ASTS 58.59
+                - generic [ref=e3201]: —
+                - generic "open position — no realized P&L yet" [ref=e3202]: open
+                - generic [ref=e3203]: still open
+                - generic [ref=e3204]: ▸
+              - generic [ref=e3206] [cursor=pointer]:
+                - generic [ref=e3207]: 09:46
+                - generic [ref=e3208]:
+                  - 'generic "ticker: IREN" [ref=e3209]': IREN
+                  - text: short_call 40 ×1
+                  - 'generic "account: Robinhood" [ref=e3210]': Robinhood
+                - generic [ref=e3211]: IREN 38.89
+                - generic [ref=e3212]: —
+                - generic "open position — no realized P&L yet" [ref=e3213]: open
+                - generic [ref=e3214]: still open
+                - generic [ref=e3215]: ▸
+              - generic [ref=e3217] [cursor=pointer]:
+                - generic [ref=e3218]: 10:08
+                - generic [ref=e3219]:
+                  - 'generic "ticker: SPX" [ref=e3220]': SPX
+                  - text: long_call 7485 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3221]': Robinhood Margin
+                - generic [ref=e3222]: SPX 7480
+                - generic [ref=e3223]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3224]': ✓ 7482
+                  - text: →
+                  - 'generic "exit: resistance support (3x) + fib 38.2%" [ref=e3225]': "7482"
+                - generic [ref=e3226]: −$260
+                - generic [ref=e3227]: closed
+                - generic [ref=e3228]: ▸
+              - generic [ref=e3230] [cursor=pointer]:
+                - generic [ref=e3231]: 10:15
+                - generic [ref=e3232]:
+                  - 'generic "ticker: SPX" [ref=e3233]': SPX
+                  - text: long_call 7485 ×5
+                  - 'generic "account: Robinhood Margin" [ref=e3234]': Robinhood Margin
+                - generic [ref=e3235]: SPX 7478
+                - generic [ref=e3236]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3237]': ✓ 7482
+                  - text: →
+                  - 'generic "exit: resistance resistance (2x tested) ★11d" [ref=e3238]': "7467"
+                - generic [ref=e3239]: +$150
+                - generic [ref=e3240]: closed
+                - generic [ref=e3241]: ▸
+              - generic [ref=e3243] [cursor=pointer]:
+                - generic [ref=e3244]: 11:08
+                - generic [ref=e3245]:
+                  - 'generic "ticker: SPX" [ref=e3246]': SPX
+                  - text: long_put 7460 ×25
+                  - 'generic "account: Robinhood Margin" [ref=e3247]': Robinhood Margin
+                - generic [ref=e3248]: SPX 7476
+                - generic [ref=e3249]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3250]': "7482"
+                  - text: →
+                  - 'generic "exit: resistance support (3x) + fib 38.2%" [ref=e3251]': "7482"
+                - generic [ref=e3252]: +$1,475
+                - generic [ref=e3253]: closed
+                - generic [ref=e3254]: ▸
+              - generic [ref=e3256] [cursor=pointer]:
+                - generic [ref=e3257]: 12:50
+                - generic [ref=e3258]:
+                  - 'generic "ticker: SPX" [ref=e3259]': SPX
+                  - text: long_put 7485 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3260]': Robinhood Margin
+                - generic [ref=e3261]: SPX 7482
+                - generic [ref=e3262]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3263]': ✓ 7482
+                  - text: →
+                  - 'generic "exit: resistance support (3x) + fib 38.2%" [ref=e3264]': "7482"
+                - generic [ref=e3265]: +$620
+                - generic [ref=e3266]: closed
+                - generic [ref=e3267]: ▸
+              - generic [ref=e3269] [cursor=pointer]:
+                - generic [ref=e3270]: 13:00
+                - generic [ref=e3271]:
+                  - 'generic "ticker: SPX" [ref=e3272]': SPX
+                  - text: long_call 7475 ×5
+                  - 'generic "account: Robinhood Margin" [ref=e3273]': Robinhood Margin
+                - generic [ref=e3274]: SPX 7477
+                - generic [ref=e3275]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3276]': "7482"
+                  - text: →
+                  - 'generic "exit: resistance resistance (2x tested) ★11d" [ref=e3277]': "7467"
+                - generic [ref=e3278]: −$120
+                - generic [ref=e3279]: closed
+                - generic [ref=e3280]: ▸
+              - generic [ref=e3282] [cursor=pointer]:
+                - generic [ref=e3283]: 13:55
+                - generic [ref=e3284]:
+                  - 'generic "ticker: SPX" [ref=e3285]': SPX
+                  - text: long_put_spread 7420/7470 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3286]': Robinhood Margin
+                - generic [ref=e3287]: SPX 7471
+                - generic [ref=e3288]:
+                  - 'generic "entry: resistance resistance (2x tested) ★11d" [ref=e3289]': "7467"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3290]': ✓ 7458
+                - generic [ref=e3291]: +$765
+                - generic [ref=e3292]: closed
+                - generic [ref=e3293]: ▸
+              - generic [ref=e3295] [cursor=pointer]:
+                - generic [ref=e3296]: 13:56
+                - generic [ref=e3297]:
+                  - 'generic "ticker: SPX" [ref=e3298]': SPX
+                  - text: long_put 7450 ×2
+                  - 'generic "account: Robinhood Margin" [ref=e3299]': Robinhood Margin
+                - generic [ref=e3300]: SPX 7469
+                - generic [ref=e3301]:
+                  - 'generic "entry: resistance resistance (2x tested) ★11d" [ref=e3302]': ✓ 7467
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3303]': "7458"
+                - generic [ref=e3304]: +$650
+                - generic [ref=e3305]: closed
+                - generic [ref=e3306]: ▸
+              - generic [ref=e3308] [cursor=pointer]:
+                - generic [ref=e3309]: 14:02
+                - generic [ref=e3310]:
+                  - 'generic "ticker: SPX" [ref=e3311]': SPX
+                  - text: long_put 7475 ×2
+                  - 'generic "account: Robinhood Margin" [ref=e3312]': Robinhood Margin
+                - generic [ref=e3313]: SPX 7476
+                - generic [ref=e3314]:
+                  - 'generic "entry: resistance support (3x) + fib 38.2%" [ref=e3315]': "7482"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3316]': "7458"
+                - generic [ref=e3317]: +$1,180
+                - generic [ref=e3318]: closed
+                - generic [ref=e3319]: ▸
+              - generic [ref=e3321] [cursor=pointer]:
+                - generic [ref=e3322]: 14:14
+                - generic [ref=e3323]:
+                  - 'generic "ticker: MA" [ref=e3324]': MA
+                  - text: long_put_spread 535/545 ×4
+                  - 'generic "account: Robinhood Margin" [ref=e3325]': Robinhood Margin
+                - generic [ref=e3326]: MA 547
+                - generic [ref=e3327]: —
+                - generic "open position — no realized P&L yet" [ref=e3328]: open
+                - generic [ref=e3329]: still open
+                - generic [ref=e3330]: ▸
+              - generic [ref=e3332] [cursor=pointer]:
+                - generic [ref=e3333]: 14:46
+                - generic [ref=e3334]:
+                  - 'generic "ticker: SPX" [ref=e3335]': SPX
+                  - text: long_call_spread 7465/7515 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3336]': Robinhood Margin
+                - generic [ref=e3337]: SPX 7454
+                - generic [ref=e3338]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3339]': ✓ 7458
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3340]': "7458"
+                - generic [ref=e3341]: −$190
+                - generic [ref=e3342]: closed
+                - generic [ref=e3343]: ▸
+              - generic [ref=e3345] [cursor=pointer]:
+                - generic [ref=e3346]: 14:48
+                - generic [ref=e3347]:
+                  - 'generic "ticker: SPX" [ref=e3348]': SPX
+                  - text: custom 7460/7470/7480 ×10
+                  - 'generic "account: Robinhood Margin" [ref=e3349]': Robinhood Margin
+                - generic [ref=e3350]: SPX 7454
+                - generic [ref=e3351]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3352]': ✓ 7458
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3353]': "7458"
+                - generic [ref=e3354]: −$795
+                - generic [ref=e3355]: expired worthless
+                - generic [ref=e3356]: ▸
+              - generic [ref=e3358] [cursor=pointer]:
+                - generic [ref=e3359]: 14:50
+                - generic [ref=e3360]:
+                  - 'generic "ticker: SPX" [ref=e3361]': SPX
+                  - text: long_call 7455 ×4
+                  - 'generic "account: Robinhood Margin" [ref=e3362]': Robinhood Margin
+                - generic [ref=e3363]: SPX 7453
+                - generic [ref=e3364]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3365]': "7458"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3366]': ✓ 7458
+                - generic [ref=e3367]: −$515
+                - generic [ref=e3368]: closed
+                - generic [ref=e3369]: ▸
+              - generic [ref=e3371] [cursor=pointer]:
+                - generic [ref=e3372]: 14:55
+                - generic [ref=e3373]:
+                  - 'generic "ticker: MU" [ref=e3374]': MU
+                  - text: long_call 875 ×2
+                  - 'generic "account: Robinhood Margin" [ref=e3375]': Robinhood Margin
+                - generic [ref=e3376]: MU 875
+                - generic [ref=e3377]: —
+                - generic [ref=e3378]: −$501
+                - generic [ref=e3379]: closed
+                - generic [ref=e3380]: ▸
+              - generic [ref=e3382] [cursor=pointer]:
+                - generic [ref=e3383]: 15:13
+                - generic [ref=e3384]:
+                  - 'generic "ticker: SPX" [ref=e3385]': SPX
+                  - text: long_call 7450 ×4
+                  - 'generic "account: Robinhood Margin" [ref=e3386]': Robinhood Margin
+                - generic [ref=e3387]: SPX 7445
+                - generic [ref=e3388]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3389]': "7458"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3390]': "7458"
+                - generic [ref=e3391]: +$770
+                - generic [ref=e3392]: closed
+                - generic [ref=e3393]: ▸
+              - generic [ref=e3395] [cursor=pointer]:
+                - generic [ref=e3396]: 15:38
+                - generic [ref=e3397]:
+                  - 'generic "ticker: SPX" [ref=e3398]': SPX
+                  - text: long_call 7465 ×2
+                  - 'generic "account: Robinhood Margin" [ref=e3399]': Robinhood Margin
+                - generic [ref=e3400]: SPX 7454
+                - generic [ref=e3401]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3402]': "7458"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3403]': "7458"
+                - generic [ref=e3404]: −$120
+                - generic [ref=e3405]: expired worthless
+                - generic [ref=e3406]: ▸
+              - generic [ref=e3408] [cursor=pointer]:
+                - generic [ref=e3409]: 15:39
+                - generic [ref=e3410]:
+                  - 'generic "ticker: SPX" [ref=e3411]': SPX
+                  - text: long_put 7440 ×3
+                  - 'generic "account: Robinhood Margin" [ref=e3412]': Robinhood Margin
+                - generic [ref=e3413]: SPX 7454
+                - generic [ref=e3414]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3415]': ✓ 7458
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3416]': "7458"
+                - generic [ref=e3417]: −$185
+                - generic [ref=e3418]: expired worthless
+                - generic [ref=e3419]: ▸
+              - generic [ref=e3421] [cursor=pointer]:
+                - generic [ref=e3422]: 15:54
+                - generic [ref=e3423]:
+                  - 'generic "ticker: SPX" [ref=e3424]': SPX
+                  - text: long_call 7455 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3425]': Robinhood Margin
+                - generic [ref=e3426]: SPX 7447
+                - generic [ref=e3427]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3428]': "7458"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3429]': "7458"
+                - generic [ref=e3430]: −$45
+                - generic [ref=e3431]: expired worthless
+                - generic [ref=e3432]: ▸
+              - generic [ref=e3434] [cursor=pointer]:
+                - generic [ref=e3435]: 15:57
+                - generic [ref=e3436]:
+                  - 'generic "ticker: SPX" [ref=e3437]': SPX
+                  - text: long_put 7445 ×1
+                  - 'generic "account: Robinhood Margin" [ref=e3438]': Robinhood Margin
+                - generic [ref=e3439]: SPX 7445
+                - generic [ref=e3440]:
+                  - 'generic "entry: prior spot prior spot" [ref=e3441]': "7458"
+                  - text: →
+                  - 'generic "exit: prior spot prior spot" [ref=e3442]': "7458"
+                - generic [ref=e3443]: +$155
+                - generic [ref=e3444]: closed
+                - generic [ref=e3445]: ▸
+            - paragraph [ref=e3446]: Price is the 1-minute print at submission, per the trade's own ticker. Tag the level you were trading — the broker says WHAT you did; only you can say WHY. Saves with the entry.
+          - group [ref=e3447]:
+            - generic "▸ Forecast vs. actual · levels 100% · stayed rangey (0.74%)" [ref=e3448] [cursor=pointer]
+          - generic [ref=e3449]:
+            - heading "My journal — the day overall" [level=4] [ref=e3450]
+            - generic [ref=e3451]:
+              - generic [ref=e3452]: Action taken
+              - textbox "e.g. bought 7550C, sold half at 7575" [ref=e3453]
+            - generic [ref=e3454]:
+              - generic [ref=e3455]: Entry
+              - textbox "price / time / size you got in" [ref=e3456]
+            - generic [ref=e3457]:
+              - generic [ref=e3458]: Exit
+              - textbox "price / time you got out" [ref=e3459]
+            - generic [ref=e3460]:
+              - generic [ref=e3461]: Result
+              - textbox "P&L, win/loss, R multiple" [ref=e3462]
+            - generic [ref=e3463]:
+              - generic [ref=e3464]: Lesson
+              - textbox "what to repeat or avoid next time" [ref=e3465]
+            - generic [ref=e3466]:
+              - generic [ref=e3467]: Notes
+              - textbox "anything else" [ref=e3468]
+            - button "Save" [disabled] [ref=e3470]
+          - generic [ref=e3471]: 📎 Attach a reference chart — drop, paste (⌘V), or click (never analyzed)
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

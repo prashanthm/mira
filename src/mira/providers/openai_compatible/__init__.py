@@ -50,10 +50,16 @@ class ToolCall:
 
 @dataclass(frozen=True, slots=True)
 class ChatResult:
-    """Outcome of a tool-aware chat turn: assistant text and/or requested tool calls."""
+    """Outcome of a tool-aware chat turn: assistant text and/or requested tool calls.
+
+    ``usage`` carries the provider's real token counts
+    ({"prompt_tokens", "completion_tokens", "total_tokens"}) when the endpoint
+    reports them — the gateway persists them as the actual (not estimated) cost
+    basis. None when the backend doesn't report usage (e.g. the echo stub)."""
 
     text: str
     tool_calls: tuple[ToolCall, ...] = field(default_factory=tuple)
+    usage: dict[str, int] | None = None
 
 
 class OpenAICompatibleLLMProvider:
@@ -145,7 +151,15 @@ class OpenAICompatibleLLMProvider:
             ToolCall(id=tc.id, name=tc.function.name, arguments=tc.function.arguments)
             for tc in raw_calls
         )
-        return ChatResult(text=message.content or "", tool_calls=tool_calls)
+        # real token usage — the one place the provider reports it; the gateway
+        # persists it as the actual cost basis (previously discarded).
+        u = getattr(completion, "usage", None)
+        usage = None
+        if u is not None:
+            usage = {"prompt_tokens": getattr(u, "prompt_tokens", 0) or 0,
+                     "completion_tokens": getattr(u, "completion_tokens", 0) or 0,
+                     "total_tokens": getattr(u, "total_tokens", 0) or 0}
+        return ChatResult(text=message.content or "", tool_calls=tool_calls, usage=usage)
 
     def embed(self, text: str) -> list[float]:
         """Embeddings are not served over the chat endpoint (ADR-010 follow-up).

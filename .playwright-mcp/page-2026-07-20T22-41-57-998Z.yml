@@ -1,0 +1,854 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e3642]:
+        - generic [ref=e3644]:
+          - heading "Trade Analytics" [level=2] [ref=e3645]
+          - paragraph [ref=e3646]: Round-trip record + statistically-defensible edges · as of 2026-07-05 · educational only, not advice
+        - generic [ref=e3648]:
+          - generic [ref=e3649]:
+            - generic [ref=e3650]: Win rate
+            - generic [ref=e3651]: 37.8%
+            - generic [ref=e3652]: 14W / 23L
+          - generic [ref=e3653]:
+            - generic [ref=e3654]: Profit factor
+            - generic [ref=e3655]: "0.77"
+            - generic [ref=e3656]: below breakeven
+          - generic [ref=e3657]:
+            - generic [ref=e3658]: Avg hold
+            - generic [ref=e3659]: 7.2d
+          - generic [ref=e3660]:
+            - generic [ref=e3661]: Avg MFE capture
+            - generic [ref=e3662]: "-25%"
+            - generic [ref=e3663]: share of peak move captured
+          - generic [ref=e3664]:
+            - generic [ref=e3665]: Closed trades
+            - generic [ref=e3666]: "37"
+            - generic [ref=e3667]: 6 est. entry
+        - generic [ref=e3668]: Defensible edges & leaks
+        - paragraph [ref=e3669]: Only conditions whose 90% credible interval clears your 37.8% baseline with enough trades to matter. Anything thinner is held back below.
+        - generic [ref=e3671]:
+          - generic [ref=e3672]:
+            - strong [ref=e3673]: Thursday
+            - generic [ref=e3674]: ▲ edge
+          - generic [ref=e3675]: day of week
+          - generic [ref=e3676]:
+            - generic [ref=e3677]: 75.0%
+            - generic [ref=e3678]: +37.16% vs baseline
+          - generic [ref=e3679]: n = 8 trades
+          - generic [ref=e3680]:
+            - img "Credible interval 45.0% to 90.2%, baseline 37.8%" [ref=e3681]:
+              - generic "baseline 37.8%" [ref=e3684]
+            - generic [ref=e3685]: CI 45.0%–90.2% · baseline 37.8%
+        - generic [ref=e3686]: All conditions
+        - paragraph [ref=e3687]: Every entry condition by win-rate and credible interval. Rows with too few trades to be defensible are muted and marked “n too small” — don't read them as signal.
+        - table [ref=e3689]:
+          - rowgroup [ref=e3690]:
+            - row [ref=e3691]:
+              - columnheader "Condition" [ref=e3692]
+              - columnheader "n" [ref=e3693]
+              - columnheader "Win rate" [ref=e3694]
+              - columnheader "Credible interval (90%)" [ref=e3695]
+              - columnheader "Avg P/L" [ref=e3696]
+              - columnheader [ref=e3697]
+          - rowgroup [ref=e3698]:
+            - row [ref=e3699]:
+              - cell "falseearnings before entry" [ref=e3700]
+              - cell "31" [ref=e3701]
+              - cell "41.9%" [ref=e3702]
+              - cell "Credible interval 28.7% to 56.7%, baseline 37.8% CI 28.7%–56.7% · baseline 37.8%" [ref=e3703]:
+                - generic [ref=e3704]:
+                  - img "Credible interval 28.7% to 56.7%, baseline 37.8%" [ref=e3705]:
+                    - generic "baseline 37.8%" [ref=e3708]
+                  - generic [ref=e3709]: CI 28.7%–56.7% · baseline 37.8%
+              - cell "−$51" [ref=e3710]
+              - cell [ref=e3711]
+            - row [ref=e3712]:
+              - cell "falseearnings during hold" [ref=e3713]
+              - cell "31" [ref=e3714]
+              - cell "41.9%" [ref=e3715]
+              - cell "Credible interval 28.7% to 56.7%, baseline 37.8% CI 28.7%–56.7% · baseline 37.8%" [ref=e3716]:
+                - generic [ref=e3717]:
+                  - img "Credible interval 28.7% to 56.7%, baseline 37.8%" [ref=e3718]:
+                    - generic "baseline 37.8%" [ref=e3721]
+                  - generic [ref=e3722]: CI 28.7%–56.7% · baseline 37.8%
+              - cell "−$51" [ref=e3723]
+              - cell [ref=e3724]
+            - row [ref=e3725]:
+              - cell "falseearnings within window" [ref=e3726]
+              - cell "31" [ref=e3727]
+              - cell "41.9%" [ref=e3728]
+              - cell "Credible interval 28.7% to 56.7%, baseline 37.8% CI 28.7%–56.7% · baseline 37.8%" [ref=e3729]:
+                - generic [ref=e3730]:
+                  - img "Credible interval 28.7% to 56.7%, baseline 37.8%" [ref=e3731]:
+                    - generic "baseline 37.8%" [ref=e3734]
+                  - generic [ref=e3735]: CI 28.7%–56.7% · baseline 37.8%
+              - cell "−$51" [ref=e3736]
+              - cell [ref=e3737]
+            - row [ref=e3738]:
+              - cell "falseis friday" [ref=e3739]
+              - cell "29" [ref=e3740]
+              - cell "44.8%" [ref=e3741]
+              - cell "Credible interval 30.8% to 59.8%, baseline 37.8% CI 30.8%–59.8% · baseline 37.8%" [ref=e3742]:
+                - generic [ref=e3743]:
+                  - img "Credible interval 30.8% to 59.8%, baseline 37.8%" [ref=e3744]:
+                    - generic "baseline 37.8%" [ref=e3747]
+                  - generic [ref=e3748]: CI 30.8%–59.8% · baseline 37.8%
+              - cell "−$53" [ref=e3749]
+              - cell [ref=e3750]
+            - row [ref=e3751]:
+              - cell "falseis monday" [ref=e3752]
+              - cell "26" [ref=e3753]
+              - cell "46.2%" [ref=e3754]
+              - cell "Credible interval 31.3% to 61.8%, baseline 37.8% CI 31.3%–61.8% · baseline 37.8%" [ref=e3755]:
+                - generic [ref=e3756]:
+                  - img "Credible interval 31.3% to 61.8%, baseline 37.8%" [ref=e3757]:
+                    - generic "baseline 37.8%" [ref=e3760]
+                  - generic [ref=e3761]: CI 31.3%–61.8% · baseline 37.8%
+              - cell "+$77" [ref=e3762]
+              - cell [ref=e3763]
+            - row [ref=e3764]:
+              - cell "1-4wkholding bucket" [ref=e3765]
+              - cell "26" [ref=e3766]
+              - cell "42.3%" [ref=e3767]
+              - cell "Credible interval 28.0% to 58.3%, baseline 37.8% CI 28.0%–58.3% · baseline 37.8%" [ref=e3768]:
+                - generic [ref=e3769]:
+                  - img "Credible interval 28.0% to 58.3%, baseline 37.8%" [ref=e3770]:
+                    - generic "baseline 37.8%" [ref=e3773]
+                  - generic [ref=e3774]: CI 28.0%–58.3% · baseline 37.8%
+              - cell "−$77" [ref=e3775]
+              - cell [ref=e3776]
+            - row [ref=e3777]:
+              - cell "Tuesdayday of week" [ref=e3778]
+              - cell "11" [ref=e3779]
+              - cell "27.3%" [ref=e3780]
+              - cell "Credible interval 12.3% to 52.7%, baseline 37.8% CI 12.3%–52.7% · baseline 37.8%" [ref=e3781]:
+                - generic [ref=e3782]:
+                  - img "Credible interval 12.3% to 52.7%, baseline 37.8%" [ref=e3783]:
+                    - generic "baseline 37.8%" [ref=e3786]
+                  - generic [ref=e3787]: CI 12.3%–52.7% · baseline 37.8%
+              - cell "−$170" [ref=e3788]
+              - cell [ref=e3789]
+            - row [ref=e3790]:
+              - cell "Thursdayday of week" [ref=e3791]
+              - cell "8" [ref=e3792]
+              - cell "75.0%" [ref=e3793]
+              - cell "Credible interval 45.0% to 90.2%, baseline 37.8% CI 45.0%–90.2% · baseline 37.8%" [ref=e3794]:
+                - generic [ref=e3795]:
+                  - img "Credible interval 45.0% to 90.2%, baseline 37.8%" [ref=e3796]:
+                    - generic "baseline 37.8%" [ref=e3799]
+                  - generic [ref=e3800]: CI 45.0%–90.2% · baseline 37.8%
+              - cell "+$429" [ref=e3801]
+              - cell [ref=e3802]
+            - row [ref=e3803]:
+              - cell "Wednesdayday of week" [ref=e3804]
+              - cell "5" [ref=e3805]
+              - cell "60.0%" [ref=e3806]
+              - cell "Credible interval 27.1% to 84.7%, baseline 37.8% CI 27.1%–84.7% · baseline 37.8%" [ref=e3807]:
+                - generic [ref=e3808]:
+                  - img "Credible interval 27.1% to 84.7%, baseline 37.8%" [ref=e3809]:
+                    - generic "baseline 37.8%" [ref=e3812]
+                  - generic [ref=e3813]: CI 27.1%–84.7% · baseline 37.8%
+              - cell "+$100" [ref=e3814]
+              - cell [ref=e3815]
+            - row [ref=e3816]:
+              - cell "truenear resistance" [ref=e3817]
+              - cell "5" [ref=e3818]
+              - cell "40.0%" [ref=e3819]
+              - cell "Credible interval 15.3% to 72.9%, baseline 37.8% CI 15.3%–72.9% · baseline 37.8%" [ref=e3820]:
+                - generic [ref=e3821]:
+                  - img "Credible interval 15.3% to 72.9%, baseline 37.8%" [ref=e3822]:
+                    - generic "baseline 37.8%" [ref=e3825]
+                  - generic [ref=e3826]: CI 15.3%–72.9% · baseline 37.8%
+              - cell "+$86" [ref=e3827]
+              - cell [ref=e3828]
+            - row [ref=e3829]:
+              - cell "Mondayday of week" [ref=e3830]
+              - cell "5" [ref=e3831]
+              - cell "20.0%" [ref=e3832]
+              - cell "Credible interval 6.3% to 58.2%, baseline 37.8% CI 6.3%–58.2% · baseline 37.8%" [ref=e3833]:
+                - generic [ref=e3834]:
+                  - img "Credible interval 6.3% to 58.2%, baseline 37.8%" [ref=e3835]:
+                    - generic "baseline 37.8%" [ref=e3838]
+                  - generic [ref=e3839]: CI 6.3%–58.2% · baseline 37.8%
+              - cell "−$720" [ref=e3840]
+              - cell [ref=e3841]
+            - row [ref=e3842]:
+              - cell "trueis monday" [ref=e3843]
+              - cell "5" [ref=e3844]
+              - cell "20.0%" [ref=e3845]
+              - cell "Credible interval 6.3% to 58.2%, baseline 37.8% CI 6.3%–58.2% · baseline 37.8%" [ref=e3846]:
+                - generic [ref=e3847]:
+                  - img "Credible interval 6.3% to 58.2%, baseline 37.8%" [ref=e3848]:
+                    - generic "baseline 37.8%" [ref=e3851]
+                  - generic [ref=e3852]: CI 6.3%–58.2% · baseline 37.8%
+              - cell "−$720" [ref=e3853]
+              - cell [ref=e3854]
+            - row [ref=e3855]:
+              - cell "updaily trend" [ref=e3856]
+              - cell "4" [ref=e3857]
+              - cell "50.0%" [ref=e3858]
+              - cell "Credible interval 18.9% to 81.1%, baseline 37.8% CI 18.9%–81.1% · baseline 37.8%" [ref=e3859]:
+                - generic [ref=e3860]:
+                  - img "Credible interval 18.9% to 81.1%, baseline 37.8%" [ref=e3861]:
+                    - generic "baseline 37.8%" [ref=e3864]
+                  - generic [ref=e3865]: CI 18.9%–81.1% · baseline 37.8%
+              - cell "+$244" [ref=e3866]
+              - cell [ref=e3867]
+            - row [ref=e3868]:
+              - cell "sidewaysweekly trend" [ref=e3869]
+              - cell "4" [ref=e3870]
+              - cell "50.0%" [ref=e3871]
+              - cell "Credible interval 18.9% to 81.1%, baseline 37.8% CI 18.9%–81.1% · baseline 37.8%" [ref=e3872]:
+                - generic [ref=e3873]:
+                  - img "Credible interval 18.9% to 81.1%, baseline 37.8%" [ref=e3874]:
+                    - generic "baseline 37.8%" [ref=e3877]
+                  - generic [ref=e3878]: CI 18.9%–81.1% · baseline 37.8%
+              - cell "+$105" [ref=e3879]
+              - cell [ref=e3880]
+            - row [ref=e3881]:
+              - cell "2-5dholding bucket" [ref=e3882]
+              - cell "4" [ref=e3883]
+              - cell "25.0%" [ref=e3884]
+              - cell "Credible interval 7.6% to 65.7%, baseline 37.8% CI 7.6%–65.7% · baseline 37.8%" [ref=e3885]:
+                - generic [ref=e3886]:
+                  - img "Credible interval 7.6% to 65.7%, baseline 37.8%" [ref=e3887]:
+                    - generic "baseline 37.8%" [ref=e3890]
+                  - generic [ref=e3891]: CI 7.6%–65.7% · baseline 37.8%
+              - cell "−$64" [ref=e3892]
+              - cell [ref=e3893]
+            - row [ref=e3894]:
+              - cell "truenear support" [ref=e3895]
+              - cell "4" [ref=e3896]
+              - cell "25.0%" [ref=e3897]
+              - cell "Credible interval 7.6% to 65.7%, baseline 37.8% CI 7.6%–65.7% · baseline 37.8%" [ref=e3898]:
+                - generic [ref=e3899]:
+                  - img "Credible interval 7.6% to 65.7%, baseline 37.8%" [ref=e3900]:
+                    - generic "baseline 37.8%" [ref=e3903]
+                  - generic [ref=e3904]: CI 7.6%–65.7% · baseline 37.8%
+              - cell "+$11" [ref=e3905]
+              - cell [ref=e3906]
+            - row [ref=e3907]:
+              - cell "falsersi declining" [ref=e3908]
+              - cell "3" [ref=e3909]
+              - cell "33.3%" [ref=e3910]
+              - cell "Credible interval 9.8% to 75.1%, baseline 37.8% CI 9.8%–75.1% · baseline 37.8%" [ref=e3911]:
+                - generic [ref=e3912]:
+                  - img "Credible interval 9.8% to 75.1%, baseline 37.8%" [ref=e3913]:
+                    - generic "baseline 37.8%" [ref=e3916]
+                  - generic [ref=e3917]: CI 9.8%–75.1% · baseline 37.8%
+              - cell "−$71" [ref=e3918]
+              - cell [ref=e3919]
+            - row [ref=e3920]:
+              - cell "truersi declining" [ref=e3921]
+              - cell "3" [ref=e3922]
+              - cell "33.3%" [ref=e3923]
+              - cell "Credible interval 9.8% to 75.1%, baseline 37.8% CI 9.8%–75.1% · baseline 37.8%" [ref=e3924]:
+                - generic [ref=e3925]:
+                  - img "Credible interval 9.8% to 75.1%, baseline 37.8%" [ref=e3926]:
+                    - generic "baseline 37.8%" [ref=e3929]
+                  - generic [ref=e3930]: CI 9.8%–75.1% · baseline 37.8%
+              - cell "+$205" [ref=e3931]
+              - cell [ref=e3932]
+            - row [ref=e3933]:
+              - cell "highvol percentile band" [ref=e3934]
+              - cell "3" [ref=e3935]
+              - cell "0.0%" [ref=e3936]
+              - cell "Credible interval 1.3% to 52.7%, baseline 37.8% CI 1.3%–52.7% · baseline 37.8%" [ref=e3937]:
+                - generic [ref=e3938]:
+                  - img "Credible interval 1.3% to 52.7%, baseline 37.8%" [ref=e3939]:
+                    - generic "baseline 37.8%" [ref=e3942]
+                  - generic [ref=e3943]: CI 1.3%–52.7% · baseline 37.8%
+              - cell "−$17" [ref=e3944]
+              - cell [ref=e3945]
+            - row [ref=e3946]:
+              - cell "mediumvol percentile band" [ref=e3947]
+              - cell "2" [ref=e3948]
+              - cell "100.0%" [ref=e3949]
+              - cell "Credible interval 36.8% to 98.3%, baseline 37.8% CI 36.8%–98.3% · baseline 37.8%" [ref=e3950]:
+                - generic [ref=e3951]:
+                  - img "Credible interval 36.8% to 98.3%, baseline 37.8%" [ref=e3952]:
+                    - generic "baseline 37.8%" [ref=e3955]
+                  - generic [ref=e3956]: CI 36.8%–98.3% · baseline 37.8%
+              - cell "+$511" [ref=e3957]
+              - cell "n too small" [ref=e3958]:
+                - generic "Too few trades to be statistically defensible" [ref=e3959]: n too small
+            - row [ref=e3960]:
+              - cell "falsenear support" [ref=e3961]
+              - cell "2" [ref=e3962]
+              - cell "50.0%" [ref=e3963]
+              - cell "Credible interval 13.5% to 86.5%, baseline 37.8% CI 13.5%–86.5% · baseline 37.8%" [ref=e3964]:
+                - generic [ref=e3965]:
+                  - img "Credible interval 13.5% to 86.5%, baseline 37.8%" [ref=e3966]:
+                    - generic "baseline 37.8%" [ref=e3969]
+                  - generic [ref=e3970]: CI 13.5%–86.5% · baseline 37.8%
+              - cell "+$178" [ref=e3971]
+              - cell "n too small" [ref=e3972]:
+                - generic "Too few trades to be statistically defensible" [ref=e3973]: n too small
+            - row [ref=e3974]:
+              - cell "downdaily trend" [ref=e3975]
+              - cell "2" [ref=e3976]
+              - cell "0.0%" [ref=e3977]
+              - cell "Credible interval 1.7% to 63.2%, baseline 37.8% CI 1.7%–63.2% · baseline 37.8%" [ref=e3978]:
+                - generic [ref=e3979]:
+                  - img "Credible interval 1.7% to 63.2%, baseline 37.8%" [ref=e3980]:
+                    - generic "baseline 37.8%" [ref=e3983]
+                  - generic [ref=e3984]: CI 1.7%–63.2% · baseline 37.8%
+              - cell "−$287" [ref=e3985]
+              - cell "n too small" [ref=e3986]:
+                - generic "Too few trades to be statistically defensible" [ref=e3987]: n too small
+            - row [ref=e3988]:
+              - cell "Fridayday of week" [ref=e3989]
+              - cell "2" [ref=e3990]
+              - cell "0.0%" [ref=e3991]
+              - cell "Credible interval 1.7% to 63.2%, baseline 37.8% CI 1.7%–63.2% · baseline 37.8%" [ref=e3992]:
+                - generic [ref=e3993]:
+                  - img "Credible interval 1.7% to 63.2%, baseline 37.8%" [ref=e3994]:
+                    - generic "baseline 37.8%" [ref=e3997]
+                  - generic [ref=e3998]: CI 1.7%–63.2% · baseline 37.8%
+              - cell "−$23" [ref=e3999]
+              - cell "n too small" [ref=e4000]:
+                - generic "Too few trades to be statistically defensible" [ref=e4001]: n too small
+            - row [ref=e4002]:
+              - cell "trueis friday" [ref=e4003]
+              - cell "2" [ref=e4004]
+              - cell "0.0%" [ref=e4005]
+              - cell "Credible interval 1.7% to 63.2%, baseline 37.8% CI 1.7%–63.2% · baseline 37.8%" [ref=e4006]:
+                - generic [ref=e4007]:
+                  - img "Credible interval 1.7% to 63.2%, baseline 37.8%" [ref=e4008]:
+                    - generic "baseline 37.8%" [ref=e4011]
+                  - generic [ref=e4012]: CI 1.7%–63.2% · baseline 37.8%
+              - cell "−$23" [ref=e4013]
+              - cell "n too small" [ref=e4014]:
+                - generic "Too few trades to be statistically defensible" [ref=e4015]: n too small
+            - row [ref=e4016]:
+              - cell "downweekly trend" [ref=e4017]
+              - cell "2" [ref=e4018]
+              - cell "0.0%" [ref=e4019]
+              - cell "Credible interval 1.7% to 63.2%, baseline 37.8% CI 1.7%–63.2% · baseline 37.8%" [ref=e4020]:
+                - generic [ref=e4021]:
+                  - img "Credible interval 1.7% to 63.2%, baseline 37.8%" [ref=e4022]:
+                    - generic "baseline 37.8%" [ref=e4025]
+                  - generic [ref=e4026]: CI 1.7%–63.2% · baseline 37.8%
+              - cell "−$10" [ref=e4027]
+              - cell "n too small" [ref=e4028]:
+                - generic "Too few trades to be statistically defensible" [ref=e4029]: n too small
+            - row [ref=e4030]:
+              - cell "0-1dholding bucket" [ref=e4031]
+              - cell "1" [ref=e4032]
+              - cell "100.0%" [ref=e4033]
+              - cell "Credible interval 22.4% to 97.5%, baseline 37.8% CI 22.4%–97.5% · baseline 37.8%" [ref=e4034]:
+                - generic [ref=e4035]:
+                  - img "Credible interval 22.4% to 97.5%, baseline 37.8%" [ref=e4036]:
+                    - generic "baseline 37.8%" [ref=e4039]
+                  - generic [ref=e4040]: CI 22.4%–97.5% · baseline 37.8%
+              - cell "+$660" [ref=e4041]
+              - cell "n too small" [ref=e4042]:
+                - generic "Too few trades to be statistically defensible" [ref=e4043]: n too small
+            - row [ref=e4044]:
+              - cell "falsenear resistance" [ref=e4045]
+              - cell "1" [ref=e4046]
+              - cell "0.0%" [ref=e4047]
+              - cell "Credible interval 2.5% to 77.6%, baseline 37.8% CI 2.5%–77.6% · baseline 37.8%" [ref=e4048]:
+                - generic [ref=e4049]:
+                  - img "Credible interval 2.5% to 77.6%, baseline 37.8%" [ref=e4050]:
+                    - generic "baseline 37.8%" [ref=e4053]
+                  - generic [ref=e4054]: CI 2.5%–77.6% · baseline 37.8%
+              - cell "−$30" [ref=e4055]
+              - cell "n too small" [ref=e4056]:
+                - generic "Too few trades to be statistically defensible" [ref=e4057]: n too small
+            - row [ref=e4058]:
+              - cell "lowvol percentile band" [ref=e4059]
+              - cell "1" [ref=e4060]
+              - cell "0.0%" [ref=e4061]
+              - cell "Credible interval 2.5% to 77.6%, baseline 37.8% CI 2.5%–77.6% · baseline 37.8%" [ref=e4062]:
+                - generic [ref=e4063]:
+                  - img "Credible interval 2.5% to 77.6%, baseline 37.8%" [ref=e4064]:
+                    - generic "baseline 37.8%" [ref=e4067]
+                  - generic [ref=e4068]: CI 2.5%–77.6% · baseline 37.8%
+              - cell "−$570" [ref=e4069]
+              - cell "n too small" [ref=e4070]:
+                - generic "Too few trades to be statistically defensible" [ref=e4071]: n too small
+        - generic [ref=e4072]: Recent round-trips
+        - table [ref=e4074]:
+          - rowgroup [ref=e4075]:
+            - row [ref=e4076]:
+              - columnheader "Symbol" [ref=e4077]
+              - columnheader "Kind" [ref=e4078]
+              - columnheader "Open → Close" [ref=e4079]
+              - columnheader "Held" [ref=e4080]
+              - columnheader "Realized $" [ref=e4081]
+              - columnheader "%" [ref=e4082]
+              - columnheader "Result" [ref=e4083]
+              - columnheader "MFE capture" [ref=e4084]
+          - rowgroup [ref=e4085]:
+            - row [ref=e4086] [cursor=pointer]:
+              - cell "SPXW" [ref=e4087]
+              - cell "option" [ref=e4088]
+              - cell "Jun 25 → Jul 3" [ref=e4090]
+              - cell "8d" [ref=e4091]
+              - cell "+$1,652" [ref=e4092]
+              - cell "+2.12%" [ref=e4093]
+              - cell "✓ Win" [ref=e4094]
+              - cell "—" [ref=e4096]
+            - row [ref=e4097] [cursor=pointer]:
+              - cell "SPXW" [ref=e4098]
+              - cell "option" [ref=e4099]
+              - cell "Jun 25 → Jul 3" [ref=e4101]
+              - cell "8d" [ref=e4102]
+              - cell "−$1,076" [ref=e4103]
+              - cell "−0.79%" [ref=e4104]
+              - cell "✕ Loss" [ref=e4105]
+              - cell "—" [ref=e4107]
+            - row [ref=e4108] [cursor=pointer]:
+              - cell "est." [ref=e4109]
+              - cell "equity" [ref=e4110]
+              - cell "— → Jul 2" [ref=e4112]
+              - cell "d" [ref=e4113]
+              - cell "−$11" [ref=e4114]
+              - cell "+0.00%" [ref=e4115]
+              - cell "✕ Loss" [ref=e4116]
+              - cell "—" [ref=e4118]
+            - row [ref=e4119] [cursor=pointer]:
+              - cell "SPXW" [ref=e4120]
+              - cell "option" [ref=e4121]
+              - cell "Jun 23 → Jul 2" [ref=e4123]
+              - cell "9d" [ref=e4124]
+              - cell "+$117" [ref=e4125]
+              - cell "+0.09%" [ref=e4126]
+              - cell "✓ Win" [ref=e4127]
+              - cell "—" [ref=e4129]
+            - row [ref=e4130] [cursor=pointer]:
+              - cell "SPXW" [ref=e4131]
+              - cell "option" [ref=e4132]
+              - cell "Jun 23 → Jul 2" [ref=e4134]
+              - cell "9d" [ref=e4135]
+              - cell "+$410" [ref=e4136]
+              - cell "+1.05%" [ref=e4137]
+              - cell "✓ Win" [ref=e4138]
+              - cell "—" [ref=e4140]
+            - row [ref=e4141] [cursor=pointer]:
+              - cell "UNH" [ref=e4142]
+              - cell "option" [ref=e4143]
+              - cell "Jul 2 → Jul 2" [ref=e4145]
+              - cell "0d" [ref=e4146]
+              - cell "+$660" [ref=e4147]
+              - cell "+18.86%" [ref=e4148]
+              - cell "✓ Win" [ref=e4149]
+              - cell "—" [ref=e4151]
+            - row [ref=e4152] [cursor=pointer]:
+              - cell "SPXW" [ref=e4153]
+              - cell "option" [ref=e4154]
+              - cell "Jun 23 → Jul 2" [ref=e4156]
+              - cell "9d" [ref=e4157]
+              - cell "−$340" [ref=e4158]
+              - cell "−5.23%" [ref=e4159]
+              - cell "✕ Loss" [ref=e4160]
+              - cell "—" [ref=e4162]
+            - row [ref=e4163] [cursor=pointer]:
+              - cell "SPXW" [ref=e4164]
+              - cell "option" [ref=e4165]
+              - cell "Jun 24 → Jul 2" [ref=e4167]
+              - cell "8d" [ref=e4168]
+              - cell "+$430" [ref=e4169]
+              - cell "+0.24%" [ref=e4170]
+              - cell "✓ Win" [ref=e4171]
+              - cell "—" [ref=e4173]
+            - row [ref=e4174] [cursor=pointer]:
+              - cell "SPXW" [ref=e4175]
+              - cell "option" [ref=e4176]
+              - cell "Jun 24 → Jul 2" [ref=e4178]
+              - cell "8d" [ref=e4179]
+              - cell "+$420" [ref=e4180]
+              - cell "+0.35%" [ref=e4181]
+              - cell "✓ Win" [ref=e4182]
+              - cell "—" [ref=e4184]
+            - row [ref=e4185] [cursor=pointer]:
+              - cell "SPXW" [ref=e4186]
+              - cell "option" [ref=e4187]
+              - cell "Jun 24 → Jul 2" [ref=e4189]
+              - cell "8d" [ref=e4190]
+              - cell "+$740" [ref=e4191]
+              - cell "+13.45%" [ref=e4192]
+              - cell "✓ Win" [ref=e4193]
+              - cell "—" [ref=e4195]
+            - row [ref=e4196] [cursor=pointer]:
+              - cell "SPXW" [ref=e4197]
+              - cell "option" [ref=e4198]
+              - cell "Jun 24 → Jul 2" [ref=e4200]
+              - cell "8d" [ref=e4201]
+              - cell "−$740" [ref=e4202]
+              - cell "−0.76%" [ref=e4203]
+              - cell "✕ Loss" [ref=e4204]
+              - cell "—" [ref=e4206]
+            - row [ref=e4207] [cursor=pointer]:
+              - cell "SPXW" [ref=e4208]
+              - cell "option" [ref=e4209]
+              - cell "Jun 24 → Jul 2" [ref=e4211]
+              - cell "8d" [ref=e4212]
+              - cell "−$350" [ref=e4213]
+              - cell "−0.25%" [ref=e4214]
+              - cell "✕ Loss" [ref=e4215]
+              - cell "—" [ref=e4217]
+            - row [ref=e4218] [cursor=pointer]:
+              - cell "SOXS" [ref=e4219]
+              - cell "option" [ref=e4220]
+              - cell "Jun 30 → Jul 2" [ref=e4222]
+              - cell "2d" [ref=e4223]
+              - cell "−$570" [ref=e4224]
+              - cell "−0.23%" [ref=e4225]
+              - cell "✕ Loss" [ref=e4226]
+              - cell "-25%" [ref=e4228]
+            - row [ref=e4229] [cursor=pointer]:
+              - cell "SPXW" [ref=e4230]
+              - cell "option" [ref=e4231]
+              - cell "Jun 25 → Jul 2" [ref=e4233]
+              - cell "7d" [ref=e4234]
+              - cell "+$470" [ref=e4235]
+              - cell "+0.15%" [ref=e4236]
+              - cell "✓ Win" [ref=e4237]
+              - cell "—" [ref=e4239]
+            - row [ref=e4240] [cursor=pointer]:
+              - cell "SPXW" [ref=e4241]
+              - cell "option" [ref=e4242]
+              - cell "Jun 25 → Jul 2" [ref=e4244]
+              - cell "7d" [ref=e4245]
+              - cell "+$510" [ref=e4246]
+              - cell "+1.24%" [ref=e4247]
+              - cell "✓ Win" [ref=e4248]
+              - cell "—" [ref=e4250]
+            - row [ref=e4251] [cursor=pointer]:
+              - cell "SPXW" [ref=e4252]
+              - cell "option" [ref=e4253]
+              - cell "Jun 25 → Jul 2" [ref=e4255]
+              - cell "7d" [ref=e4256]
+              - cell "+$1,210" [ref=e4257]
+              - cell "+3.10%" [ref=e4258]
+              - cell "✓ Win" [ref=e4259]
+              - cell "—" [ref=e4261]
+            - row [ref=e4262] [cursor=pointer]:
+              - cell "SPXW" [ref=e4263]
+              - cell "option" [ref=e4264]
+              - cell "Jun 25 → Jul 2" [ref=e4266]
+              - cell "7d" [ref=e4267]
+              - cell "+$7" [ref=e4268]
+              - cell "+0.01%" [ref=e4269]
+              - cell "✓ Win" [ref=e4270]
+              - cell "—" [ref=e4272]
+            - row [ref=e4273] [cursor=pointer]:
+              - cell "SPXW" [ref=e4274]
+              - cell "option" [ref=e4275]
+              - cell "Jun 23 → Jul 1" [ref=e4277]
+              - cell "8d" [ref=e4278]
+              - cell "−$990" [ref=e4279]
+              - cell "−0.35%" [ref=e4280]
+              - cell "✕ Loss" [ref=e4281]
+              - cell "—" [ref=e4283]
+            - row [ref=e4284] [cursor=pointer]:
+              - cell "UNH" [ref=e4285]
+              - cell "option" [ref=e4286]
+              - cell "Jun 29 → Jul 1" [ref=e4288]
+              - cell "2d" [ref=e4289]
+              - cell "+$361" [ref=e4290]
+              - cell "+0.70%" [ref=e4291]
+              - cell "✓ Win" [ref=e4292]
+              - cell "—" [ref=e4294]
+            - row [ref=e4295] [cursor=pointer]:
+              - cell "SPXW" [ref=e4296]
+              - cell "option" [ref=e4297]
+              - cell "Jun 23 → Jul 1" [ref=e4299]
+              - cell "8d" [ref=e4300]
+              - cell "−$525" [ref=e4301]
+              - cell "−0.62%" [ref=e4302]
+              - cell "✕ Loss" [ref=e4303]
+              - cell "—" [ref=e4305]
+            - row [ref=e4306] [cursor=pointer]:
+              - cell "SPXW" [ref=e4307]
+              - cell "option" [ref=e4308]
+              - cell "Jun 23 → Jul 1" [ref=e4310]
+              - cell "8d" [ref=e4311]
+              - cell "+$590" [ref=e4312]
+              - cell "+0.48%" [ref=e4313]
+              - cell "✓ Win" [ref=e4314]
+              - cell "—" [ref=e4316]
+            - row [ref=e4317] [cursor=pointer]:
+              - cell "SPXW" [ref=e4318]
+              - cell "option" [ref=e4319]
+              - cell "Jun 23 → Jul 1" [ref=e4321]
+              - cell "8d" [ref=e4322]
+              - cell "−$455" [ref=e4323]
+              - cell "−0.35%" [ref=e4324]
+              - cell "✕ Loss" [ref=e4325]
+              - cell "—" [ref=e4327]
+            - row [ref=e4328] [cursor=pointer]:
+              - cell "SPXW" [ref=e4329]
+              - cell "option" [ref=e4330]
+              - cell "Jun 23 → Jul 1" [ref=e4332]
+              - cell "8d" [ref=e4333]
+              - cell "−$25" [ref=e4334]
+              - cell "−0.03%" [ref=e4335]
+              - cell "✕ Loss" [ref=e4336]
+              - cell "—" [ref=e4338]
+            - row [ref=e4339] [cursor=pointer]:
+              - cell "SPXW" [ref=e4340]
+              - cell "option" [ref=e4341]
+              - cell "Jun 23 → Jul 1" [ref=e4343]
+              - cell "8d" [ref=e4344]
+              - cell "−$65" [ref=e4345]
+              - cell "−0.07%" [ref=e4346]
+              - cell "✕ Loss" [ref=e4347]
+              - cell "—" [ref=e4349]
+            - row [ref=e4350] [cursor=pointer]:
+              - cell "SPXW" [ref=e4351]
+              - cell "option" [ref=e4352]
+              - cell "Jun 23 → Jul 1" [ref=e4354]
+              - cell "8d" [ref=e4355]
+              - cell "−$20" [ref=e4356]
+              - cell "−0.02%" [ref=e4357]
+              - cell "✕ Loss" [ref=e4358]
+              - cell "—" [ref=e4360]
+            - row [ref=e4361] [cursor=pointer]:
+              - cell "est." [ref=e4362]
+              - cell "equity" [ref=e4363]
+              - cell "— → Jun 30" [ref=e4365]
+              - cell "d" [ref=e4366]
+              - cell "−$26" [ref=e4367]
+              - cell "+0.00%" [ref=e4368]
+              - cell "✕ Loss" [ref=e4369]
+              - cell "—" [ref=e4371]
+            - row [ref=e4372] [cursor=pointer]:
+              - cell "est." [ref=e4373]
+              - cell "equity" [ref=e4374]
+              - cell "— → Jun 30" [ref=e4376]
+              - cell "d" [ref=e4377]
+              - cell "+$28" [ref=e4378]
+              - cell "+0.00%" [ref=e4379]
+              - cell "✓ Win" [ref=e4380]
+              - cell "—" [ref=e4382]
+            - row [ref=e4383] [cursor=pointer]:
+              - cell "SPXW" [ref=e4384]
+              - cell "option" [ref=e4385]
+              - cell "Jun 22 → Jun 30" [ref=e4387]
+              - cell "8d" [ref=e4388]
+              - cell "−$1,610" [ref=e4389]
+              - cell "−10.06%" [ref=e4390]
+              - cell "✕ Loss" [ref=e4391]
+              - cell "—" [ref=e4393]
+            - row [ref=e4394] [cursor=pointer]:
+              - cell "EXYNest." [ref=e4395]
+              - cell "equity" [ref=e4396]
+              - cell "— → Jun 30" [ref=e4398]
+              - cell "d" [ref=e4399]
+              - cell "−$58" [ref=e4400]
+              - cell "+0.00%" [ref=e4401]
+              - cell "✕ Loss" [ref=e4402]
+              - cell "—" [ref=e4404]
+            - row [ref=e4405] [cursor=pointer]:
+              - cell "QDTE" [ref=e4406]
+              - cell "equity" [ref=e4407]
+              - cell "Jun 18 → Jun 30" [ref=e4409]
+              - cell "12d" [ref=e4410]
+              - cell "−$5" [ref=e4411]
+              - cell "−0.02%" [ref=e4412]
+              - cell "✕ Loss" [ref=e4413]
+              - cell "—" [ref=e4415]
+            - row [ref=e4416] [cursor=pointer]:
+              - cell "ADBGest." [ref=e4417]
+              - cell "equity" [ref=e4418]
+              - cell "— → Jun 30" [ref=e4420]
+              - cell "d" [ref=e4421]
+              - cell "−$19" [ref=e4422]
+              - cell "+0.00%" [ref=e4423]
+              - cell "✕ Loss" [ref=e4424]
+              - cell "—" [ref=e4426]
+            - row [ref=e4427] [cursor=pointer]:
+              - cell "FEPI" [ref=e4428]
+              - cell "equity" [ref=e4429]
+              - cell "Jun 26 → Jun 30" [ref=e4431]
+              - cell "4d" [ref=e4432]
+              - cell "−$16" [ref=e4433]
+              - cell "−0.04%" [ref=e4434]
+              - cell "✕ Loss" [ref=e4435]
+              - cell "—" [ref=e4437]
+            - row [ref=e4438] [cursor=pointer]:
+              - cell "HYPR" [ref=e4439]
+              - cell "equity" [ref=e4440]
+              - cell "Jun 26 → Jun 30" [ref=e4442]
+              - cell "4d" [ref=e4443]
+              - cell "−$30" [ref=e4444]
+              - cell "−0.18%" [ref=e4445]
+              - cell "✕ Loss" [ref=e4446]
+              - cell "—" [ref=e4448]
+            - row [ref=e4449] [cursor=pointer]:
+              - cell "IMSRest." [ref=e4450]
+              - cell "equity" [ref=e4451]
+              - cell "— → Jun 30" [ref=e4453]
+              - cell "d" [ref=e4454]
+              - cell "−$542" [ref=e4455]
+              - cell "+0.00%" [ref=e4456]
+              - cell "✕ Loss" [ref=e4457]
+              - cell "—" [ref=e4459]
+            - row [ref=e4460] [cursor=pointer]:
+              - cell "SPXW" [ref=e4461]
+              - cell "option" [ref=e4462]
+              - cell "Jun 22 → Jun 30" [ref=e4464]
+              - cell "8d" [ref=e4465]
+              - cell "−$1,135" [ref=e4466]
+              - cell "−4.73%" [ref=e4467]
+              - cell "✕ Loss" [ref=e4468]
+              - cell "—" [ref=e4470]
+            - row [ref=e4471] [cursor=pointer]:
+              - cell "SPXW" [ref=e4472]
+              - cell "option" [ref=e4473]
+              - cell "Jun 22 → Jun 30" [ref=e4475]
+              - cell "8d" [ref=e4476]
+              - cell "−$940" [ref=e4477]
+              - cell "−1.15%" [ref=e4478]
+              - cell "✕ Loss" [ref=e4479]
+              - cell "—" [ref=e4481]
+            - row [ref=e4482] [cursor=pointer]:
+              - cell "SPXW" [ref=e4483]
+              - cell "option" [ref=e4484]
+              - cell "Jun 22 → Jun 30" [ref=e4486]
+              - cell "8d" [ref=e4487]
+              - cell "−$275" [ref=e4488]
+              - cell "−0.42%" [ref=e4489]
+              - cell "✕ Loss" [ref=e4490]
+              - cell "—" [ref=e4492]
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

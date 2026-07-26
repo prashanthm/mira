@@ -1,0 +1,131 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e9]:
+      - generic "Backend unreachable at http://127.0.0.1:8641 — showing demo fixtures" [ref=e10]: data demo
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - heading "Portfolio" [level=2] [ref=e66]
+          - generic [ref=e67]: "Roll-up analysis · scope: all accounts"
+        - generic [ref=e69]:
+          - button "All" [ref=e70] [cursor=pointer]
+          - button "⚙ Manage" [ref=e72]
+        - progressbar "Loading"
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPY
+          - generic [ref=e82]: · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPY. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPY…" [ref=e93]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e106] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News none" [ref=e110] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: none
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

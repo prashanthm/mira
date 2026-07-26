@@ -1,0 +1,371 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e2308]:
+        - heading "Options" [level=2] [ref=e2309]
+        - paragraph [ref=e2310]: Your live option strategies — open positions and closed spreads, rolled up by structure and ticker · educational only
+        - generic [ref=e2311]:
+          - generic [ref=e2312]:
+            - heading "Strategies" [level=3] [ref=e2313]
+            - generic [ref=e2314]: grouped option legs · net of shorts · marks live
+          - generic [ref=e2315]:
+            - generic [ref=e2317]:
+              - button "Open · 18" [ref=e2318] [cursor=pointer]
+              - button "History · 200" [ref=e2319] [cursor=pointer]
+              - button "By ticker · 16" [ref=e2320] [cursor=pointer]
+            - table [ref=e2321]:
+              - rowgroup [ref=e2322]:
+                - row [ref=e2323]:
+                  - columnheader "Strategy" [ref=e2324]
+                  - columnheader "Underlying" [ref=e2325]
+                  - columnheader "Exp" [ref=e2326]
+                  - columnheader "Net cost" [ref=e2327]
+                  - columnheader "Current" [ref=e2328]
+                  - columnheader "Unrealized" [ref=e2329]
+              - rowgroup [ref=e2330]:
+                - row [ref=e2331] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2332]:
+                    - text: ▸long call
+                    - generic [ref=e2333]: SINGLE
+                  - cell "ACN" [ref=e2334]
+                  - cell "Jan 21 565d" [ref=e2335]:
+                    - text: Jan 21
+                    - generic [ref=e2336]: 565d
+                  - cell "$3,600" [ref=e2337]
+                  - cell "$2,475" [ref=e2338]
+                  - cell "−$1,125" [ref=e2339]
+                - row [ref=e2340] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2341]:
+                    - text: ▸long call
+                    - generic [ref=e2342]: SINGLE
+                  - cell "ADBG" [ref=e2343]
+                  - cell "Jul 17 12d" [ref=e2344]:
+                    - text: Jul 17
+                    - generic [ref=e2345]: 12d
+                  - cell "$100" [ref=e2346]
+                  - cell "$120" [ref=e2347]
+                  - cell "+$20" [ref=e2348]
+                - row [ref=e2349] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2350]:
+                    - text: ▸long call
+                    - generic [ref=e2351]: SINGLE
+                  - cell "BBAI" [ref=e2352]
+                  - cell "Jan 15 194d" [ref=e2353]:
+                    - text: Jan 15
+                    - generic [ref=e2354]: 194d
+                  - cell "$420" [ref=e2355]
+                  - cell "$53" [ref=e2356]
+                  - cell "−$367" [ref=e2357]
+                - row [ref=e2358] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2359]:
+                    - text: ▸long call
+                    - generic [ref=e2360]: SINGLE
+                  - cell "ENPH" [ref=e2361]
+                  - cell "Jan 15 194d" [ref=e2362]:
+                    - text: Jan 15
+                    - generic [ref=e2363]: 194d
+                  - cell "$2,050" [ref=e2364]
+                  - cell "$2,495" [ref=e2365]
+                  - cell "+$445" [ref=e2366]
+                - row [ref=e2367] [cursor=pointer]:
+                  - cell "▸multi-leg (call) COMPLEX" [ref=e2368]:
+                    - text: ▸multi-leg (call)
+                    - generic [ref=e2369]: COMPLEX
+                  - cell "FISV" [ref=e2370]
+                  - cell "Jan 21 565d" [ref=e2371]:
+                    - text: Jan 21
+                    - generic [ref=e2372]: 565d
+                  - cell "$3,240" [ref=e2373]
+                  - cell "$2,620" [ref=e2374]
+                  - cell "−$620" [ref=e2375]
+                - row [ref=e2376] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2377]:
+                    - text: ▸long call
+                    - generic [ref=e2378]: SINGLE
+                  - cell "INTU" [ref=e2379]
+                  - cell "Jun 17 347d" [ref=e2380]:
+                    - text: Jun 17
+                    - generic [ref=e2381]: 347d
+                  - cell "$7,700" [ref=e2382]
+                  - cell "$5,575" [ref=e2383]
+                  - cell "−$2,125" [ref=e2384]
+                - row [ref=e2385] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2386]:
+                    - text: ▸long call
+                    - generic [ref=e2387]: SINGLE
+                  - cell "NBIS" [ref=e2388]
+                  - cell "Jul 10 5d" [ref=e2389]:
+                    - text: Jul 10
+                    - generic [ref=e2390]: 5d
+                  - cell "$1,580" [ref=e2391]
+                  - cell "$1,643" [ref=e2392]
+                  - cell "+$63" [ref=e2393]
+                - row [ref=e2394] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2395]:
+                    - text: ▸long call
+                    - generic [ref=e2396]: SINGLE
+                  - cell "NFLX" [ref=e2397]
+                  - cell "Dec 15 894d" [ref=e2398]:
+                    - text: Dec 15
+                    - generic [ref=e2399]: 894d
+                  - cell "$4,610" [ref=e2400]
+                  - cell "$4,545" [ref=e2401]
+                  - cell "−$65" [ref=e2402]
+                - row [ref=e2403] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2404]:
+                    - text: ▸long call
+                    - generic [ref=e2405]: SINGLE
+                  - cell "NVO" [ref=e2406]
+                  - cell "Jan 21 565d" [ref=e2407]:
+                    - text: Jan 21
+                    - generic [ref=e2408]: 565d
+                  - cell "$3,251" [ref=e2409]
+                  - cell "$3,390" [ref=e2410]
+                  - cell "+$139" [ref=e2411]
+                - row [ref=e2412] [cursor=pointer]:
+                  - cell "▸bull call (debit) spread SPREAD" [ref=e2413]:
+                    - text: ▸bull call (debit) spread
+                    - generic [ref=e2414]: SPREAD
+                  - cell "PLTR" [ref=e2415]
+                  - cell "Oct 16 103d" [ref=e2416]:
+                    - text: Oct 16
+                    - generic [ref=e2417]: 103d
+                  - cell "$3,285" [ref=e2418]
+                  - cell "$2,590" [ref=e2419]
+                  - cell "−$695" [ref=e2420]
+                - row [ref=e2421] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2422]:
+                    - text: ▸long call
+                    - generic [ref=e2423]: SINGLE
+                  - cell "SNAP" [ref=e2424]
+                  - cell "Jan 21 565d" [ref=e2425]:
+                    - text: Jan 21
+                    - generic [ref=e2426]: 565d
+                  - cell "$650" [ref=e2427]
+                  - cell "$164" [ref=e2428]
+                  - cell "−$486" [ref=e2429]
+                - row [ref=e2430] [cursor=pointer]:
+                  - cell "▸short call SINGLE" [ref=e2431]:
+                    - text: ▸short call
+                    - generic [ref=e2432]: SINGLE
+                  - cell "SNK" [ref=e2433]
+                  - cell "Jul 17 12d" [ref=e2434]:
+                    - text: Jul 17
+                    - generic [ref=e2435]: 12d
+                  - cell "-$500" [ref=e2436]
+                  - cell "-$275" [ref=e2437]
+                  - cell "+$225" [ref=e2438]
+                - row [ref=e2439] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2440]:
+                    - text: ▸long call
+                    - generic [ref=e2441]: SINGLE
+                  - cell "SNK" [ref=e2442]
+                  - cell "Aug 21 47d" [ref=e2443]:
+                    - text: Aug 21
+                    - generic [ref=e2444]: 47d
+                  - cell "$470" [ref=e2445]
+                  - cell "$700" [ref=e2446]
+                  - cell "+$230" [ref=e2447]
+                - row [ref=e2448] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2449]:
+                    - text: ▸long call
+                    - generic [ref=e2450]: SINGLE
+                  - cell "SOUN" [ref=e2451]
+                  - cell "Jan 15 194d" [ref=e2452]:
+                    - text: Jan 15
+                    - generic [ref=e2453]: 194d
+                  - cell "$1,145" [ref=e2454]
+                  - cell "$35" [ref=e2455]
+                  - cell "−$1,111" [ref=e2456]
+                - row [ref=e2457] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2458]:
+                    - text: ▸long call
+                    - generic [ref=e2459]: SINGLE
+                  - cell "SOXL" [ref=e2460]
+                  - cell "Jul 10 5d" [ref=e2461]:
+                    - text: Jul 10
+                    - generic [ref=e2462]: 5d
+                  - cell "$1,982" [ref=e2463]
+                  - cell "$2,195" [ref=e2464]
+                  - cell "+$213" [ref=e2465]
+                - row [ref=e2466] [cursor=pointer]:
+                  - cell "▸short call SINGLE" [ref=e2467]:
+                    - text: ▸short call
+                    - generic [ref=e2468]: SINGLE
+                  - cell "SOXS" [ref=e2469]
+                  - cell "Jul 10 5d" [ref=e2470]:
+                    - text: Jul 10
+                    - generic [ref=e2471]: 5d
+                  - cell "-$390" [ref=e2472]
+                  - cell "-$310" [ref=e2473]
+                  - cell "+$80" [ref=e2474]
+                - row [ref=e2475] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2476]:
+                    - text: ▸long call
+                    - generic [ref=e2477]: SINGLE
+                  - cell "SOXS" [ref=e2478]
+                  - cell "Jan 21 565d" [ref=e2479]:
+                    - text: Jan 21
+                    - generic [ref=e2480]: 565d
+                  - cell "$2,440" [ref=e2481]
+                  - cell "$3,225" [ref=e2482]
+                  - cell "+$785" [ref=e2483]
+                - row [ref=e2484] [cursor=pointer]:
+                  - cell "▸long call SINGLE" [ref=e2485]:
+                    - text: ▸long call
+                    - generic [ref=e2486]: SINGLE
+                  - cell "SRPT" [ref=e2487]
+                  - cell "Jan 15 194d" [ref=e2488]:
+                    - text: Jan 15
+                    - generic [ref=e2489]: 194d
+                  - cell "$2,230" [ref=e2490]
+                  - cell "$1,425" [ref=e2491]
+                  - cell "−$805" [ref=e2492]
+        - generic [ref=e2493]:
+          - generic [ref=e2494]:
+            - heading "Covered-call ideas live in your Actions" [level=4] [ref=e2496]
+            - paragraph [ref=e2497]: The nightly engine flags HOLD & SELL CALL against real lots, with a suggested strike, credit, and basis reduction. Those appear in the Dashboard Action Queue — cross-checked against your Tax Center for wash risk.
+          - generic [ref=e2498]:
+            - heading "Approval levels differ per account" [level=4] [ref=e2500]
+            - paragraph [ref=e2501]: Roth allows covered calls and CSPs at most brokers; 401(k)s rarely allow options at all. The engine only suggests calls on lots in accounts where they're actually executable.
+        - generic [ref=e2503]:
+          - button "How are covered-call ideas generated?" [ref=e2504] [cursor=pointer]:
+            - generic [ref=e2506]: ▾
+          - paragraph [ref=e2507]: The nightly analysis looks for lots of 100+ shares held at a loss or near breakeven, targets a strike above cost basis at the next monthly expiry, estimates the credit, and only recommends the call when it isn't wash-blocked. Results are persisted to the decision journal — educational only, not advice.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

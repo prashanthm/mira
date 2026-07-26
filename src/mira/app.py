@@ -33,6 +33,34 @@ TurnRunner = Callable[[str, str], dict[str, Any]]
 DEFAULT_PROFILE = "kubernetes"
 
 
+def _parse_a2ui_sections(text: str) -> list | None:
+    """Server-side mirror of the SPA's parseMira: if the reply is the A2UI
+    JSON contract, return its ``sections`` list; else None (prose). Tolerant of
+    ```json fences and leading/trailing prose — extracts the first balanced {}."""
+    import json as _json
+    if not text or "{" not in text:
+        return None
+    s = text[text.index("{"):]
+    depth = 0
+    end = None
+    for i, ch in enumerate(s):
+        if ch == "{":
+            depth += 1
+        elif ch == "}":
+            depth -= 1
+            if depth == 0:
+                end = i + 1
+                break
+    if end is None:
+        return None
+    try:
+        obj = _json.loads(s[:end])
+    except (ValueError, TypeError):
+        return None
+    secs = obj.get("sections") if isinstance(obj, dict) else None
+    return secs if isinstance(secs, list) and secs else None
+
+
 @dataclass(frozen=True, slots=True)
 class App:
     """A composed, runnable agent service.
@@ -138,22 +166,51 @@ class App:
             yield from self.stream_events(prompt, thread_id=thread_id)
             return
 
-        with self.service.track_in_flight():
+        import uuid
+
+        # one correlation id for the whole turn — the LLM calls made during it
+        # tag themselves with it (via call_context) so llm_calls ↔ turns join.
+        correlation_id = str(uuid.uuid4())
+        from mira.model.gateway import call_context
+        with self.service.track_in_flight(), call_context("turn", correlation_id=correlation_id):
             try:
                 result = self.supervisor.invoke(prompt, thread_id=thread_id)
             except Exception as exc:  # noqa: BLE001 — surfaced as a typed error event
                 yield from run_to_events(exc)
                 return
             if result.routed_domain is not None:
-                import uuid
-
-                correlation_id = str(uuid.uuid4())
                 self._record_turn_trace(correlation_id, result)
+                self._record_turn_durable(correlation_id, thread_id, prompt, result,
+                                          kind="routed")
                 yield from supervisor_to_events(result, correlation_id=correlation_id)
                 return
             # No card matched: the supervisor never guesses a domain — fall back
-            # to the runtime turn (echo/model path).
+            # to the runtime turn (echo/model path). Still persist the turn so
+            # the fallback answer isn't lost (it was, before).
+            self._record_turn_durable(correlation_id, thread_id, prompt, result=None,
+                                      kind="runtime")
             yield from self.stream_events(prompt, thread_id=thread_id)
+
+    def _record_turn_durable(self, correlation_id: str, thread_id: str, prompt: str,
+                             result: Any, *, kind: str) -> None:
+        """Persist the user input + the reply we sent to the durable turns table
+        — for EVERY turn type, not just the traced path. Stores the synthesized
+        reply text and its A2UI sections (parsed) so 'what did we answer?' is
+        recoverable. Best-effort; never breaks the stream."""
+        try:
+            from mira.core.persistence import get_persistence
+            reply_text = getattr(result, "synthesis", "") if result is not None else ""
+            sections = _parse_a2ui_sections(reply_text)
+            claims = None
+            if result is not None:
+                claims = [r.get("answer") for r in (result.results or [])]
+            get_persistence().record_turn(
+                correlation_id=correlation_id, thread_id=thread_id, kind=kind,
+                routed_domain=getattr(result, "routed_domain", None) if result else None,
+                query=prompt, reply_text=reply_text, reply_sections=sections,
+                claims=claims)
+        except Exception:  # noqa: BLE001 — persistence is not the answer path
+            pass
 
     def _record_turn_trace(self, correlation_id: str, result: Any) -> None:
         """Record a supervisor-routed turn in the decision-trace store (ADR-040).

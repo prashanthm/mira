@@ -1,0 +1,562 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e4493]:
+        - generic [ref=e4495]:
+          - heading "Dashboard" [level=2] [ref=e4496]
+          - paragraph [ref=e4497]: All accounts · your morning brief · marked to last close
+        - generic [ref=e4498]:
+          - generic [ref=e4499]:
+            - generic [ref=e4500]: Market today
+            - generic [ref=e4825]: yfinance · 2026-07-20T22:37:29+00:00
+          - generic [ref=e4826]:
+            - generic [ref=e4827]:
+              - generic [ref=e4828]: S&P 500
+              - generic [ref=e4829]: "742.09"
+              - generic [ref=e4830]: −0.05%
+            - generic [ref=e4831]:
+              - generic [ref=e4832]: Nasdaq 100
+              - generic [ref=e4833]: "696.06"
+              - generic [ref=e4834]: +0.33%
+            - generic [ref=e4835]:
+              - generic [ref=e4836]: Russell 2000
+              - generic [ref=e4837]: "292.31"
+              - generic [ref=e4838]: −0.40%
+            - generic [ref=e4839]:
+              - generic [ref=e4840]: Total Market
+              - generic [ref=e4841]: "366.25"
+              - generic [ref=e4842]: −0.20%
+          - paragraph [ref=e4843]: Mixed — no clear direction.
+          - generic [ref=e4502]:
+            - generic [ref=e4503]:
+              - generic [ref=e4504]: Mira advisor read
+              - generic [ref=e4505]:
+                - generic [ref=e4506]: ● live
+                - generic [ref=e4507]: confidence medium
+            - paragraph [ref=e4508]: 3 grounded observation(s) from 3 advisory queries for domain 'advisor'; confidence medium.
+            - generic [ref=e4509]:
+              - generic [ref=e4510]:
+                - generic [ref=e4511]: wash_status
+                - generic [ref=e4512]:
+                  - text: 0 of 78 symbol(s) wash-blocked
+                  - generic [ref=e4513]: "source: wash_status"
+              - generic [ref=e4514]:
+                - generic [ref=e4515]: tlh_candidates
+                - generic [ref=e4516]:
+                  - text: 50 loss lot(s) (1 below, 36 clear, 13 na)
+                  - generic [ref=e4517]: "source: tlh_candidates"
+              - generic [ref=e4518]:
+                - generic [ref=e4519]: allocation
+                - generic [ref=e4520]:
+                  - text: "allocation: bonds 0.0%, cash 24.3%, crypto 4.7%, intlEquity 0.0%, options 8.8%, usEquity 62.2%"
+                  - generic [ref=e4521]: "source: allocation"
+            - list [ref=e4522]:
+              - listitem [ref=e4523]: "Observation: 36 loss lot(s) are marked clear by the engine with a mapped replacement — a consideration to review, not a trade instruction."
+            - paragraph [ref=e4524]: "Advisory only: these are observations for consideration, never instructions to trade. All figures come from the read-only Vantage engine tools — Mira performs no portfolio math."
+        - generic [ref=e4525]: Portfolio today
+        - generic [ref=e4526]:
+          - generic [ref=e4527]:
+            - generic [ref=e4528]: Total value
+            - generic [ref=e4529]: ₹36,27,681 · $421,655
+          - generic [ref=e4530]:
+            - generic [ref=e4531]: Day P/L
+            - generic [ref=e4532]: +₹4,184 · −$259
+            - generic [ref=e4844]: −0.06%
+          - generic [ref=e4533]:
+            - generic [ref=e4534]: Unrealized P/L
+            - generic [ref=e4535]: −₹5,04,654 · −$68,068
+            - generic [ref=e4845]: −13.90%
+          - generic [ref=e4536]:
+            - generic [ref=e4537]: Harvestable losses
+            - generic [ref=e4538]: $81,081
+            - generic [ref=e4539]: ≈ $19,459 est. benefit at 24%
+        - generic [ref=e4540]:
+          - generic [ref=e4541]:
+            - strong [ref=e4542]: Allocation by asset class
+            - generic [ref=e4543]: target 70 / 10 / 15 / 5
+          - img "Asset allocation" [ref=e4544]:
+            - generic "US Equity 54.3%" [ref=e4846]
+            - generic "Cash 30.9%" [ref=e4847]
+          - generic [ref=e4545]:
+            - generic [ref=e4546]:
+              - text: US Equity
+              - generic [ref=e4548]: 54.3%
+              - generic [ref=e4549]: −15.7% vs target
+            - generic [ref=e4550]:
+              - text: International
+              - generic [ref=e4552]: 0.0%
+              - generic [ref=e4553]: −10.0% vs target
+            - generic [ref=e4554]:
+              - text: Bonds
+              - generic [ref=e4556]: 0.0%
+              - generic [ref=e4557]: −15.0% vs target
+            - generic [ref=e4558]:
+              - text: Cash
+              - generic [ref=e4560]: 30.9%
+              - generic [ref=e4561]: +25.9% vs target
+        - generic [ref=e4562]:
+          - generic [ref=e4563]: Accounts today
+          - button "Refresh all accounts" [ref=e4564] [cursor=pointer]:
+            - generic [ref=e4565]: ⟳
+            - generic [ref=e4566]: refresh all
+        - generic [ref=e4567]:
+          - generic [ref=e4568]:
+            - button "RH $9,723 brokerage · synced 2h ago" [ref=e4569] [cursor=pointer]:
+              - generic [ref=e4570]: RH
+              - generic [ref=e4571]: $9,723
+              - generic [ref=e4572]: brokerage · synced 2h ago
+            - button "Refresh RH" [ref=e4573] [cursor=pointer]:
+              - generic [ref=e4574]: ⟳
+          - generic [ref=e4575]:
+            - button "RH Margin $72,970 brokerage · synced 2h ago" [ref=e4576] [cursor=pointer]:
+              - generic [ref=e4577]: RH Margin
+              - generic [ref=e4578]: $72,970
+              - generic [ref=e4579]: brokerage · synced 2h ago
+            - button "Refresh RH Margin" [ref=e4580] [cursor=pointer]:
+              - generic [ref=e4581]: ⟳
+          - generic [ref=e4582]:
+            - button "Fid BLink $238,405 Taxable · synced never" [ref=e4583] [cursor=pointer]:
+              - generic [ref=e4584]: Fid BLink
+              - generic [ref=e4585]: $238,405
+              - generic [ref=e4586]: Taxable · synced never
+            - button "Refresh Fid BLink" [disabled] [ref=e4587]:
+              - generic [ref=e4588]: ⟳
+          - generic [ref=e4589]:
+            - button "Fid HSA $51,102 HSA · synced never" [ref=e4590] [cursor=pointer]:
+              - generic [ref=e4591]: Fid HSA
+              - generic [ref=e4592]: $51,102
+              - generic [ref=e4593]: HSA · synced never
+            - button "Refresh Fid HSA" [disabled] [ref=e4594]:
+              - generic [ref=e4595]: ⟳
+          - generic [ref=e4596]:
+            - button "Fid Roth $49,456 Roth IRA · synced never" [ref=e4597] [cursor=pointer]:
+              - generic [ref=e4598]: Fid Roth
+              - generic [ref=e4599]: $49,456
+              - generic [ref=e4600]: Roth IRA · synced never
+            - button "Refresh Fid Roth" [disabled] [ref=e4601]:
+              - generic [ref=e4602]: ⟳
+          - generic [ref=e4603]:
+            - button "Zerodha ₹36,27,681 brokerage · synced Jul 12" [ref=e4604] [cursor=pointer]:
+              - generic [ref=e4605]: Zerodha
+              - generic [ref=e4606]: ₹36,27,681
+              - generic [ref=e4607]: brokerage · synced Jul 12
+            - button "Refresh Zerodha" [ref=e4608] [cursor=pointer]:
+              - generic [ref=e4609]: ⟳
+          - generic [ref=e4610]:
+            - button "Charles Schw $0 brokerage · synced never" [ref=e4611] [cursor=pointer]:
+              - generic [ref=e4612]: Charles Schw
+              - generic [ref=e4613]: $0
+              - generic [ref=e4614]: brokerage · synced never
+            - button "Refresh Charles Schw" [ref=e4615] [cursor=pointer]:
+              - generic [ref=e4616]: ⟳
+        - generic [ref=e4617]:
+          - generic [ref=e4618]: Actions (45)
+          - button "All recommendations →" [ref=e4619] [cursor=pointer]
+        - generic [ref=e4620]:
+          - button "CLOSE & BOOK LOSS ACN — book $1125, 4.1wk to offset ACN broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~4 weeks of estimated weekly call credit ($272/wk) to offset the $1,125 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4848] [cursor=pointer]:
+            - generic [ref=e4849]: CLOSE & BOOK LOSS
+            - generic [ref=e4850]:
+              - generic [ref=e4851]: ACN — book $1125, 4.1wk to offset
+              - generic [ref=e4852]: ACN broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~4 weeks of estimated weekly call credit ($272/wk) to offset the $1,125 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4853]: →
+          - button "CLOSE & BOOK LOSS FISV — book $620, 3.1wk to offset FISV broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~3 weeks of estimated weekly call credit ($198/wk) to offset the $620 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4854] [cursor=pointer]:
+            - generic [ref=e4855]: CLOSE & BOOK LOSS
+            - generic [ref=e4856]:
+              - generic [ref=e4857]: FISV — book $620, 3.1wk to offset
+              - generic [ref=e4858]: FISV broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~3 weeks of estimated weekly call credit ($198/wk) to offset the $620 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4859]: →
+          - button "CLOSE & BOOK LOSS HTHIY — book $90, 1.6wk to offset HTHIY broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~2 weeks of estimated weekly call credit ($57/wk) to offset the $90 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4860] [cursor=pointer]:
+            - generic [ref=e4861]: CLOSE & BOOK LOSS
+            - generic [ref=e4862]:
+              - generic [ref=e4863]: HTHIY — book $90, 1.6wk to offset
+              - generic [ref=e4864]: HTHIY broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~2 weeks of estimated weekly call credit ($57/wk) to offset the $90 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4865]: →
+          - button "CLOSE & BOOK LOSS MBAK — book $17 MBAK broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take no sensible weekly credit to offset it the $17 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4866] [cursor=pointer]:
+            - generic [ref=e4867]: CLOSE & BOOK LOSS
+            - generic [ref=e4868]:
+              - generic [ref=e4869]: MBAK — book $17
+              - generic [ref=e4870]: MBAK broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take no sensible weekly credit to offset it the $17 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4871]: →
+          - button "CLOSE & BOOK LOSS NFLX — book $65, 0.2wk to offset NFLX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~0 weeks of estimated weekly call credit ($277/wk) to offset the $65 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4872] [cursor=pointer]:
+            - generic [ref=e4873]: CLOSE & BOOK LOSS
+            - generic [ref=e4874]:
+              - generic [ref=e4875]: NFLX — book $65, 0.2wk to offset
+              - generic [ref=e4876]: NFLX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~0 weeks of estimated weekly call credit ($277/wk) to offset the $65 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4877]: →
+          - button "CLOSE & BOOK LOSS SMX — book $1684, 56.5wk to offset SMX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~56 weeks of estimated weekly call credit ($30/wk) to offset the $1,684 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4878] [cursor=pointer]:
+            - generic [ref=e4879]: CLOSE & BOOK LOSS
+            - generic [ref=e4880]:
+              - generic [ref=e4881]: SMX — book $1684, 56.5wk to offset
+              - generic [ref=e4882]: SMX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~56 weeks of estimated weekly call credit ($30/wk) to offset the $1,684 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4883]: →
+          - button "CLOSE & BOOK LOSS SNAP — book $486, 30.8wk to offset SNAP broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~31 weeks of estimated weekly call credit ($16/wk) to offset the $486 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e4884] [cursor=pointer]:
+            - generic [ref=e4885]: CLOSE & BOOK LOSS
+            - generic [ref=e4886]:
+              - generic [ref=e4887]: SNAP — book $486, 30.8wk to offset
+              - generic [ref=e4888]: SNAP broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~31 weeks of estimated weekly call credit ($16/wk) to offset the $486 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy.
+            - generic [ref=e4889]: →
+          - 'button "SELL CALL ENPH — sell 43.31C ~$126, basis $2050→$1924 ENPH reads STRONG at support and basing (conviction +0.50). Sell a ~7-DTE OTM call at $43.31 (near resistance) as a covered call: an estimated $126 credit reduces net cost from $2,050 to $1,924 (basis -$126)." [ref=e4890] [cursor=pointer]':
+            - generic [ref=e4891]: SELL CALL
+            - generic [ref=e4892]:
+              - generic [ref=e4893]: ENPH — sell 43.31C ~$126, basis $2050→$1924
+              - generic [ref=e4894]: "ENPH reads STRONG at support and basing (conviction +0.50). Sell a ~7-DTE OTM call at $43.31 (near resistance) as a covered call: an estimated $126 credit reduces net cost from $2,050 to $1,924 (basis -$126)."
+            - generic [ref=e4895]: →
+          - 'button "SELL CALL UNH — sell 435.56C ~$748, basis $28579→$27831 UNH reads STRONG at support and basing (conviction +0.70). Sell a ~7-DTE OTM call at $435.56 (near resistance) as a covered call: an estimated $748 credit reduces net cost from $28,579 to $27,831 (basis -$748)." [ref=e4896] [cursor=pointer]':
+            - generic [ref=e4897]: SELL CALL
+            - generic [ref=e4898]:
+              - generic [ref=e4899]: UNH — sell 435.56C ~$748, basis $28579→$27831
+              - generic [ref=e4900]: "UNH reads STRONG at support and basing (conviction +0.70). Sell a ~7-DTE OTM call at $435.56 (near resistance) as a covered call: an estimated $748 credit reduces net cost from $28,579 to $27,831 (basis -$748)."
+            - generic [ref=e4901]: →
+          - button "HARVEST SQQQ — harvest $16,129 loss ≈ $3,871 benefit Wash-clear in taxable accounts." [ref=e4621] [cursor=pointer]:
+            - generic [ref=e4622]: HARVEST
+            - generic [ref=e4623]:
+              - generic [ref=e4624]: SQQQ — harvest $16,129 loss ≈ $3,871 benefit
+              - generic [ref=e4625]: Wash-clear in taxable accounts.
+            - generic [ref=e4626]: →
+          - button "HARVEST FRCB — harvest $15,498 loss ≈ $3,719 benefit Wash-clear in taxable accounts." [ref=e4627] [cursor=pointer]:
+            - generic [ref=e4628]: HARVEST
+            - generic [ref=e4629]:
+              - generic [ref=e4630]: FRCB — harvest $15,498 loss ≈ $3,719 benefit
+              - generic [ref=e4631]: Wash-clear in taxable accounts.
+            - generic [ref=e4632]: →
+          - button "HARVEST ENPH — harvest $15,186 loss ≈ $3,645 benefit Wash-clear in taxable accounts." [ref=e4633] [cursor=pointer]:
+            - generic [ref=e4634]: HARVEST
+            - generic [ref=e4635]:
+              - generic [ref=e4636]: ENPH — harvest $15,186 loss ≈ $3,645 benefit
+              - generic [ref=e4637]: Wash-clear in taxable accounts.
+            - generic [ref=e4638]: →
+          - button "HARVEST BOIL — harvest $8,445 loss ≈ $2,027 benefit Wash-clear in taxable accounts." [ref=e4639] [cursor=pointer]:
+            - generic [ref=e4640]: HARVEST
+            - generic [ref=e4641]:
+              - generic [ref=e4642]: BOIL — harvest $8,445 loss ≈ $2,027 benefit
+              - generic [ref=e4643]: Wash-clear in taxable accounts.
+            - generic [ref=e4644]: →
+          - button "HARVEST ADBE — harvest $4,491 loss ≈ $1,078 benefit Wash-clear in taxable accounts." [ref=e4645] [cursor=pointer]:
+            - generic [ref=e4646]: HARVEST
+            - generic [ref=e4647]:
+              - generic [ref=e4648]: ADBE — harvest $4,491 loss ≈ $1,078 benefit
+              - generic [ref=e4649]: Wash-clear in taxable accounts.
+            - generic [ref=e4650]: →
+          - button "HARVEST FFAI — harvest $2,688 loss ≈ $645 benefit Wash-clear in taxable accounts." [ref=e4651] [cursor=pointer]:
+            - generic [ref=e4652]: HARVEST
+            - generic [ref=e4653]:
+              - generic [ref=e4654]: FFAI — harvest $2,688 loss ≈ $645 benefit
+              - generic [ref=e4655]: Wash-clear in taxable accounts.
+            - generic [ref=e4656]: →
+          - button "HARVEST VFS — harvest $2,539 loss ≈ $609 benefit Wash-clear in taxable accounts." [ref=e4657] [cursor=pointer]:
+            - generic [ref=e4658]: HARVEST
+            - generic [ref=e4659]:
+              - generic [ref=e4660]: VFS — harvest $2,539 loss ≈ $609 benefit
+              - generic [ref=e4661]: Wash-clear in taxable accounts.
+            - generic [ref=e4662]: →
+          - button "HARVEST OCGN — harvest $1,450 loss ≈ $348 benefit Wash-clear in taxable accounts." [ref=e4669] [cursor=pointer]:
+            - generic [ref=e4670]: HARVEST
+            - generic [ref=e4671]:
+              - generic [ref=e4672]: OCGN — harvest $1,450 loss ≈ $348 benefit
+              - generic [ref=e4673]: Wash-clear in taxable accounts.
+            - generic [ref=e4674]: →
+          - button "HARVEST NFLX 2028-12-15 80C — harvest $1,410 loss ≈ $338 benefit Wash-clear in taxable accounts." [ref=e4675] [cursor=pointer]:
+            - generic [ref=e4676]: HARVEST
+            - generic [ref=e4677]:
+              - generic [ref=e4678]: NFLX 2028-12-15 80C — harvest $1,410 loss ≈ $338 benefit
+              - generic [ref=e4679]: Wash-clear in taxable accounts.
+            - generic [ref=e4680]: →
+          - button "HARVEST SPXW 2026-07-20 7460C — harvest $1,337 loss ≈ $321 benefit Wash-clear in taxable accounts." [ref=e4681] [cursor=pointer]:
+            - generic [ref=e4682]: HARVEST
+            - generic [ref=e4683]:
+              - generic [ref=e4684]: SPXW 2026-07-20 7460C — harvest $1,337 loss ≈ $321 benefit
+              - generic [ref=e4685]: Wash-clear in taxable accounts.
+            - generic [ref=e4686]: →
+          - button "HARVEST INTU 2027-06-17 300C — harvest $1,325 loss ≈ $318 benefit Wash-clear in taxable accounts." [ref=e4687] [cursor=pointer]:
+            - generic [ref=e4688]: HARVEST
+            - generic [ref=e4689]:
+              - generic [ref=e4690]: INTU 2027-06-17 300C — harvest $1,325 loss ≈ $318 benefit
+              - generic [ref=e4691]: Wash-clear in taxable accounts.
+            - generic [ref=e4692]: →
+          - button "HARVEST SRPT 2027-01-15 20C — harvest $1,255 loss ≈ $301 benefit Wash-clear in taxable accounts." [ref=e4693] [cursor=pointer]:
+            - generic [ref=e4694]: HARVEST
+            - generic [ref=e4695]:
+              - generic [ref=e4696]: SRPT 2027-01-15 20C — harvest $1,255 loss ≈ $301 benefit
+              - generic [ref=e4697]: Wash-clear in taxable accounts.
+            - generic [ref=e4698]: →
+          - button "HARVEST IBM 2026-08-21 195C — harvest $1,253 loss ≈ $301 benefit Wash-clear in taxable accounts." [ref=e4699] [cursor=pointer]:
+            - generic [ref=e4700]: HARVEST
+            - generic [ref=e4701]:
+              - generic [ref=e4702]: IBM 2026-08-21 195C — harvest $1,253 loss ≈ $301 benefit
+              - generic [ref=e4703]: Wash-clear in taxable accounts.
+            - generic [ref=e4704]: →
+          - button "HARVEST SOUN 2027-01-15 17C — harvest $1,117 loss ≈ $268 benefit Wash-clear in taxable accounts." [ref=e4705] [cursor=pointer]:
+            - generic [ref=e4706]: HARVEST
+            - generic [ref=e4707]:
+              - generic [ref=e4708]: SOUN 2027-01-15 17C — harvest $1,117 loss ≈ $268 benefit
+              - generic [ref=e4709]: Wash-clear in taxable accounts.
+            - generic [ref=e4710]: →
+          - button "HARVEST FISV 2028-01-21 60C — harvest $870 loss ≈ $209 benefit Wash-clear in taxable accounts." [ref=e4711] [cursor=pointer]:
+            - generic [ref=e4712]: HARVEST
+            - generic [ref=e4713]:
+              - generic [ref=e4714]: FISV 2028-01-21 60C — harvest $870 loss ≈ $209 benefit
+              - generic [ref=e4715]: Wash-clear in taxable accounts.
+            - generic [ref=e4716]: →
+          - button "HARVEST ACN 2028-01-21 160C — harvest $665 loss ≈ $160 benefit Wash-clear in taxable accounts." [ref=e4717] [cursor=pointer]:
+            - generic [ref=e4718]: HARVEST
+            - generic [ref=e4719]:
+              - generic [ref=e4720]: ACN 2028-01-21 160C — harvest $665 loss ≈ $160 benefit
+              - generic [ref=e4721]: Wash-clear in taxable accounts.
+            - generic [ref=e4722]: →
+          - button "HARVEST PLTR 2026-10-16 120C — harvest $622 loss ≈ $149 benefit Wash-clear in taxable accounts." [ref=e4723] [cursor=pointer]:
+            - generic [ref=e4724]: HARVEST
+            - generic [ref=e4725]:
+              - generic [ref=e4726]: PLTR 2026-10-16 120C — harvest $622 loss ≈ $149 benefit
+              - generic [ref=e4727]: Wash-clear in taxable accounts.
+            - generic [ref=e4728]: →
+          - button "HARVEST INDA — harvest $618 loss ≈ $148 benefit Wash-clear in taxable accounts." [ref=e4729] [cursor=pointer]:
+            - generic [ref=e4730]: HARVEST
+            - generic [ref=e4731]:
+              - generic [ref=e4732]: INDA — harvest $618 loss ≈ $148 benefit
+              - generic [ref=e4733]: Wash-clear in taxable accounts.
+            - generic [ref=e4734]: →
+          - button "HARVEST SNAP 2028-01-21 10C — harvest $508 loss ≈ $122 benefit Wash-clear in taxable accounts." [ref=e4735] [cursor=pointer]:
+            - generic [ref=e4736]: HARVEST
+            - generic [ref=e4737]:
+              - generic [ref=e4738]: SNAP 2028-01-21 10C — harvest $508 loss ≈ $122 benefit
+              - generic [ref=e4739]: Wash-clear in taxable accounts.
+            - generic [ref=e4740]: →
+          - button "HARVEST BBAI 2027-01-15 5.5C — harvest $393 loss ≈ $94 benefit Wash-clear in taxable accounts." [ref=e4741] [cursor=pointer]:
+            - generic [ref=e4742]: HARVEST
+            - generic [ref=e4743]:
+              - generic [ref=e4744]: BBAI 2027-01-15 5.5C — harvest $393 loss ≈ $94 benefit
+              - generic [ref=e4745]: Wash-clear in taxable accounts.
+            - generic [ref=e4746]: →
+          - button "HARVEST MA 2026-07-24 545P — harvest $312 loss ≈ $75 benefit Wash-clear in taxable accounts." [ref=e4747] [cursor=pointer]:
+            - generic [ref=e4748]: HARVEST
+            - generic [ref=e4749]:
+              - generic [ref=e4750]: MA 2026-07-24 545P — harvest $312 loss ≈ $75 benefit
+              - generic [ref=e4751]: Wash-clear in taxable accounts.
+            - generic [ref=e4752]: →
+          - button "HARVEST ENZC — harvest $209 loss ≈ $50 benefit Wash-clear in taxable accounts." [ref=e4753] [cursor=pointer]:
+            - generic [ref=e4754]: HARVEST
+            - generic [ref=e4755]:
+              - generic [ref=e4756]: ENZC — harvest $209 loss ≈ $50 benefit
+              - generic [ref=e4757]: Wash-clear in taxable accounts.
+            - generic [ref=e4758]: →
+          - button "HARVEST IREN — harvest $176 loss ≈ $42 benefit Wash-clear in taxable accounts." [ref=e4759] [cursor=pointer]:
+            - generic [ref=e4760]: HARVEST
+            - generic [ref=e4761]:
+              - generic [ref=e4762]: IREN — harvest $176 loss ≈ $42 benefit
+              - generic [ref=e4763]: Wash-clear in taxable accounts.
+            - generic [ref=e4764]: →
+          - button "HARVEST IBX — harvest $145 loss ≈ $35 benefit Wash-clear in taxable accounts." [ref=e4765] [cursor=pointer]:
+            - generic [ref=e4766]: HARVEST
+            - generic [ref=e4767]:
+              - generic [ref=e4768]: IBX — harvest $145 loss ≈ $35 benefit
+              - generic [ref=e4769]: Wash-clear in taxable accounts.
+            - generic [ref=e4770]: →
+          - button "HARVEST SPXW 2026-07-20 7440P — harvest $140 loss ≈ $34 benefit Wash-clear in taxable accounts." [ref=e4771] [cursor=pointer]:
+            - generic [ref=e4772]: HARVEST
+            - generic [ref=e4773]:
+              - generic [ref=e4774]: SPXW 2026-07-20 7440P — harvest $140 loss ≈ $34 benefit
+              - generic [ref=e4775]: Wash-clear in taxable accounts.
+            - generic [ref=e4776]: →
+          - button "HARVEST SPXW 2026-07-20 7480C — harvest $134 loss ≈ $32 benefit Wash-clear in taxable accounts." [ref=e4777] [cursor=pointer]:
+            - generic [ref=e4778]: HARVEST
+            - generic [ref=e4779]:
+              - generic [ref=e4780]: SPXW 2026-07-20 7480C — harvest $134 loss ≈ $32 benefit
+              - generic [ref=e4781]: Wash-clear in taxable accounts.
+            - generic [ref=e4782]: →
+          - button "HARVEST MMEX — harvest $130 loss ≈ $31 benefit Wash-clear in taxable accounts." [ref=e4783] [cursor=pointer]:
+            - generic [ref=e4784]: HARVEST
+            - generic [ref=e4785]:
+              - generic [ref=e4786]: MMEX — harvest $130 loss ≈ $31 benefit
+              - generic [ref=e4787]: Wash-clear in taxable accounts.
+            - generic [ref=e4788]: →
+          - button "HARVEST SPXW 2026-07-20 7465C — harvest $115 loss ≈ $28 benefit Wash-clear in taxable accounts." [ref=e4789] [cursor=pointer]:
+            - generic [ref=e4790]: HARVEST
+            - generic [ref=e4791]:
+              - generic [ref=e4792]: SPXW 2026-07-20 7465C — harvest $115 loss ≈ $28 benefit
+              - generic [ref=e4793]: Wash-clear in taxable accounts.
+            - generic [ref=e4794]: →
+          - button "HARVEST IBX 2026-12-18 16C — harvest $101 loss ≈ $24 benefit Wash-clear in taxable accounts." [ref=e4795] [cursor=pointer]:
+            - generic [ref=e4796]: HARVEST
+            - generic [ref=e4797]:
+              - generic [ref=e4798]: IBX 2026-12-18 16C — harvest $101 loss ≈ $24 benefit
+              - generic [ref=e4799]: Wash-clear in taxable accounts.
+            - generic [ref=e4800]: →
+          - button "HARVEST AITX — harvest $73 loss ≈ $17 benefit Wash-clear in taxable accounts." [ref=e4801] [cursor=pointer]:
+            - generic [ref=e4802]: HARVEST
+            - generic [ref=e4803]:
+              - generic [ref=e4804]: AITX — harvest $73 loss ≈ $17 benefit
+              - generic [ref=e4805]: Wash-clear in taxable accounts.
+            - generic [ref=e4806]: →
+          - button "HARVEST SPXW 2026-07-20 7455C — harvest $43 loss ≈ $10 benefit Wash-clear in taxable accounts." [ref=e4807] [cursor=pointer]:
+            - generic [ref=e4808]: HARVEST
+            - generic [ref=e4809]:
+              - generic [ref=e4810]: SPXW 2026-07-20 7455C — harvest $43 loss ≈ $10 benefit
+              - generic [ref=e4811]: Wash-clear in taxable accounts.
+            - generic [ref=e4812]: →
+          - button "HARVEST IBX 2026-09-18 16C — harvest $11 loss ≈ $3 benefit Wash-clear in taxable accounts." [ref=e4819] [cursor=pointer]:
+            - generic [ref=e4820]: HARVEST
+            - generic [ref=e4821]:
+              - generic [ref=e4822]: IBX 2026-09-18 16C — harvest $11 loss ≈ $3 benefit
+              - generic [ref=e4823]: Wash-clear in taxable accounts.
+            - generic [ref=e4824]: →
+          - button "REBALANCE US Equity −15.7% vs target (54.3% / 70%) Underweight — direct new cash here." [ref=e4902] [cursor=pointer]:
+            - generic [ref=e4903]: REBALANCE
+            - generic [ref=e4904]:
+              - generic [ref=e4905]: US Equity −15.7% vs target (54.3% / 70%)
+              - generic [ref=e4906]: Underweight — direct new cash here.
+            - generic [ref=e4907]: →
+          - button "REBALANCE International −10.0% vs target (0.0% / 10%) Underweight — direct new cash here." [ref=e4908] [cursor=pointer]:
+            - generic [ref=e4909]: REBALANCE
+            - generic [ref=e4910]:
+              - generic [ref=e4911]: International −10.0% vs target (0.0% / 10%)
+              - generic [ref=e4912]: Underweight — direct new cash here.
+            - generic [ref=e4913]: →
+          - button "REBALANCE Bonds −15.0% vs target (0.0% / 15%) Underweight — direct new cash here." [ref=e4914] [cursor=pointer]:
+            - generic [ref=e4915]: REBALANCE
+            - generic [ref=e4916]:
+              - generic [ref=e4917]: Bonds −15.0% vs target (0.0% / 15%)
+              - generic [ref=e4918]: Underweight — direct new cash here.
+            - generic [ref=e4919]: →
+          - button "REBALANCE Cash +25.9% vs target (30.9% / 5%) Overweight — trim on the next contribution." [ref=e4920] [cursor=pointer]:
+            - generic [ref=e4921]: REBALANCE
+            - generic [ref=e4922]:
+              - generic [ref=e4923]: Cash +25.9% vs target (30.9% / 5%)
+              - generic [ref=e4924]: Overweight — trim on the next contribution.
+            - generic [ref=e4925]: →
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

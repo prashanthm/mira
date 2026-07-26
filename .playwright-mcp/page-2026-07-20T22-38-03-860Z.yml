@@ -1,0 +1,802 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e1500]:
+        - heading "Tax Center — realized gains & loss harvesting" [level=2] [ref=e1501]
+        - paragraph [ref=e1502]: Every lot marked to last close · wash-sale window checked across all linked accounts · threshold $200 or 3% · decision-support only, no orders placed
+        - table [ref=e1504]:
+          - rowgroup [ref=e1505]:
+            - row [ref=e1506]:
+              - columnheader "Lot" [ref=e1507]
+              - columnheader "Account" [ref=e1508]
+              - columnheader "Unrealized" [ref=e1509]
+              - columnheader "Status" [ref=e1510]
+              - columnheader "Action" [ref=e1511]
+          - rowgroup [ref=e1512]:
+            - row [ref=e1513]:
+              - cell "ITC.BO · 3324 sh @ $370.17 bought Jul 12" [ref=e1514]:
+                - text: ITC.BO · 3324 sh @ $370.17
+                - generic [ref=e1515]: bought Jul 12
+              - cell "Zerodha" [ref=e1516]
+              - cell "−$291,738 (−23.71%)" [ref=e1518]:
+                - text: −$291,738
+                - generic [ref=e1519]: (−23.71%)
+              - cell "N/A — tax-advantaged" [ref=e1520]
+              - cell "Monitor" [ref=e1522]
+            - row [ref=e1523]:
+              - cell "RELIANCE.BO · 500 sh @ $1,570.00 bought Jul 12" [ref=e1524]:
+                - text: RELIANCE.BO · 500 sh @ $1,570.00
+                - generic [ref=e1525]: bought Jul 12
+              - cell "Zerodha" [ref=e1526]
+              - cell "−$123,375 (−15.72%)" [ref=e1528]:
+                - text: −$123,375
+                - generic [ref=e1529]: (−15.72%)
+              - cell "N/A — tax-advantaged" [ref=e1530]
+              - cell "Monitor" [ref=e1532]
+            - row [ref=e1533]:
+              - cell "ASIANPAINT.BO · 570 sh @ $2,884.41 bought Jul 12" [ref=e1534]:
+                - text: ASIANPAINT.BO · 570 sh @ $2,884.41
+                - generic [ref=e1535]: bought Jul 12
+              - cell "Zerodha" [ref=e1536]
+              - cell "−$110,359 (−6.71%)" [ref=e1538]:
+                - text: −$110,359
+                - generic [ref=e1539]: (−6.71%)
+              - cell "N/A — tax-advantaged" [ref=e1540]
+              - cell "Monitor" [ref=e1542]
+            - row [ref=e1543]:
+              - cell "SQQQ · 721.647 sh @ $65.03 bought Jul 19" [ref=e1544]:
+                - text: SQQQ · 721.647 sh @ $65.03
+                - generic [ref=e1545]: bought Jul 19
+              - cell "Fid BLink" [ref=e1546]
+              - cell "−$16,129 (−34.37%)" [ref=e1548]:
+                - text: −$16,129
+                - generic [ref=e1549]: (−34.37%)
+              - cell "✓ Clear to harvest" [ref=e1550]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1552]:
+                - generic [ref=e1553]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1554]: no like-exposure partner for single stock
+            - row [ref=e1555]:
+              - cell "FRCB · 1400 sh @ $11.07 bought Jul 19" [ref=e1556]:
+                - text: FRCB · 1400 sh @ $11.07
+                - generic [ref=e1557]: bought Jul 19
+              - cell "Fid BLink" [ref=e1558]
+              - cell "−$15,498 (−100.00%)" [ref=e1560]:
+                - text: −$15,498
+                - generic [ref=e1561]: (−100.00%)
+              - cell "✓ Clear to harvest" [ref=e1562]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1564]:
+                - generic [ref=e1565]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1566]: no like-exposure partner for single stock
+            - row [ref=e1567]:
+              - cell "ENPH · 200 sh @ $115.39 bought Jul 19" [ref=e1568]:
+                - text: ENPH · 200 sh @ $115.39
+                - generic [ref=e1569]: bought Jul 19
+              - cell "Fid BLink" [ref=e1570]
+              - cell "−$15,186 (−65.80%)" [ref=e1572]:
+                - text: −$15,186
+                - generic [ref=e1573]: (−65.80%)
+              - cell "✓ Clear to harvest" [ref=e1574]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1576]:
+                - generic [ref=e1577]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1578]: no like-exposure partner for single stock
+            - row [ref=e1579]:
+              - cell "BOIL · 30 sh @ $303.00 bought Jul 19" [ref=e1580]:
+                - text: BOIL · 30 sh @ $303.00
+                - generic [ref=e1581]: bought Jul 19
+              - cell "Fid BLink" [ref=e1582]
+              - cell "−$8,445 (−92.90%)" [ref=e1584]:
+                - text: −$8,445
+                - generic [ref=e1585]: (−92.90%)
+              - cell "✓ Clear to harvest" [ref=e1586]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1588]:
+                - generic [ref=e1589]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1590]: no like-exposure partner for single stock
+            - row [ref=e1591]:
+              - cell "ADBE · 50 sh @ $324.57 bought Jul 19" [ref=e1592]:
+                - text: ADBE · 50 sh @ $324.57
+                - generic [ref=e1593]: bought Jul 19
+              - cell "Fid BLink" [ref=e1594]
+              - cell "−$4,491 (−27.68%)" [ref=e1596]:
+                - text: −$4,491
+                - generic [ref=e1597]: (−27.68%)
+              - cell "✓ Clear to harvest" [ref=e1598]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1600]:
+                - generic [ref=e1601]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1602]: no like-exposure partner for single stock
+            - row [ref=e1603]:
+              - cell "FRCB · 1400 sh @ $3.14 bought Jul 19" [ref=e1604]:
+                - text: FRCB · 1400 sh @ $3.14
+                - generic [ref=e1605]: bought Jul 19
+              - cell "Fid Roth" [ref=e1606]
+              - cell "−$4,396 (−99.99%)" [ref=e1608]:
+                - text: −$4,396
+                - generic [ref=e1609]: (−99.99%)
+              - cell "N/A — tax-advantaged" [ref=e1610]
+              - cell "Monitor" [ref=e1612]
+            - row [ref=e1613]:
+              - cell "FFAI · 700 sh @ $3.95 bought Jul 19" [ref=e1614]:
+                - text: FFAI · 700 sh @ $3.95
+                - generic [ref=e1615]: bought Jul 19
+              - cell "Fid BLink" [ref=e1616]
+              - cell "−$2,688 (−97.23%)" [ref=e1618]:
+                - text: −$2,688
+                - generic [ref=e1619]: (−97.23%)
+              - cell "✓ Clear to harvest" [ref=e1620]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1622]:
+                - generic [ref=e1623]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1624]: no like-exposure partner for single stock
+            - row [ref=e1625]:
+              - cell "VFS · 100 sh @ $28.51 bought Jul 19" [ref=e1626]:
+                - text: VFS · 100 sh @ $28.51
+                - generic [ref=e1627]: bought Jul 19
+              - cell "Fid BLink" [ref=e1628]
+              - cell "−$2,539 (−89.06%)" [ref=e1630]:
+                - text: −$2,539
+                - generic [ref=e1631]: (−89.06%)
+              - cell "✓ Clear to harvest" [ref=e1632]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1634]:
+                - generic [ref=e1635]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1636]: no like-exposure partner for single stock
+            - row [ref=e1637]:
+              - cell "FFAI · 300 sh @ $7.96 bought Jul 19" [ref=e1638]:
+                - text: FFAI · 300 sh @ $7.96
+                - generic [ref=e1639]: bought Jul 19
+              - cell "Fid Roth" [ref=e1640]
+              - cell "−$2,355 (−98.62%)" [ref=e1642]:
+                - text: −$2,355
+                - generic [ref=e1643]: (−98.62%)
+              - cell "N/A — tax-advantaged" [ref=e1644]
+              - cell "Monitor" [ref=e1646]
+            - row [ref=e1647]:
+              - cell "SMX · 6.564551 sh @ $273.08 bought Jul 20" [ref=e1648]:
+                - text: SMX · 6.564551 sh @ $273.08
+                - generic [ref=e1649]: bought Jul 20
+              - cell "RH Margin" [ref=e1650]
+              - cell "−$1,677 (−93.53%)" [ref=e1652]:
+                - text: −$1,677
+                - generic [ref=e1653]: (−93.53%)
+              - cell "✓ Clear to harvest" [ref=e1654]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1656]:
+                - generic [ref=e1657]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1658]: no like-exposure partner for single stock
+            - row [ref=e1659]:
+              - cell "NFLX · 100 sh @ $82.84 bought Jul 19" [ref=e1660]:
+                - text: NFLX · 100 sh @ $82.84
+                - generic [ref=e1661]: bought Jul 19
+              - cell "Fid HSA" [ref=e1662]
+              - cell "−$1,524 (−18.40%)" [ref=e1664]:
+                - text: −$1,524
+                - generic [ref=e1665]: (−18.40%)
+              - cell "N/A — tax-advantaged" [ref=e1666]
+              - cell "Monitor" [ref=e1668]
+            - row [ref=e1669]:
+              - cell "OCGN · 1000 sh @ $2.78 bought Jul 19" [ref=e1670]:
+                - text: OCGN · 1000 sh @ $2.78
+                - generic [ref=e1671]: bought Jul 19
+              - cell "Fid BLink" [ref=e1672]
+              - cell "−$1,450 (−52.16%)" [ref=e1674]:
+                - text: −$1,450
+                - generic [ref=e1675]: (−52.16%)
+              - cell "✓ Clear to harvest" [ref=e1676]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1678]:
+                - generic [ref=e1679]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1680]: no like-exposure partner for single stock
+            - row [ref=e1681]:
+              - cell "NFLX 2028-12-15 80C · 2 sh @ $2,305.00 bought Feb 17" [ref=e1682]:
+                - text: NFLX 2028-12-15 80C · 2 sh @ $2,305.00
+                - generic [ref=e1683]: bought Feb 17
+              - cell "RH Margin" [ref=e1684]
+              - cell "−$1,410 (−30.59%)" [ref=e1686]:
+                - text: −$1,410
+                - generic [ref=e1687]: (−30.59%)
+              - cell "✓ Clear to harvest" [ref=e1688]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1690]:
+                - generic [ref=e1691]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1692]: no like-exposure partner for single stock
+            - row [ref=e1693]:
+              - cell "SPXW 2026-07-20 7460C · 3 sh @ $448.00 bought Jul 20" [ref=e1694]:
+                - text: SPXW 2026-07-20 7460C · 3 sh @ $448.00
+                - generic [ref=e1695]: bought Jul 20
+              - cell "RH Margin" [ref=e1696]
+              - cell "−$1,337 (−99.44%)" [ref=e1698]:
+                - text: −$1,337
+                - generic [ref=e1699]: (−99.44%)
+              - cell "✓ Clear to harvest" [ref=e1700]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1702]:
+                - generic [ref=e1703]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1704]: no like-exposure partner for single stock
+            - row [ref=e1705]:
+              - cell "INTU 2027-06-17 300C · 1 sh @ $7,700.00 bought May 21" [ref=e1706]:
+                - text: INTU 2027-06-17 300C · 1 sh @ $7,700.00
+                - generic [ref=e1707]: bought May 21
+              - cell "RH Margin" [ref=e1708]
+              - cell "−$1,325 (−17.21%)" [ref=e1710]:
+                - text: −$1,325
+                - generic [ref=e1711]: (−17.21%)
+              - cell "✓ Clear to harvest" [ref=e1712]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1714]:
+                - generic [ref=e1715]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1716]: no like-exposure partner for single stock
+            - row [ref=e1717]:
+              - cell "SRPT 2027-01-15 20C · 3 sh @ $743.33 bought Jun 16" [ref=e1718]:
+                - text: SRPT 2027-01-15 20C · 3 sh @ $743.33
+                - generic [ref=e1719]: bought Jun 16
+              - cell "RH Margin" [ref=e1720]
+              - cell "−$1,255 (−56.28%)" [ref=e1722]:
+                - text: −$1,255
+                - generic [ref=e1723]: (−56.28%)
+              - cell "✓ Clear to harvest" [ref=e1724]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1726]:
+                - generic [ref=e1727]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1728]: no like-exposure partner for single stock
+            - row [ref=e1729]:
+              - cell "IBM 2026-08-21 195C · 2 sh @ $2,894.00 bought Jul 14" [ref=e1730]:
+                - text: IBM 2026-08-21 195C · 2 sh @ $2,894.00
+                - generic [ref=e1731]: bought Jul 14
+              - cell "RH Margin" [ref=e1732]
+              - cell "−$1,253 (−21.65%)" [ref=e1734]:
+                - text: −$1,253
+                - generic [ref=e1735]: (−21.65%)
+              - cell "✓ Clear to harvest" [ref=e1736]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1738]:
+                - generic [ref=e1739]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1740]: no like-exposure partner for single stock
+            - row [ref=e1741]:
+              - cell "SOUN 2027-01-15 17C · 1 sh @ $1,145.00 bought Jul 20" [ref=e1742]:
+                - text: SOUN 2027-01-15 17C · 1 sh @ $1,145.00
+                - generic [ref=e1743]: bought Jul 20
+              - cell "RH Margin" [ref=e1744]
+              - cell "−$1,117 (−97.55%)" [ref=e1746]:
+                - text: −$1,117
+                - generic [ref=e1747]: (−97.55%)
+              - cell "✓ Clear to harvest" [ref=e1748]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1750]:
+                - generic [ref=e1751]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1752]: no like-exposure partner for single stock
+            - row [ref=e1753]:
+              - cell "FISV 2028-01-21 60C · 1 sh @ $1,930.00 bought Feb 17" [ref=e1754]:
+                - text: FISV 2028-01-21 60C · 1 sh @ $1,930.00
+                - generic [ref=e1755]: bought Feb 17
+              - cell "RH Margin" [ref=e1756]
+              - cell "−$870 (−45.08%)" [ref=e1758]:
+                - text: −$870
+                - generic [ref=e1759]: (−45.08%)
+              - cell "✓ Clear to harvest" [ref=e1760]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1762]:
+                - generic [ref=e1763]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1764]: no like-exposure partner for single stock
+            - row [ref=e1765]:
+              - cell "ACN 2028-01-21 160C · 1 sh @ $3,600.00 bought Jun 17" [ref=e1766]:
+                - text: ACN 2028-01-21 160C · 1 sh @ $3,600.00
+                - generic [ref=e1767]: bought Jun 17
+              - cell "RH Margin" [ref=e1768]
+              - cell "−$665 (−18.47%)" [ref=e1770]:
+                - text: −$665
+                - generic [ref=e1771]: (−18.47%)
+              - cell "✓ Clear to harvest" [ref=e1772]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1774]:
+                - generic [ref=e1775]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1776]: no like-exposure partner for single stock
+            - row [ref=e1777]:
+              - cell "INDL · 201.502 sh @ $46.74 bought Jul 19" [ref=e1778]:
+                - text: INDL · 201.502 sh @ $46.74
+                - generic [ref=e1779]: bought Jul 19
+              - cell "Fid Roth" [ref=e1780]
+              - cell "−$645 (−6.85%)" [ref=e1782]:
+                - text: −$645
+                - generic [ref=e1783]: (−6.85%)
+              - cell "N/A — tax-advantaged" [ref=e1784]
+              - cell "Monitor" [ref=e1786]
+            - row [ref=e1787]:
+              - cell "PLTR 2026-10-16 120C · 2 sh @ $2,766.00 bought Apr 13" [ref=e1788]:
+                - text: PLTR 2026-10-16 120C · 2 sh @ $2,766.00
+                - generic [ref=e1789]: bought Apr 13
+              - cell "RH Margin" [ref=e1790]
+              - cell "−$622 (−11.24%)" [ref=e1792]:
+                - text: −$622
+                - generic [ref=e1793]: (−11.24%)
+              - cell "✓ Clear to harvest" [ref=e1794]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1796]:
+                - generic [ref=e1797]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1798]: no like-exposure partner for single stock
+            - row [ref=e1799]:
+              - cell "INDA · 301.483 sh @ $50.60 bought Jul 19" [ref=e1800]:
+                - text: INDA · 301.483 sh @ $50.60
+                - generic [ref=e1801]: bought Jul 19
+              - cell "Fid BLink" [ref=e1802]
+              - cell "−$618 (−4.05%)" [ref=e1804]:
+                - text: −$618
+                - generic [ref=e1805]: (−4.05%)
+              - cell "✓ Clear to harvest" [ref=e1806]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1808]:
+                - generic [ref=e1809]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1810]: no like-exposure partner for single stock
+            - row [ref=e1811]:
+              - cell "SOXL · 100 sh @ $142.58 bought Jul 19" [ref=e1812]:
+                - text: SOXL · 100 sh @ $142.58
+                - generic [ref=e1813]: bought Jul 19
+              - cell "Fid HSA" [ref=e1814]
+              - cell "−$577 (−4.05%)" [ref=e1816]:
+                - text: −$577
+                - generic [ref=e1817]: (−4.05%)
+              - cell "N/A — tax-advantaged" [ref=e1818]
+              - cell "Monitor" [ref=e1820]
+            - row [ref=e1821]:
+              - cell "TQQQ · 100.228 sh @ $72.79 bought Jul 19" [ref=e1822]:
+                - text: TQQQ · 100.228 sh @ $72.79
+                - generic [ref=e1823]: bought Jul 19
+              - cell "Fid Roth" [ref=e1824]
+              - cell "−$515 (−7.06%)" [ref=e1826]:
+                - text: −$515
+                - generic [ref=e1827]: (−7.06%)
+              - cell "N/A — tax-advantaged" [ref=e1828]
+              - cell "Monitor" [ref=e1830]
+            - row [ref=e1831]:
+              - cell "SNAP 2028-01-21 10C · 2 sh @ $325.00 bought Sep 22" [ref=e1832]:
+                - text: SNAP 2028-01-21 10C · 2 sh @ $325.00
+                - generic [ref=e1833]: bought Sep 22
+              - cell "RH Margin" [ref=e1834]
+              - cell "−$508 (−78.15%)" [ref=e1836]:
+                - text: −$508
+                - generic [ref=e1837]: (−78.15%)
+              - cell "✓ Clear to harvest" [ref=e1838]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1840]:
+                - generic [ref=e1841]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1842]: no like-exposure partner for single stock
+            - row [ref=e1843]:
+              - cell "BANT · 31 sh @ $15.21 bought Jul 19" [ref=e1844]:
+                - text: BANT · 31 sh @ $15.21
+                - generic [ref=e1845]: bought Jul 19
+              - cell "Fid Roth" [ref=e1846]
+              - cell "−$472 (−100.00%)" [ref=e1848]:
+                - text: −$472
+                - generic [ref=e1849]: (−100.00%)
+              - cell "N/A — tax-advantaged" [ref=e1850]
+              - cell "Monitor" [ref=e1852]
+            - row [ref=e1853]:
+              - cell "BBAI 2027-01-15 5.5C · 1 sh @ $420.00 bought Jul 20" [ref=e1854]:
+                - text: BBAI 2027-01-15 5.5C · 1 sh @ $420.00
+                - generic [ref=e1855]: bought Jul 20
+              - cell "RH Margin" [ref=e1856]
+              - cell "−$393 (−93.57%)" [ref=e1858]:
+                - text: −$393
+                - generic [ref=e1859]: (−93.57%)
+              - cell "✓ Clear to harvest" [ref=e1860]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1862]:
+                - generic [ref=e1863]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1864]: no like-exposure partner for single stock
+            - row [ref=e1865]:
+              - cell "MA 2026-07-24 545P · 4 sh @ $603.00 bought Jul 20" [ref=e1866]:
+                - text: MA 2026-07-24 545P · 4 sh @ $603.00
+                - generic [ref=e1867]: bought Jul 20
+              - cell "RH Margin" [ref=e1868]
+              - cell "−$312 (−12.94%)" [ref=e1870]:
+                - text: −$312
+                - generic [ref=e1871]: (−12.94%)
+              - cell "✓ Clear to harvest" [ref=e1872]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1874]:
+                - generic [ref=e1875]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1876]: no like-exposure partner for single stock
+            - row [ref=e1877]:
+              - cell "ENZC · 1000 sh @ $0.21 bought Jul 19" [ref=e1878]:
+                - text: ENZC · 1000 sh @ $0.21
+                - generic [ref=e1879]: bought Jul 19
+              - cell "Fid BLink" [ref=e1880]
+              - cell "−$209 (−99.71%)" [ref=e1882]:
+                - text: −$209
+                - generic [ref=e1883]: (−99.71%)
+              - cell "✓ Clear to harvest" [ref=e1884]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1886]:
+                - generic [ref=e1887]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1888]: no like-exposure partner for single stock
+            - row [ref=e1889]:
+              - cell "INDA · 200.185 sh @ $49.45 bought Jul 19" [ref=e1890]:
+                - text: INDA · 200.185 sh @ $49.45
+                - generic [ref=e1891]: bought Jul 19
+              - cell "Fid Roth" [ref=e1892]
+              - cell "−$180 (−1.82%)" [ref=e1894]:
+                - text: −$180
+                - generic [ref=e1895]: (−1.82%)
+              - cell "N/A — tax-advantaged" [ref=e1896]
+              - cell "Monitor" [ref=e1898]
+            - row [ref=e1899]:
+              - cell "NFLX · 12.161 sh @ $82.23 bought Jul 19" [ref=e1900]:
+                - text: NFLX · 12.161 sh @ $82.23
+                - generic [ref=e1901]: bought Jul 19
+              - cell "Fid Roth" [ref=e1902]
+              - cell "−$178 (−17.79%)" [ref=e1904]:
+                - text: −$178
+                - generic [ref=e1905]: (−17.79%)
+              - cell "N/A — tax-advantaged" [ref=e1906]
+              - cell "Monitor" [ref=e1908]
+            - row [ref=e1909]:
+              - cell "IREN · 100 sh @ $41.96 bought Jul 20" [ref=e1910]:
+                - text: IREN · 100 sh @ $41.96
+                - generic [ref=e1911]: bought Jul 20
+              - cell "RH" [ref=e1912]
+              - cell "−$176 (−4.19%)" [ref=e1914]:
+                - text: −$176
+                - generic [ref=e1915]: (−4.19%)
+              - cell "✓ Clear to harvest" [ref=e1916]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1918]:
+                - generic [ref=e1919]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1920]: no like-exposure partner for single stock
+            - row [ref=e1921]:
+              - cell "IBX · 100 sh @ $16.26 bought Jul 19" [ref=e1922]:
+                - text: IBX · 100 sh @ $16.26
+                - generic [ref=e1923]: bought Jul 19
+              - cell "Fid Roth" [ref=e1924]
+              - cell "−$147 (−9.04%)" [ref=e1926]:
+                - text: −$147
+                - generic [ref=e1927]: (−9.04%)
+              - cell "N/A — tax-advantaged" [ref=e1928]
+              - cell "Monitor" [ref=e1930]
+            - row [ref=e1931]:
+              - cell "IBX · 100 sh @ $16.24 bought Jul 19" [ref=e1932]:
+                - text: IBX · 100 sh @ $16.24
+                - generic [ref=e1933]: bought Jul 19
+              - cell "Fid BLink" [ref=e1934]
+              - cell "−$145 (−8.93%)" [ref=e1936]:
+                - text: −$145
+                - generic [ref=e1937]: (−8.93%)
+              - cell "✓ Clear to harvest" [ref=e1938]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1940]:
+                - generic [ref=e1941]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1942]: no like-exposure partner for single stock
+            - row [ref=e1943]:
+              - cell "SPXW 2026-07-20 7440P · 3 sh @ $61.67 bought Jul 20" [ref=e1944]:
+                - text: SPXW 2026-07-20 7440P · 3 sh @ $61.67
+                - generic [ref=e1945]: bought Jul 20
+              - cell "RH Margin" [ref=e1946]
+              - cell "−$140 (−75.68%)" [ref=e1948]:
+                - text: −$140
+                - generic [ref=e1949]: (−75.68%)
+              - cell "✓ Clear to harvest" [ref=e1950]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1952]:
+                - generic [ref=e1953]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1954]: no like-exposure partner for single stock
+            - row [ref=e1955]:
+              - cell "SPXW 2026-07-20 7480C · 3 sh @ $47.00 bought Jul 20" [ref=e1956]:
+                - text: SPXW 2026-07-20 7480C · 3 sh @ $47.00
+                - generic [ref=e1957]: bought Jul 20
+              - cell "RH Margin" [ref=e1958]
+              - cell "−$134 (−94.68%)" [ref=e1960]:
+                - text: −$134
+                - generic [ref=e1961]: (−94.68%)
+              - cell "✓ Clear to harvest" [ref=e1962]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1964]:
+                - generic [ref=e1965]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1966]: no like-exposure partner for single stock
+            - row [ref=e1967]:
+              - cell "MMEX · 10 sh @ $13.00 bought Jul 19" [ref=e1968]:
+                - text: MMEX · 10 sh @ $13.00
+                - generic [ref=e1969]: bought Jul 19
+              - cell "Fid BLink" [ref=e1970]
+              - cell "−$130 (−100.00%)" [ref=e1972]:
+                - text: −$130
+                - generic [ref=e1973]: (−100.00%)
+              - cell "✓ Clear to harvest" [ref=e1974]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1976]:
+                - generic [ref=e1977]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e1978]: no like-exposure partner for single stock
+            - row [ref=e1979]:
+              - cell "PSYCF · 1000 sh @ $0.13 bought Jul 19" [ref=e1980]:
+                - text: PSYCF · 1000 sh @ $0.13
+                - generic [ref=e1981]: bought Jul 19
+              - cell "Fid Roth" [ref=e1982]
+              - cell "−$122 (−94.00%)" [ref=e1984]:
+                - text: −$122
+                - generic [ref=e1985]: (−94.00%)
+              - cell "N/A — tax-advantaged" [ref=e1986]
+              - cell "Monitor" [ref=e1988]
+            - row [ref=e1989]:
+              - cell "SPXW 2026-07-20 7465C · 2 sh @ $60.00 bought Jul 20" [ref=e1990]:
+                - text: SPXW 2026-07-20 7465C · 2 sh @ $60.00
+                - generic [ref=e1991]: bought Jul 20
+              - cell "RH Margin" [ref=e1992]
+              - cell "−$115 (−95.83%)" [ref=e1994]:
+                - text: −$115
+                - generic [ref=e1995]: (−95.83%)
+              - cell "✓ Clear to harvest" [ref=e1996]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e1998]:
+                - generic [ref=e1999]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2000]: no like-exposure partner for single stock
+            - row [ref=e2001]:
+              - cell "IBX 2026-12-18 16C · 1 sh @ $436.00 bought Jul 14" [ref=e2002]:
+                - text: IBX 2026-12-18 16C · 1 sh @ $436.00
+                - generic [ref=e2003]: bought Jul 14
+              - cell "RH Margin" [ref=e2004]
+              - cell "−$101 (−23.17%)" [ref=e2006]:
+                - text: −$101
+                - generic [ref=e2007]: (−23.17%)
+              - cell "✓ Clear to harvest" [ref=e2008]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e2010]:
+                - generic [ref=e2011]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2012]: no like-exposure partner for single stock
+            - row [ref=e2013]:
+              - cell "NFLX · 100 sh @ $68.49 bought Jul 19" [ref=e2014]:
+                - text: NFLX · 100 sh @ $68.49
+                - generic [ref=e2015]: bought Jul 19
+              - cell "Fid BLink" [ref=e2016]
+              - cell "−$89 (−1.30%)" [ref=e2018]:
+                - text: −$89
+                - generic [ref=e2019]: (−1.30%)
+              - cell "Below threshold" [ref=e2020]
+              - cell "Monitor" [ref=e2022]
+            - row [ref=e2023]:
+              - cell "HTHIY · 100 sh @ $30.06 bought Jul 19" [ref=e2024]:
+                - text: HTHIY · 100 sh @ $30.06
+                - generic [ref=e2025]: bought Jul 19
+              - cell "Fid HSA" [ref=e2026]
+              - cell "−$89 (−2.96%)" [ref=e2028]:
+                - text: −$89
+                - generic [ref=e2029]: (−2.96%)
+              - cell "N/A — tax-advantaged" [ref=e2030]
+              - cell "Monitor" [ref=e2032]
+            - row [ref=e2033]:
+              - cell "NVO 2028-01-21 50C · 3 sh @ $1,083.67 bought Feb 17" [ref=e2034]:
+                - text: NVO 2028-01-21 50C · 3 sh @ $1,083.67
+                - generic [ref=e2035]: bought Feb 17
+              - cell "RH Margin" [ref=e2036]
+              - cell "−$86 (−2.65%)" [ref=e2038]:
+                - text: −$86
+                - generic [ref=e2039]: (−2.65%)
+              - cell "Below threshold" [ref=e2040]
+              - cell "Monitor" [ref=e2042]
+            - row [ref=e2043]:
+              - cell "AITX · 10 sh @ $7.28 bought Jul 19" [ref=e2044]:
+                - text: AITX · 10 sh @ $7.28
+                - generic [ref=e2045]: bought Jul 19
+              - cell "Fid BLink" [ref=e2046]
+              - cell "−$73 (−99.89%)" [ref=e2048]:
+                - text: −$73
+                - generic [ref=e2049]: (−99.89%)
+              - cell "✓ Clear to harvest" [ref=e2050]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e2052]:
+                - generic [ref=e2053]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2054]: no like-exposure partner for single stock
+            - row [ref=e2055]:
+              - cell "SPXW 2026-07-20 7455C · 1 sh @ $45.00 bought Jul 20" [ref=e2056]:
+                - text: SPXW 2026-07-20 7455C · 1 sh @ $45.00
+                - generic [ref=e2057]: bought Jul 20
+              - cell "RH Margin" [ref=e2058]
+              - cell "−$43 (−94.44%)" [ref=e2060]:
+                - text: −$43
+                - generic [ref=e2061]: (−94.44%)
+              - cell "✓ Clear to harvest" [ref=e2062]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e2064]:
+                - generic [ref=e2065]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2066]: no like-exposure partner for single stock
+            - row [ref=e2067]:
+              - cell "NFLU · 100 sh @ $14.89 bought Jul 20" [ref=e2068]:
+                - text: NFLU · 100 sh @ $14.89
+                - generic [ref=e2069]: bought Jul 20
+              - cell "RH Margin" [ref=e2070]
+              - cell "−$36 (−2.42%)" [ref=e2072]:
+                - text: −$36
+                - generic [ref=e2073]: (−2.42%)
+              - cell "Below threshold" [ref=e2074]
+              - cell "Monitor" [ref=e2076]
+            - row [ref=e2077]:
+              - cell "MBAK · 1000 sh @ $0.02 bought Jul 19" [ref=e2078]:
+                - text: MBAK · 1000 sh @ $0.02
+                - generic [ref=e2079]: bought Jul 19
+              - cell "Fid BLink" [ref=e2080]
+              - cell "−$17 (−87.00%)" [ref=e2082]:
+                - text: −$17
+                - generic [ref=e2083]: (−87.00%)
+              - cell "✓ Clear to harvest" [ref=e2084]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e2086]:
+                - generic [ref=e2087]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2088]: no like-exposure partner for single stock
+            - row [ref=e2089]:
+              - cell "NFLU · 100 sh @ $14.67 bought Jul 19" [ref=e2090]:
+                - text: NFLU · 100 sh @ $14.67
+                - generic [ref=e2091]: bought Jul 19
+              - cell "Fid Roth" [ref=e2092]
+              - cell "−$14 (−0.95%)" [ref=e2094]:
+                - text: −$14
+                - generic [ref=e2095]: (−0.95%)
+              - cell "N/A — tax-advantaged" [ref=e2096]
+              - cell "Monitor" [ref=e2098]
+            - row [ref=e2099]:
+              - cell "IBX 2026-09-18 16C · 1 sh @ $306.00 bought Jul 14" [ref=e2100]:
+                - text: IBX 2026-09-18 16C · 1 sh @ $306.00
+                - generic [ref=e2101]: bought Jul 14
+              - cell "RH" [ref=e2102]
+              - cell "−$11 (−3.59%)" [ref=e2104]:
+                - text: −$11
+                - generic [ref=e2105]: (−3.59%)
+              - cell "✓ Clear to harvest" [ref=e2106]
+              - cell "Sell, wait 31 days to rebuy no like-exposure partner for single stock" [ref=e2108]:
+                - generic [ref=e2109]:
+                  - text: Sell, wait 31 days to rebuy
+                  - generic [ref=e2110]: no like-exposure partner for single stock
+            - row [ref=e2111]:
+              - cell "-SOXS2280121C3 · 10 sh @ $2.43 bought Jul 19" [ref=e2112]:
+                - text: "-SOXS2280121C3 · 10 sh @ $2.43"
+                - generic [ref=e2113]: bought Jul 19
+              - cell "Fid BLink" [ref=e2114]
+              - cell "−$0 (−0.41%)" [ref=e2116]:
+                - text: −$0
+                - generic [ref=e2117]: (−0.41%)
+              - cell "Below threshold" [ref=e2118]
+              - cell "Monitor" [ref=e2120]
+        - generic [ref=e2122]:
+          - button "Why does a buy in my IRA block a harvest in my brokerage account?" [ref=e2123] [cursor=pointer]:
+            - generic [ref=e2125]: ▾
+          - paragraph [ref=e2126]: The IRS wash-sale rule disallows a loss if you buy a substantially identical security within 30 days before or after the sale — in any of your accounts, including IRAs (Rev. Rul. 2008-5) and a spouse's accounts. Single-account tools miss this; Vantage checks every linked account plus scheduled auto-invests before calling a loss harvestable. Estimated benefit assumes your 24% marginal rate — change it in Settings.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: SPY
+            - generic [ref=e82]: State Street SPDR S&P 500 ETF T · not held
+          - generic [ref=e411]:
+            - generic [ref=e412]: $742.09
+            - generic [ref=e413]: close $743.29
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPY at $742.09. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPY…" [ref=e93]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation P/E 26.7" [ref=e414] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: P/E 26.7
+          - group [ref=e109]:
+            - generic "▸ News 10 · neutral" [ref=e415] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · neutral
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

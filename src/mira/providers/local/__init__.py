@@ -40,14 +40,20 @@ class LocalObjectStore:
 
 
 class LocalStateStore:
+    """KV state store. Durable when MIRA_DATA_DIR is set (SQLite kv table, so
+    thread checkpoints / conversation memory survive restarts); a RAM dict
+    otherwise (tests, no-config). Backed by the shared Persistence handle so it
+    shares one db file with the LLM-call + turn logs."""
+
     def __init__(self) -> None:
-        self._state: dict[str, str] = {}
+        from mira.core.persistence import get_persistence
+        self._p = get_persistence()
 
     def get(self, key: str) -> str | None:
-        return self._state.get(key)
+        return self._p.kv_get(key)
 
     def set(self, key: str, value: str) -> None:
-        self._state[key] = value
+        self._p.kv_set(key, value)
 
 
 class LocalObservability:

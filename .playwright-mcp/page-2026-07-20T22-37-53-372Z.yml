@@ -1,0 +1,913 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e748]:
+        - heading "Holdings" [level=2] [ref=e749]
+        - paragraph [ref=e750]: All accounts · 56 tickers · 9 actionable · grouped by symbol · click to expand
+        - generic [ref=e751]:
+          - generic [ref=e752]:
+            - button "All" [ref=e753] [cursor=pointer]
+            - button "Has equity" [ref=e754] [cursor=pointer]
+            - button "Has options" [ref=e755] [cursor=pointer]
+            - button "Losers" [ref=e756] [cursor=pointer]
+          - generic [ref=e757]:
+            - combobox "Filter by recommendation" [ref=e758]:
+              - option "Any recommendation" [selected]
+              - option "Actionable only"
+              - option "Hold & sell call"
+              - option "Close & book loss"
+              - option "Monitor"
+            - combobox "Sort by" [ref=e759]:
+              - 'option "Sort: Action priority"'
+              - 'option "Sort: Value" [selected]'
+              - 'option "Sort: Unrealized"'
+              - 'option "Sort: Weight"'
+              - 'option "Sort: Day P/L"'
+              - 'option "Sort: Symbol"'
+            - textbox "Search symbol…" [ref=e760]
+        - table [ref=e762]:
+          - rowgroup [ref=e763]:
+            - row [ref=e764]:
+              - columnheader "Symbol" [ref=e765]
+              - columnheader "Value" [ref=e766]
+              - columnheader "Day" [ref=e767]
+              - columnheader "Unrealized" [ref=e768]
+              - columnheader "Weight" [ref=e769]
+              - columnheader "Recommendation" [ref=e770]
+          - rowgroup [ref=e771]:
+            - row [ref=e940] [cursor=pointer]:
+              - cell "▸ ASIANPAINT.BO Concentrated" [ref=e941]:
+                - generic "expand lots" [ref=e942]: ▸
+                - text: ASIANPAINT.BO
+                - generic [ref=e943]: Concentrated
+              - cell "₹15,33,756" [ref=e944]
+              - cell "+₹920" [ref=e945]
+              - cell "−₹1,10,359" [ref=e946]
+              - cell "42.3%" [ref=e947]
+              - cell "MONITOR" [ref=e948]:
+                - 'generic "ASIANPAINT.BO reads neutral (conviction +0.40): daily up/RSI 50, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e949]': MONITOR
+            - row [ref=e951] [cursor=pointer]:
+              - cell "▸ ITC.BO Concentrated" [ref=e952]:
+                - generic "expand lots" [ref=e953]: ▸
+                - text: ITC.BO
+                - generic [ref=e954]: Concentrated
+              - cell "₹9,38,698" [ref=e955]
+              - cell "+₹6,008" [ref=e956]
+              - cell "−₹2,91,738" [ref=e957]
+              - cell "25.9%" [ref=e958]
+              - cell "MONITOR" [ref=e959]:
+                - 'generic "ITC.BO reads neutral (conviction +0.40): daily up/RSI 50, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e960]': MONITOR
+            - row [ref=e962] [cursor=pointer]:
+              - cell "▸ RELIANCE.BO Concentrated" [ref=e963]:
+                - generic "expand lots" [ref=e964]: ▸
+                - text: RELIANCE.BO
+                - generic [ref=e965]: Concentrated
+              - cell "₹6,61,625" [ref=e966]
+              - cell "−₹1,654" [ref=e967]
+              - cell "−₹1,23,375" [ref=e968]
+              - cell "18.2%" [ref=e969]
+              - cell "MONITOR" [ref=e970]:
+                - 'generic "RELIANCE.BO reads neutral (conviction +0.40): daily up/RSI 50, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e971]': MONITOR
+            - row [ref=e973] [cursor=pointer]:
+              - cell "▸ NIFTYBEES.NS Concentrated" [ref=e974]:
+                - generic "expand lots" [ref=e975]: ▸
+                - text: NIFTYBEES.NS
+                - generic [ref=e976]: Concentrated
+              - cell "₹4,35,141" [ref=e977]
+              - cell "−₹1,610" [ref=e978]
+              - cell "+₹17,445" [ref=e979]
+              - cell "12.0%" [ref=e980]
+              - cell "MONITOR" [ref=e981]:
+                - 'generic "NIFTYBEES.NS reads neutral (conviction +0.40): daily sideways/RSI 54, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e982]': MONITOR
+            - row [ref=e984] [cursor=pointer]:
+              - cell "▸ GOLDBEES.NS" [ref=e985]:
+                - generic "expand lots" [ref=e986]: ▸
+                - text: GOLDBEES.NS
+              - cell "₹58,420" [ref=e987]
+              - cell "+₹520" [ref=e988]
+              - cell "+₹3,332" [ref=e989]
+              - cell "1.6%" [ref=e990]
+              - cell "MONITOR" [ref=e991]:
+                - 'generic "GOLDBEES.NS reads neutral (conviction +0.40): daily sideways/RSI 41, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e992]': MONITOR
+            - row [ref=e994] [cursor=pointer]:
+              - cell "▸ UNH Concentrated" [ref=e995]:
+                - generic "expand lots" [ref=e996]: ▸
+                - text: UNH
+                - generic [ref=e997]: Concentrated
+              - cell "$43,609" [ref=e998]
+              - cell "−$558" [ref=e999]
+              - cell "+$15,030" [ref=e1000]
+              - cell "10.3%" [ref=e1001]
+              - cell "HOLD & SELL CALL sell 435.56C ~$748" [ref=e1002]:
+                - 'generic "UNH reads STRONG at support and basing (conviction +0.70). Sell a ~7-DTE OTM call at $435.56 (near resistance) as a covered call: an estimated $748 credit reduces net cost from $28,579 to $27,831 (basis -$748)." [ref=e1003]':
+                  - generic [ref=e1004]: HOLD & SELL CALL
+                  - text: sell 435.56C ~$748
+            - row [ref=e1005] [cursor=pointer]:
+              - cell "▸ SQQQ Concentrated" [ref=e1006]:
+                - generic "expand lots" [ref=e1007]: ▸
+                - text: SQQQ
+                - generic [ref=e1008]: Concentrated
+              - cell "$30,800" [ref=e1009]
+              - cell "−$237" [ref=e1010]
+              - cell "−$16,129" [ref=e1011]
+              - cell "7.3%" [ref=e1012]
+              - cell "MONITOR" [ref=e1013]:
+                - 'generic "SQQQ reads neutral (conviction -0.20): daily sideways/RSI 61, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1014]': MONITOR
+            - row [ref=e1016] [cursor=pointer]:
+              - cell "▸ INDA" [ref=e1017]:
+                - generic "expand lots" [ref=e1018]: ▸
+                - text: INDA
+              - cell "$24,356" [ref=e1019]
+              - cell "−$153" [ref=e1020]
+              - cell "−$798" [ref=e1021]
+              - cell "5.8%" [ref=e1022]
+              - cell "MONITOR" [ref=e1023]:
+                - 'generic "INDA reads neutral (conviction +0.30): daily down/RSI 47, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1024]': MONITOR
+            - row [ref=e1026] [cursor=pointer]:
+              - cell "▸ CRYPTO sleeve — value via broker portfolio" [ref=e1027]:
+                - generic "expand lots" [ref=e1028]: ▸
+                - text: CRYPTO
+                - generic [ref=e1029]: sleeve — value via broker portfolio
+              - cell "$22,725" [ref=e1030]
+              - cell "—" [ref=e1031]
+              - cell "+$0" [ref=e1032]
+              - cell "5.4%" [ref=e1033]
+              - cell "—" [ref=e1034]
+            - row [ref=e1035] [cursor=pointer]:
+              - cell "▸ TQQQ" [ref=e1036]:
+                - generic "expand lots" [ref=e1037]: ▸
+                - text: TQQQ
+              - cell "$20,467" [ref=e1038]
+              - cell "+$174" [ref=e1039]
+              - cell "+$454" [ref=e1040]
+              - cell "4.9%" [ref=e1041]
+              - cell "MONITOR" [ref=e1042]:
+                - 'generic "TQQQ reads freefall (conviction -1.00): daily sideways/RSI 37, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1043]': MONITOR
+            - row [ref=e1045] [cursor=pointer]:
+              - cell "▸ ACN 1 OPT" [ref=e1046]:
+                - generic "expand lots" [ref=e1047]: ▸
+                - text: ACN
+                - generic "1 option leg(s)" [ref=e1048]: 1 OPT
+              - cell "$18,132" [ref=e1049]
+              - cell "+$131" [ref=e1050]
+              - cell "+$784" [ref=e1051]
+              - cell "4.3%" [ref=e1052]
+              - cell "CLOSE & BOOK LOSS book −$1,125" [ref=e1053]:
+                - generic "ACN broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~4 weeks of estimated weekly call credit ($272/wk) to offset the $1,125 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1054]:
+                  - generic [ref=e1055]: CLOSE & BOOK LOSS
+                  - text: book −$1,125
+            - row [ref=e1056] [cursor=pointer]:
+              - cell "▸ NFLX 1 OPT" [ref=e1057]:
+                - generic "expand lots" [ref=e1058]: ▸
+                - text: NFLX
+                - generic "1 option leg(s)" [ref=e1059]: 1 OPT
+              - cell "$17,542" [ref=e1060]
+              - cell "−$320" [ref=e1061]
+              - cell "−$3,201" [ref=e1062]
+              - cell "4.2%" [ref=e1063]
+              - cell "CLOSE & BOOK LOSS book −$65" [ref=e1064]:
+                - generic "NFLX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~0 weeks of estimated weekly call credit ($277/wk) to offset the $65 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1065]:
+                  - generic [ref=e1066]: CLOSE & BOOK LOSS
+                  - text: book −$65
+            - row [ref=e1067] [cursor=pointer]:
+              - cell "▸ ADBE" [ref=e1068]:
+                - generic "expand lots" [ref=e1069]: ▸
+                - text: ADBE
+              - cell "$16,432" [ref=e1070]
+              - cell "−$191" [ref=e1071]
+              - cell "−$4,360" [ref=e1072]
+              - cell "3.9%" [ref=e1073]
+              - cell "MONITOR" [ref=e1074]:
+                - 'generic "ADBE reads neutral (conviction +0.10): daily down/RSI 70, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1075]': MONITOR
+            - row [ref=e1077] [cursor=pointer]:
+              - cell "▸ SOXL" [ref=e1078]:
+                - generic "expand lots" [ref=e1079]: ▸
+                - text: SOXL
+              - cell "$13,681" [ref=e1080]
+              - cell "+$287" [ref=e1081]
+              - cell "−$577" [ref=e1082]
+              - cell "3.2%" [ref=e1083]
+              - cell "MONITOR" [ref=e1084]:
+                - 'generic "SOXL reads freefall (conviction -1.00): daily up/RSI 34, weekly up, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1085]': MONITOR
+            - row [ref=e1087] [cursor=pointer]:
+              - cell "▸ ENPH 1 OPT" [ref=e1088]:
+                - generic "expand lots" [ref=e1089]: ▸
+                - text: ENPH
+                - generic "1 option leg(s)" [ref=e1090]: 1 OPT
+              - cell "$10,019" [ref=e1091]
+              - cell "−$379" [ref=e1092]
+              - cell "−$15,109" [ref=e1093]
+              - cell "2.4%" [ref=e1094]
+              - cell "HOLD & SELL CALL sell 43.31C ~$126" [ref=e1095]:
+                - 'generic "ENPH reads STRONG at support and basing (conviction +0.50). Sell a ~7-DTE OTM call at $43.31 (near resistance) as a covered call: an estimated $126 credit reduces net cost from $2,050 to $1,924 (basis -$126)." [ref=e1096]':
+                  - generic [ref=e1097]: HOLD & SELL CALL
+                  - text: sell 43.31C ~$126
+            - row [ref=e1098] [cursor=pointer]:
+              - cell "▸ INDL" [ref=e1099]:
+                - generic "expand lots" [ref=e1100]: ▸
+                - text: INDL
+              - cell "$8,773" [ref=e1101]
+              - cell "−$121" [ref=e1102]
+              - cell "−$645" [ref=e1103]
+              - cell "2.1%" [ref=e1104]
+              - cell "MONITOR" [ref=e1105]:
+                - 'generic "INDL reads neutral (conviction -0.20): daily down/RSI 47, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1106]': MONITOR
+            - row [ref=e1108] [cursor=pointer]:
+              - cell "▸ FISV 2 OPT" [ref=e1109]:
+                - generic "expand lots" [ref=e1110]: ▸
+                - text: FISV
+                - generic "2 option leg(s)" [ref=e1111]: 2 OPT
+              - cell "$7,638" [ref=e1112]
+              - cell "+$107" [ref=e1113]
+              - cell "−$419" [ref=e1114]
+              - cell "1.8%" [ref=e1115]
+              - cell "CLOSE & BOOK LOSS book −$620" [ref=e1116]:
+                - generic "FISV broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~3 weeks of estimated weekly call credit ($198/wk) to offset the $620 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1117]:
+                  - generic [ref=e1118]: CLOSE & BOOK LOSS
+                  - text: book −$620
+            - row [ref=e1119] [cursor=pointer]:
+              - cell "▸ EMBJ" [ref=e1120]:
+                - generic "expand lots" [ref=e1121]: ▸
+                - text: EMBJ
+              - cell "$6,594" [ref=e1122]
+              - cell "+$201" [ref=e1123]
+              - cell "+$917" [ref=e1124]
+              - cell "1.6%" [ref=e1125]
+              - cell "MONITOR" [ref=e1126]:
+                - 'generic "EMBJ reads freefall (conviction -1.00): daily up/RSI 53, weekly down, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1127]': MONITOR
+            - row [ref=e1129] [cursor=pointer]:
+              - cell "▸ INTU 1 OPT" [ref=e1130]:
+                - generic "expand lots" [ref=e1131]: ▸
+                - text: INTU
+                - generic "1 option leg(s)" [ref=e1132]: 1 OPT
+              - cell "$6,375" [ref=e1133]
+              - cell "—" [ref=e1134]
+              - cell "−$1,325" [ref=e1135]
+              - cell "1.5%" [ref=e1136]
+              - cell "MONITOR" [ref=e1137]:
+                - 'generic "INTU reads neutral (conviction +0.00): daily down/RSI 60, weekly down, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1138]': MONITOR
+            - row [ref=e1140] [cursor=pointer]:
+              - cell "▸ SNK 1 OPT" [ref=e1141]:
+                - generic "expand lots" [ref=e1142]: ▸
+                - text: SNK
+                - generic "1 option leg(s)" [ref=e1143]: 1 OPT
+              - cell "$5,156" [ref=e1144]
+              - cell "+$204" [ref=e1145]
+              - cell "+$3,409" [ref=e1146]
+              - cell "1.2%" [ref=e1147]
+              - cell "MONITOR" [ref=e1148]:
+                - 'generic "SNK reads neutral (conviction +0.20): daily up/RSI 79, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1149]': MONITOR
+            - row [ref=e1151] [cursor=pointer]:
+              - cell "▸ PLTR 1 OPT" [ref=e1152]:
+                - generic "expand lots" [ref=e1153]: ▸
+                - text: PLTR
+                - generic "1 option leg(s)" [ref=e1154]: 1 OPT
+              - cell "$4,910" [ref=e1155]
+              - cell "—" [ref=e1156]
+              - cell "−$622" [ref=e1157]
+              - cell "1.2%" [ref=e1158]
+              - cell "MONITOR" [ref=e1159]:
+                - 'generic "PLTR reads neutral (conviction +0.00): daily down/RSI 58, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1160]': MONITOR
+            - row [ref=e1162] [cursor=pointer]:
+              - cell "▸ IBM 1 OPT" [ref=e1163]:
+                - generic "expand lots" [ref=e1164]: ▸
+                - text: IBM
+                - generic "1 option leg(s)" [ref=e1165]: 1 OPT
+              - cell "$4,535" [ref=e1166]
+              - cell "—" [ref=e1167]
+              - cell "−$1,253" [ref=e1168]
+              - cell "1.1%" [ref=e1169]
+              - cell "—" [ref=e1170]
+            - row [ref=e1171] [cursor=pointer]:
+              - cell "▸ SOXS2 1 OPT" [ref=e1172]:
+                - generic "expand lots" [ref=e1173]: ▸
+                - text: SOXS2
+                - generic "1 option leg(s)" [ref=e1174]: 1 OPT
+              - cell "$4,050" [ref=e1175]
+              - cell "—" [ref=e1176]
+              - cell "+$1,610" [ref=e1177]
+              - cell "1.0%" [ref=e1178]
+              - cell "—" [ref=e1179]
+            - row [ref=e1180] [cursor=pointer]:
+              - cell "▸ IREN" [ref=e1181]:
+                - generic "expand lots" [ref=e1182]: ▸
+                - text: IREN
+              - cell "$4,020" [ref=e1183]
+              - cell "+$773" [ref=e1184]
+              - cell "−$176" [ref=e1185]
+              - cell "1.0%" [ref=e1186]
+              - cell "MONITOR" [ref=e1187]:
+                - 'generic "IREN reads neutral (conviction +0.30): daily sideways/RSI 31, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1188]': MONITOR
+            - row [ref=e1190] [cursor=pointer]:
+              - cell "▸ IBX 2 OPT" [ref=e1191]:
+                - generic "expand lots" [ref=e1192]: ▸
+                - text: IBX
+                - generic "2 option leg(s)" [ref=e1193]: 2 OPT
+              - cell "$3,588" [ref=e1194]
+              - cell "+$14" [ref=e1195]
+              - cell "−$404" [ref=e1196]
+              - cell "0.9%" [ref=e1197]
+              - cell "—" [ref=e1198]
+            - row [ref=e1199] [cursor=pointer]:
+              - cell "▸ NVO 1 OPT" [ref=e1200]:
+                - generic "expand lots" [ref=e1201]: ▸
+                - text: NVO
+                - generic "1 option leg(s)" [ref=e1202]: 1 OPT
+              - cell "$3,165" [ref=e1203]
+              - cell "—" [ref=e1204]
+              - cell "−$86" [ref=e1205]
+              - cell "0.8%" [ref=e1206]
+              - cell "MONITOR" [ref=e1207]:
+                - 'generic "NVO reads freefall (conviction -1.00): daily sideways/RSI 62, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1208]': MONITOR
+            - row [ref=e1210] [cursor=pointer]:
+              - cell "▸ HTHIY" [ref=e1211]:
+                - generic "expand lots" [ref=e1212]: ▸
+                - text: HTHIY
+              - cell "$2,917" [ref=e1213]
+              - cell "+$1" [ref=e1214]
+              - cell "−$89" [ref=e1215]
+              - cell "0.7%" [ref=e1216]
+              - cell "CLOSE & BOOK LOSS book −$90" [ref=e1217]:
+                - generic "HTHIY broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~2 weeks of estimated weekly call credit ($57/wk) to offset the $90 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1218]:
+                  - generic [ref=e1219]: CLOSE & BOOK LOSS
+                  - text: book −$90
+            - row [ref=e1220] [cursor=pointer]:
+              - cell "▸ NFLU" [ref=e1221]:
+                - generic "expand lots" [ref=e1222]: ▸
+                - text: NFLU
+              - cell "$2,906" [ref=e1223]
+              - cell "−$126" [ref=e1224]
+              - cell "−$50" [ref=e1225]
+              - cell "0.7%" [ref=e1226]
+              - cell "MONITOR" [ref=e1227]:
+                - 'generic "NFLU reads freefall (conviction -1.00): daily down/RSI 30, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1228]': MONITOR
+            - row [ref=e1230] [cursor=pointer]:
+              - cell "▸ MA 1 OPT" [ref=e1231]:
+                - generic "expand lots" [ref=e1232]: ▸
+                - text: MA
+                - generic "1 option leg(s)" [ref=e1233]: 1 OPT
+              - cell "$2,100" [ref=e1234]
+              - cell "—" [ref=e1235]
+              - cell "−$312" [ref=e1236]
+              - cell "0.5%" [ref=e1237]
+              - cell "—" [ref=e1238]
+            - row [ref=e1239] [cursor=pointer]:
+              - cell "▸ OCGN" [ref=e1240]:
+                - generic "expand lots" [ref=e1241]: ▸
+                - text: OCGN
+              - cell "$1,330" [ref=e1242]
+              - cell "−$20" [ref=e1243]
+              - cell "−$1,450" [ref=e1244]
+              - cell "0.3%" [ref=e1245]
+              - cell "MONITOR" [ref=e1246]:
+                - 'generic "OCGN reads neutral (conviction +0.20): daily up/RSI 40, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1247]': MONITOR
+            - row [ref=e1249] [cursor=pointer]:
+              - cell "▸ MSFT" [ref=e1250]:
+                - generic "expand lots" [ref=e1251]: ▸
+                - text: MSFT
+              - cell "$1,145" [ref=e1252]
+              - cell "+$26" [ref=e1253]
+              - cell "+$145" [ref=e1254]
+              - cell "0.3%" [ref=e1255]
+              - cell "MONITOR" [ref=e1256]:
+                - 'generic "MSFT reads freefall (conviction -1.00): daily down/RSI 56, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1257]': MONITOR
+            - row [ref=e1259] [cursor=pointer]:
+              - cell "▸ O" [ref=e1260]:
+                - generic "expand lots" [ref=e1261]: ▸
+                - text: O
+              - cell "$1,084" [ref=e1262]
+              - cell "−$9" [ref=e1263]
+              - cell "+$84" [ref=e1264]
+              - cell "0.3%" [ref=e1265]
+              - cell "MONITOR" [ref=e1266]:
+                - 'generic "O reads neutral (conviction +0.50): daily up/RSI 68, weekly up, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1267]': MONITOR
+            - row [ref=e1269] [cursor=pointer]:
+              - cell "▸ SRPT 1 OPT" [ref=e1270]:
+                - generic "expand lots" [ref=e1271]: ▸
+                - text: SRPT
+                - generic "1 option leg(s)" [ref=e1272]: 1 OPT
+              - cell "$975" [ref=e1273]
+              - cell "—" [ref=e1274]
+              - cell "−$1,255" [ref=e1275]
+              - cell "0.2%" [ref=e1276]
+              - cell "MONITOR" [ref=e1277]:
+                - 'generic "SRPT reads neutral (conviction +0.30): daily sideways/RSI 42, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1278]': MONITOR
+            - row [ref=e1280] [cursor=pointer]:
+              - cell "▸ ADBG" [ref=e1281]:
+                - generic "expand lots" [ref=e1282]: ▸
+                - text: ADBG
+              - cell "$772" [ref=e1283]
+              - cell "−$19" [ref=e1284]
+              - cell "+$164" [ref=e1285]
+              - cell "0.2%" [ref=e1286]
+              - cell "MONITOR" [ref=e1287]:
+                - 'generic "ADBG reads neutral (conviction +0.10): daily down/RSI 68, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1288]': MONITOR
+            - row [ref=e1290] [cursor=pointer]:
+              - cell "▸ BOIL" [ref=e1291]:
+                - generic "expand lots" [ref=e1292]: ▸
+                - text: BOIL
+              - cell "$645" [ref=e1293]
+              - cell "−$26" [ref=e1294]
+              - cell "−$8,445" [ref=e1295]
+              - cell "0.2%" [ref=e1296]
+              - cell "MONITOR" [ref=e1297]:
+                - 'generic "BOIL reads weak (conviction -0.60): daily down/RSI 31, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1298]': MONITOR
+            - row [ref=e1300] [cursor=pointer]:
+              - cell "▸ 089693105" [ref=e1301]:
+                - generic "expand lots" [ref=e1302]: ▸
+                - text: "089693105"
+              - cell "$400" [ref=e1303]
+              - cell "—" [ref=e1304]
+              - cell "+$0" [ref=e1305]
+              - cell "0.1%" [ref=e1306]
+              - cell "—" [ref=e1307]
+            - row [ref=e1308] [cursor=pointer]:
+              - cell "▸ VFS" [ref=e1309]:
+                - generic "expand lots" [ref=e1310]: ▸
+                - text: VFS
+              - cell "$312" [ref=e1311]
+              - cell "−$3" [ref=e1312]
+              - cell "−$2,539" [ref=e1313]
+              - cell "0.1%" [ref=e1314]
+              - cell "MONITOR" [ref=e1315]:
+                - 'generic "VFS reads neutral (conviction +0.20): daily down/RSI 57, weekly up, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1316]': MONITOR
+            - row [ref=e1318] [cursor=pointer]:
+              - cell "▸ SNAP 1 OPT" [ref=e1319]:
+                - generic "expand lots" [ref=e1320]: ▸
+                - text: SNAP
+                - generic "1 option leg(s)" [ref=e1321]: 1 OPT
+              - cell "$142" [ref=e1322]
+              - cell "—" [ref=e1323]
+              - cell "−$508" [ref=e1324]
+              - cell "0.0%" [ref=e1325]
+              - cell "CLOSE & BOOK LOSS book −$486" [ref=e1326]:
+                - generic "SNAP broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~31 weeks of estimated weekly call credit ($16/wk) to offset the $486 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1327]:
+                  - generic [ref=e1328]: CLOSE & BOOK LOSS
+                  - text: book −$486
+            - row [ref=e1329] [cursor=pointer]:
+              - cell "▸ SMX" [ref=e1330]:
+                - generic "expand lots" [ref=e1331]: ▸
+                - text: SMX
+              - cell "$116" [ref=e1332]
+              - cell "+$8" [ref=e1333]
+              - cell "−$1,677" [ref=e1334]
+              - cell "0.0%" [ref=e1335]
+              - cell "CLOSE & BOOK LOSS book −$1,684" [ref=e1336]:
+                - generic "SMX broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take ~56 weeks of estimated weekly call credit ($30/wk) to offset the $1,684 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1337]:
+                  - generic [ref=e1338]: CLOSE & BOOK LOSS
+                  - text: book −$1,684
+            - row [ref=e1339] [cursor=pointer]:
+              - cell "▸ FFAI" [ref=e1340]:
+                - generic "expand lots" [ref=e1341]: ▸
+                - text: FFAI
+              - cell "$110" [ref=e1342]
+              - cell "−$22" [ref=e1343]
+              - cell "−$5,043" [ref=e1344]
+              - cell "0.0%" [ref=e1345]
+              - cell "MONITOR" [ref=e1346]:
+                - 'generic "FFAI reads weak (conviction -0.60): daily down/RSI 20, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1347]': MONITOR
+            - row [ref=e1349] [cursor=pointer]:
+              - cell "▸ SPXW 5 OPT" [ref=e1350]:
+                - generic "expand lots" [ref=e1351]: ▸
+                - text: SPXW
+                - generic "5 option leg(s)" [ref=e1352]: 5 OPT
+              - cell "$68" [ref=e1353]
+              - cell "—" [ref=e1354]
+              - cell "−$1,768" [ref=e1355]
+              - cell "0.0%" [ref=e1356]
+              - cell "—" [ref=e1357]
+            - row [ref=e1358] [cursor=pointer]:
+              - cell "▸ -SOXS2280121C3" [ref=e1359]:
+                - generic "expand lots" [ref=e1360]: ▸
+                - text: "-SOXS2280121C3"
+              - cell "$48" [ref=e1361]
+              - cell "—" [ref=e1362]
+              - cell "−$0" [ref=e1363]
+              - cell "0.0%" [ref=e1364]
+              - cell "—" [ref=e1365]
+            - row [ref=e1366] [cursor=pointer]:
+              - cell "▸ TVSMNCRPS-P1.NS" [ref=e1367]:
+                - generic "expand lots" [ref=e1368]: ▸
+                - text: TVSMNCRPS-P1.NS
+              - cell "₹42" [ref=e1369]
+              - cell "—" [ref=e1370]
+              - cell "+₹42" [ref=e1371]
+              - cell "0.0%" [ref=e1372]
+              - cell "MONITOR" [ref=e1373]:
+                - 'generic "TVSMNCRPS-P1.NS reads neutral (conviction +0.40): daily sideways/RSI 50, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1374]': MONITOR
+            - row [ref=e1376] [cursor=pointer]:
+              - cell "▸ -NVO270115C80" [ref=e1377]:
+                - generic "expand lots" [ref=e1378]: ▸
+                - text: "-NVO270115C80"
+              - cell "$35" [ref=e1379]
+              - cell "—" [ref=e1380]
+              - cell "+$0" [ref=e1381]
+              - cell "0.0%" [ref=e1382]
+              - cell "—" [ref=e1383]
+            - row [ref=e1384] [cursor=pointer]:
+              - cell "▸ SOUN 1 OPT" [ref=e1385]:
+                - generic "expand lots" [ref=e1386]: ▸
+                - text: SOUN
+                - generic "1 option leg(s)" [ref=e1387]: 1 OPT
+              - cell "$28" [ref=e1388]
+              - cell "—" [ref=e1389]
+              - cell "−$1,117" [ref=e1390]
+              - cell "0.0%" [ref=e1391]
+              - cell "MONITOR" [ref=e1392]:
+                - 'generic "SOUN reads neutral (conviction +0.30): daily down/RSI 39, weekly down, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1393]': MONITOR
+            - row [ref=e1395] [cursor=pointer]:
+              - cell "▸ BBAI 1 OPT" [ref=e1396]:
+                - generic "expand lots" [ref=e1397]: ▸
+                - text: BBAI
+                - generic "1 option leg(s)" [ref=e1398]: 1 OPT
+              - cell "$27" [ref=e1399]
+              - cell "—" [ref=e1400]
+              - cell "−$393" [ref=e1401]
+              - cell "0.0%" [ref=e1402]
+              - cell "MONITOR" [ref=e1403]:
+                - 'generic "BBAI reads neutral (conviction -0.40): daily down/RSI 18, weekly down, monthly up. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1404]': MONITOR
+            - row [ref=e1406] [cursor=pointer]:
+              - cell "▸ -FISV280121C50" [ref=e1407]:
+                - generic "expand lots" [ref=e1408]: ▸
+                - text: "-FISV280121C50"
+              - cell "$26" [ref=e1409]
+              - cell "—" [ref=e1410]
+              - cell "+$0" [ref=e1411]
+              - cell "0.0%" [ref=e1412]
+              - cell "—" [ref=e1413]
+            - row [ref=e1414] [cursor=pointer]:
+              - cell "▸ -FISV280121C60" [ref=e1415]:
+                - generic "expand lots" [ref=e1416]: ▸
+                - text: "-FISV280121C60"
+              - cell "$20" [ref=e1417]
+              - cell "—" [ref=e1418]
+              - cell "+$0" [ref=e1419]
+              - cell "0.0%" [ref=e1420]
+              - cell "—" [ref=e1421]
+            - row [ref=e1422] [cursor=pointer]:
+              - cell "▸ PSYCF" [ref=e1423]:
+                - generic "expand lots" [ref=e1424]: ▸
+                - text: PSYCF
+              - cell "$8" [ref=e1425]
+              - cell "—" [ref=e1426]
+              - cell "−$122" [ref=e1427]
+              - cell "0.0%" [ref=e1428]
+              - cell "MONITOR" [ref=e1429]:
+                - 'generic "PSYCF reads neutral (conviction +0.30): daily down/RSI 50, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1430]': MONITOR
+            - row [ref=e1432] [cursor=pointer]:
+              - cell "▸ -JOBY270115C5" [ref=e1433]:
+                - generic "expand lots" [ref=e1434]: ▸
+                - text: "-JOBY270115C5"
+              - cell "$6" [ref=e1435]
+              - cell "—" [ref=e1436]
+              - cell "+$0" [ref=e1437]
+              - cell "0.0%" [ref=e1438]
+              - cell "—" [ref=e1439]
+            - row [ref=e1440] [cursor=pointer]:
+              - cell "▸ MBAK" [ref=e1441]:
+                - generic "expand lots" [ref=e1442]: ▸
+                - text: MBAK
+              - cell "$3" [ref=e1443]
+              - cell "—" [ref=e1444]
+              - cell "−$17" [ref=e1445]
+              - cell "0.0%" [ref=e1446]
+              - cell "CLOSE & BOOK LOSS book −$17" [ref=e1447]:
+                - generic "MBAK broke support with momentum (conviction freefall -1.00); the decline is structural, not a dip. Selling calls would take no sensible weekly credit to offset it the $17 loss — credit collection won't offset it. Book the loss (wash-safe) and redeploy." [ref=e1448]:
+                  - generic [ref=e1449]: CLOSE & BOOK LOSS
+                  - text: book −$17
+            - row [ref=e1450] [cursor=pointer]:
+              - cell "▸ FRCB" [ref=e1451]:
+                - generic "expand lots" [ref=e1452]: ▸
+                - text: FRCB
+              - cell "$1" [ref=e1453]
+              - cell "−$1" [ref=e1454]
+              - cell "−$19,893" [ref=e1455]
+              - cell "0.0%" [ref=e1456]
+              - cell "MONITOR" [ref=e1457]:
+                - 'generic "FRCB reads neutral (conviction -0.40): daily down/RSI 50, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1458]': MONITOR
+            - row [ref=e1460] [cursor=pointer]:
+              - cell "▸ ENZC" [ref=e1461]:
+                - generic "expand lots" [ref=e1462]: ▸
+                - text: ENZC
+              - cell "$1" [ref=e1463]
+              - cell "—" [ref=e1464]
+              - cell "−$209" [ref=e1465]
+              - cell "0.0%" [ref=e1466]
+              - cell "MONITOR" [ref=e1467]:
+                - 'generic "ENZC reads neutral (conviction +0.20): daily up/RSI 36, weekly up, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1468]': MONITOR
+            - row [ref=e1470] [cursor=pointer]:
+              - cell "▸ AITX" [ref=e1471]:
+                - generic "expand lots" [ref=e1472]: ▸
+                - text: AITX
+              - cell "$0" [ref=e1473]
+              - cell "−$0" [ref=e1474]
+              - cell "−$73" [ref=e1475]
+              - cell "0.0%" [ref=e1476]
+              - cell "MONITOR" [ref=e1477]:
+                - 'generic "AITX reads weak (conviction -0.80): daily down/RSI 26, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1478]': MONITOR
+            - row [ref=e1480] [cursor=pointer]:
+              - cell "▸ BANT" [ref=e1481]:
+                - generic "expand lots" [ref=e1482]: ▸
+                - text: BANT
+              - cell "$0" [ref=e1483]
+              - cell "—" [ref=e1484]
+              - cell "−$472" [ref=e1485]
+              - cell "0.0%" [ref=e1486]
+              - cell "MONITOR" [ref=e1487]:
+                - 'generic "BANT reads neutral (conviction +0.20): daily sideways/RSI 100, weekly sideways, monthly sideways. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1488]': MONITOR
+            - row [ref=e1490] [cursor=pointer]:
+              - cell "▸ MMEX" [ref=e1491]:
+                - generic "expand lots" [ref=e1492]: ▸
+                - text: MMEX
+              - cell "$0" [ref=e1493]
+              - cell "—" [ref=e1494]
+              - cell "−$130" [ref=e1495]
+              - cell "0.0%" [ref=e1496]
+              - cell "MONITOR" [ref=e1497]:
+                - 'generic "MMEX reads neutral (conviction +0.30): daily down/RSI 46, weekly down, monthly down. Not a strong at-support basing setup and not a confirmed momentum break with a loss to book — monitor; take no action." [ref=e1498]': MONITOR
+        - generic [ref=e774]:
+          - generic [ref=e775]:
+            - generic [ref=e776]: Scanner spreads
+            - generic [ref=e777]: auto-logged from A+ setups · debit spreads · separate from the reclaim record · Alpaca paper (real fills)
+          - generic [ref=e778]:
+            - generic [ref=e779]:
+              - generic [ref=e780]: Net P&L
+              - generic [ref=e781]: "-$12,000"
+            - generic [ref=e782]:
+              - generic [ref=e783]: Win rate
+              - generic [ref=e784]: 31%
+            - generic [ref=e785]:
+              - generic [ref=e786]: Profit factor
+              - generic [ref=e787]: "0.39"
+            - generic [ref=e788]:
+              - generic [ref=e789]: Closed
+              - generic [ref=e790]: "26"
+          - generic [ref=e791]: Open (11)
+          - generic [ref=e792]:
+            - generic [ref=e793]:
+              - generic [ref=e794]: PUT
+              - generic [ref=e795]: XEL PUT 80.00/79.00 ×4
+              - generic [ref=e796]: target 79.00 · invalid 80.31
+            - generic [ref=e797]:
+              - generic [ref=e798]: PUT
+              - generic [ref=e799]: CCEP PUT 106.00/103.00 ×4
+              - generic [ref=e800]: target 103.00 · invalid 106.19
+            - generic [ref=e801]:
+              - generic [ref=e802]: PUT
+              - generic [ref=e803]: XEL PUT 80.00/79.00 ×4
+              - generic [ref=e804]: target 79.00 · invalid 80.31
+            - generic [ref=e805]:
+              - generic [ref=e806]: PUT
+              - generic [ref=e807]: AEP PUT 134.00/132.00 ×4
+              - generic [ref=e808]: target 132.00 · invalid 134.34
+            - generic [ref=e809]:
+              - generic [ref=e810]: PUT
+              - generic [ref=e811]: GOOGL PUT 355.00/345.00 ×4
+              - generic [ref=e812]: filled
+              - generic [ref=e813]: target 345.00 · invalid 359.81
+            - generic [ref=e814]:
+              - generic [ref=e815]: PUT
+              - generic [ref=e816]: BMY PUT 61.00/58.00 ×4
+              - generic [ref=e817]: target 58.00 · invalid 61.33
+            - generic [ref=e818]:
+              - generic [ref=e819]: PUT
+              - generic [ref=e820]: PG PUT 151.00/147.00 ×4
+              - generic [ref=e821]: target 147.00 · invalid 151.18
+            - generic [ref=e822]:
+              - generic [ref=e823]: PUT
+              - generic [ref=e824]: KO PUT 82.00/80.00 ×4
+              - generic [ref=e825]: target 80.00 · invalid 82.35
+            - generic [ref=e826]:
+              - generic [ref=e827]: PUT
+              - generic [ref=e828]: XEL PUT 79.00/78.00 ×4
+              - generic [ref=e829]: target 78.00 · invalid 79.68
+            - generic [ref=e830]:
+              - generic [ref=e831]: CALL
+              - generic [ref=e832]: RTX CALL 196.00/198.00 ×4
+              - generic [ref=e833]: target 198.00 · invalid 194.37
+            - generic [ref=e834]:
+              - generic [ref=e835]: CALL
+              - generic [ref=e836]: NXPI CALL 265.00/280.00 ×4
+              - generic [ref=e837]: target 280.00 · invalid 266.13
+          - img "Cumulative P&L equity curve" [ref=e839]:
+            - generic [ref=e844]: "-$12,000"
+          - generic [ref=e845]:
+            - generic [ref=e846]:
+              - generic [ref=e848]: $200
+              - generic [ref=e849]: EXC PUT 47.00/46.00 ×4
+              - generic [ref=e850]: → 46.00
+              - generic [ref=e851]: target
+            - generic [ref=e852]:
+              - generic [ref=e854]: "-$800"
+              - generic [ref=e855]: COP PUT 114.00/110.00 ×4
+              - generic [ref=e856]: × 114.50
+              - generic [ref=e857]: invalidation
+            - generic [ref=e858]:
+              - generic [ref=e860]: "-$600"
+              - generic [ref=e861]: KO CALL 83.00/86.00 ×4
+              - generic [ref=e862]: × 82.46
+              - generic [ref=e863]: invalidation
+            - generic [ref=e864]:
+              - generic [ref=e866]: $1,600
+              - generic [ref=e867]: ORCL PUT 130.00/122.00 ×4
+              - generic [ref=e868]: → 122.00
+              - generic [ref=e869]: target
+            - generic [ref=e870]:
+              - generic [ref=e872]: $800
+              - generic [ref=e873]: WDAY PUT 145.00/141.00 ×4
+              - generic [ref=e874]: → 141.00
+              - generic [ref=e875]: target
+            - generic [ref=e876]:
+              - generic [ref=e878]: "-$3,000"
+              - generic [ref=e879]: ROP CALL 360.00/375.00 ×4
+              - generic [ref=e880]: × 356.47
+              - generic [ref=e881]: invalidation
+            - generic [ref=e882]:
+              - generic [ref=e884]: $800
+              - generic [ref=e885]: TRI PUT 100.00/96.00 ×4
+              - generic [ref=e886]: → 96.00
+              - generic [ref=e887]: target
+            - generic [ref=e888]:
+              - generic [ref=e890]: $1,000
+              - generic [ref=e891]: HONA PUT 210.00/205.00 ×4
+              - generic [ref=e892]: → 205.00
+              - generic [ref=e893]: target
+            - generic [ref=e894]:
+              - generic [ref=e896]: $2,000
+              - generic [ref=e897]: INTU PUT 290.00/280.00 ×4
+              - generic [ref=e898]: → 280.00
+              - generic [ref=e899]: target
+            - generic [ref=e900]:
+              - generic [ref=e902]: "-$1,000"
+              - generic [ref=e903]: ADBE CALL 230.00/235.00 ×4
+              - generic [ref=e904]: × 229.91
+              - generic [ref=e905]: invalidation
+            - generic [ref=e906]:
+              - generic [ref=e908]: $400
+              - generic [ref=e909]: MNST PUT 99.00/97.00 ×4
+              - generic [ref=e910]: → 97.00
+              - generic [ref=e911]: target
+            - generic [ref=e912]:
+              - generic [ref=e914]: "-$800"
+              - generic [ref=e915]: FTNT CALL 161.00/165.00 ×4
+              - generic [ref=e916]: × 161.01
+              - generic [ref=e917]: invalidation
+            - generic [ref=e918]:
+              - generic [ref=e920]: "-$600"
+              - generic [ref=e921]: SHOP PUT 124.00/121.00 ×4
+              - generic [ref=e922]: × 125.10
+              - generic [ref=e923]: invalidation
+            - generic [ref=e924]:
+              - generic [ref=e926]: "-$3,000"
+              - generic [ref=e927]: KLAC CALL 215.00/230.00 ×4
+              - generic [ref=e928]: × 212.60
+              - generic [ref=e929]: invalidation
+            - generic [ref=e930]:
+              - generic [ref=e932]: $1,000
+              - generic [ref=e933]: PANW CALL 360.00/365.00 ×4
+              - generic [ref=e934]: → 365.00
+              - generic [ref=e935]: target
+            - button "show 1 more" [ref=e936] [cursor=pointer]
+            - generic [ref=e937]: 10 no-fill / voided (10 never filled · 0 voided) — $0, excluded from win-rate
+          - generic [ref=e938]: "Book of record: Alpaca paper — real multi-leg fills, closed on the invalidation (stop-loss) or target. Paper account only, no real money."
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: SPY
+            - generic [ref=e82]: State Street SPDR S&P 500 ETF T · not held
+          - generic [ref=e411]:
+            - generic [ref=e412]: $742.09
+            - generic [ref=e413]: close $743.29
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPY at $742.09. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPY…" [ref=e93]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation P/E 26.7" [ref=e414] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: P/E 26.7
+          - group [ref=e109]:
+            - generic "▸ News 10 · neutral" [ref=e415] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · neutral
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

@@ -1,0 +1,413 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e2747]:
+        - generic [ref=e2749]:
+          - heading "🔭 Scanner" [level=2] [ref=e2750]
+          - paragraph [ref=e2751]: Backtest-validated ICT hourly setups across the Nasdaq-100 + S&P top-100 (by weight).
+        - generic [ref=e2752]:
+          - combobox "scanner type" [ref=e2753]:
+            - option "A+ ICT hourly setup" [selected]
+          - generic [ref=e2754]: covered 162/162 · 0 A+ · 0 B · last run 4h ago
+          - button "↻ Refresh scan" [ref=e2755] [cursor=pointer]
+        - generic [ref=e2756]:
+          - generic [ref=e2757]: Watch tickers
+          - generic [ref=e2758]:
+            - textbox "add scanner ticker" [ref=e2759]:
+              - /placeholder: add ticker
+            - button "＋ add" [ref=e2760] [cursor=pointer]
+          - generic [ref=e2761]: none — add ad-hoc names to always scan them.
+        - paragraph [ref=e2763]: No CURRENT hourly setups across 162 covered tickers. A+ is a high-conviction, deliberately rare tier — a quiet scan is normal. Recently-played-out setups are in history below.
+        - generic [ref=e2764]:
+          - generic [ref=e2765]:
+            - generic [ref=e2766]: History · 50
+            - generic [ref=e2767]: setups that aged past current — how they played out
+          - generic [ref=e2768]:
+            - button "GOOGL A+ SHORT 5h ago · open" [ref=e2769] [cursor=pointer]:
+              - generic [ref=e2770]: GOOGL
+              - generic [ref=e2771]: A+ SHORT
+              - generic [ref=e2772]: 5h ago
+              - generic [ref=e2773]: · open
+            - button "ASML B LONG 8h ago ✕ invalid" [ref=e2774] [cursor=pointer]:
+              - generic [ref=e2775]: ASML
+              - generic [ref=e2776]: B LONG
+              - generic [ref=e2777]: 8h ago
+              - generic [ref=e2778]: ✕ invalid
+            - button "AMAT B LONG 8h ago ✕ invalid" [ref=e2779] [cursor=pointer]:
+              - generic [ref=e2780]: AMAT
+              - generic [ref=e2781]: B LONG
+              - generic [ref=e2782]: 8h ago
+              - generic [ref=e2783]: ✕ invalid
+            - button "PANW A+ LONG 10h ago · open" [ref=e2784] [cursor=pointer]:
+              - generic [ref=e2785]: PANW
+              - generic [ref=e2786]: A+ LONG
+              - generic [ref=e2787]: 10h ago
+              - generic [ref=e2788]: · open
+            - button "AMGN A+ SHORT 5h ago · open" [ref=e2789] [cursor=pointer]:
+              - generic [ref=e2790]: AMGN
+              - generic [ref=e2791]: A+ SHORT
+              - generic [ref=e2792]: 5h ago
+              - generic [ref=e2793]: · open
+            - button "GILD B LONG 33h ago ✕ invalid" [ref=e2794] [cursor=pointer]:
+              - generic [ref=e2795]: GILD
+              - generic [ref=e2796]: B LONG
+              - generic [ref=e2797]: 33h ago
+              - generic [ref=e2798]: ✕ invalid
+            - button "WDC B LONG 7h ago · open" [ref=e2799] [cursor=pointer]:
+              - generic [ref=e2800]: WDC
+              - generic [ref=e2801]: B LONG
+              - generic [ref=e2802]: 7h ago
+              - generic [ref=e2803]: · open
+            - button "APP B LONG 31h ago ✕ invalid" [ref=e2804] [cursor=pointer]:
+              - generic [ref=e2805]: APP
+              - generic [ref=e2806]: B LONG
+              - generic [ref=e2807]: 31h ago
+              - generic [ref=e2808]: ✕ invalid
+            - button "BKNG A+ SHORT 38h ago ✓ target" [ref=e2809] [cursor=pointer]:
+              - generic [ref=e2810]: BKNG
+              - generic [ref=e2811]: A+ SHORT
+              - generic [ref=e2812]: 38h ago
+              - generic [ref=e2813]: ✓ target
+            - button "SBUX B SHORT 5h ago ✓ target" [ref=e2814] [cursor=pointer]:
+              - generic [ref=e2815]: SBUX
+              - generic [ref=e2816]: B SHORT
+              - generic [ref=e2817]: 5h ago
+              - generic [ref=e2818]: ✓ target
+            - button "MAR A+ SHORT 19h ago · open" [ref=e2819] [cursor=pointer]:
+              - generic [ref=e2820]: MAR
+              - generic [ref=e2821]: A+ SHORT
+              - generic [ref=e2822]: 19h ago
+              - generic [ref=e2823]: · open
+            - button "MELI B SHORT 19h ago ✓ target" [ref=e2824] [cursor=pointer]:
+              - generic [ref=e2825]: MELI
+              - generic [ref=e2826]: B SHORT
+              - generic [ref=e2827]: 19h ago
+              - generic [ref=e2828]: ✓ target
+            - button "ADBE A+ LONG 5h ago · open" [ref=e2829] [cursor=pointer]:
+              - generic [ref=e2830]: ADBE
+              - generic [ref=e2831]: A+ LONG
+              - generic [ref=e2832]: 5h ago
+              - generic [ref=e2833]: · open
+            - button "CEG B SHORT 26h ago ✕ invalid" [ref=e2834] [cursor=pointer]:
+              - generic [ref=e2835]: CEG
+              - generic [ref=e2836]: B SHORT
+              - generic [ref=e2837]: 26h ago
+              - generic [ref=e2838]: ✕ invalid
+            - button "ABNB A+ SHORT 34h ago ✕ invalid" [ref=e2839] [cursor=pointer]:
+              - generic [ref=e2840]: ABNB
+              - generic [ref=e2841]: A+ SHORT
+              - generic [ref=e2842]: 34h ago
+              - generic [ref=e2843]: ✕ invalid
+            - button "MDLZ A+ LONG 17h ago ✓ target" [ref=e2844] [cursor=pointer]:
+              - generic [ref=e2845]: MDLZ
+              - generic [ref=e2846]: A+ LONG
+              - generic [ref=e2847]: 17h ago
+              - generic [ref=e2848]: ✓ target
+            - button "AEP A+ SHORT 5h ago ✓ target" [ref=e2849] [cursor=pointer]:
+              - generic [ref=e2850]: AEP
+              - generic [ref=e2851]: A+ SHORT
+              - generic [ref=e2852]: 5h ago
+              - generic [ref=e2853]: ✓ target
+            - button "HON A+ SHORT 22h ago ✕ invalid" [ref=e2854] [cursor=pointer]:
+              - generic [ref=e2855]: HON
+              - generic [ref=e2856]: A+ SHORT
+              - generic [ref=e2857]: 22h ago
+              - generic [ref=e2858]: ✕ invalid
+            - button "HONA A+ SHORT 12h ago ✕ invalid" [ref=e2859] [cursor=pointer]:
+              - generic [ref=e2860]: HONA
+              - generic [ref=e2861]: A+ SHORT
+              - generic [ref=e2862]: 12h ago
+              - generic [ref=e2863]: ✕ invalid
+            - button "MPWR B LONG 8h ago ✓ target" [ref=e2864] [cursor=pointer]:
+              - generic [ref=e2865]: MPWR
+              - generic [ref=e2866]: B LONG
+              - generic [ref=e2867]: 8h ago
+              - generic [ref=e2868]: ✓ target
+            - button "LITE B SHORT 26h ago ✓ target" [ref=e2869] [cursor=pointer]:
+              - generic [ref=e2870]: LITE
+              - generic [ref=e2871]: B SHORT
+              - generic [ref=e2872]: 26h ago
+              - generic [ref=e2873]: ✓ target
+            - button "TER A+ LONG 27h ago ✕ invalid" [ref=e2874] [cursor=pointer]:
+              - generic [ref=e2875]: TER
+              - generic [ref=e2876]: A+ LONG
+              - generic [ref=e2877]: 27h ago
+              - generic [ref=e2878]: ✕ invalid
+            - button "PYPL B LONG 6h ago ✕ invalid" [ref=e2879] [cursor=pointer]:
+              - generic [ref=e2880]: PYPL
+              - generic [ref=e2881]: B LONG
+              - generic [ref=e2882]: 6h ago
+              - generic [ref=e2883]: ✕ invalid
+            - button "XEL A+ SHORT 5h ago ✓ target" [ref=e2884] [cursor=pointer]:
+              - generic [ref=e2885]: XEL
+              - generic [ref=e2886]: A+ SHORT
+              - generic [ref=e2887]: 5h ago
+              - generic [ref=e2888]: ✓ target
+            - button "ODFL A+ LONG 17h ago · open" [ref=e2889] [cursor=pointer]:
+              - generic [ref=e2890]: ODFL
+              - generic [ref=e2891]: A+ LONG
+              - generic [ref=e2892]: 17h ago
+              - generic [ref=e2893]: · open
+            - button "EXC A+ SHORT 5h ago ✓ target" [ref=e2894] [cursor=pointer]:
+              - generic [ref=e2895]: EXC
+              - generic [ref=e2896]: A+ SHORT
+              - generic [ref=e2897]: 5h ago
+              - generic [ref=e2898]: ✓ target
+            - button "CCEP A+ SHORT 6h ago ✕ invalid" [ref=e2899] [cursor=pointer]:
+              - generic [ref=e2900]: CCEP
+              - generic [ref=e2901]: A+ SHORT
+              - generic [ref=e2902]: 6h ago
+              - generic [ref=e2903]: ✕ invalid
+            - button "KDP B SHORT 7h ago · open" [ref=e2904] [cursor=pointer]:
+              - generic [ref=e2905]: KDP
+              - generic [ref=e2906]: B SHORT
+              - generic [ref=e2907]: 7h ago
+              - generic [ref=e2908]: · open
+            - button "PAYX B SHORT 8h ago ✕ invalid" [ref=e2909] [cursor=pointer]:
+              - generic [ref=e2910]: PAYX
+              - generic [ref=e2911]: B SHORT
+              - generic [ref=e2912]: 8h ago
+              - generic [ref=e2913]: ✕ invalid
+            - button "ALNY A+ LONG 17h ago ✕ invalid" [ref=e2914] [cursor=pointer]:
+              - generic [ref=e2915]: ALNY
+              - generic [ref=e2916]: A+ LONG
+              - generic [ref=e2917]: 17h ago
+              - generic [ref=e2918]: ✕ invalid
+            - button "ROP A+ LONG 10h ago ✕ invalid" [ref=e2919] [cursor=pointer]:
+              - generic [ref=e2920]: ROP
+              - generic [ref=e2921]: A+ LONG
+              - generic [ref=e2922]: 10h ago
+              - generic [ref=e2923]: ✕ invalid
+            - button "WDAY B SHORT 9h ago ✓ target" [ref=e2924] [cursor=pointer]:
+              - generic [ref=e2925]: WDAY
+              - generic [ref=e2926]: B SHORT
+              - generic [ref=e2927]: 9h ago
+              - generic [ref=e2928]: ✓ target
+            - button "BRK-B B SHORT 7h ago · open" [ref=e2929] [cursor=pointer]:
+              - generic [ref=e2930]: BRK-B
+              - generic [ref=e2931]: B SHORT
+              - generic [ref=e2932]: 7h ago
+              - generic [ref=e2933]: · open
+            - button "MA B SHORT 4h ago · open" [ref=e2934] [cursor=pointer]:
+              - generic [ref=e2935]: MA
+              - generic [ref=e2936]: B SHORT
+              - generic [ref=e2937]: 4h ago
+              - generic [ref=e2938]: · open
+            - button "BAC B SHORT 6h ago ✓ target" [ref=e2939] [cursor=pointer]:
+              - generic [ref=e2940]: BAC
+              - generic [ref=e2941]: B SHORT
+              - generic [ref=e2942]: 6h ago
+              - generic [ref=e2943]: ✓ target
+            - button "GE B SHORT 14h ago ✕ invalid" [ref=e2944] [cursor=pointer]:
+              - generic [ref=e2945]: GE
+              - generic [ref=e2946]: B SHORT
+              - generic [ref=e2947]: 14h ago
+              - generic [ref=e2948]: ✕ invalid
+            - button "KO B SHORT 5h ago · open" [ref=e2949] [cursor=pointer]:
+              - generic [ref=e2950]: KO
+              - generic [ref=e2951]: B SHORT
+              - generic [ref=e2952]: 5h ago
+              - generic [ref=e2953]: · open
+            - button "PG A+ SHORT 7h ago · open" [ref=e2954] [cursor=pointer]:
+              - generic [ref=e2955]: PG
+              - generic [ref=e2956]: A+ SHORT
+              - generic [ref=e2957]: 7h ago
+              - generic [ref=e2958]: · open
+            - button "WFC A+ LONG 10h ago ✕ invalid" [ref=e2959] [cursor=pointer]:
+              - generic [ref=e2960]: WFC
+              - generic [ref=e2961]: A+ LONG
+              - generic [ref=e2962]: 10h ago
+              - generic [ref=e2963]: ✕ invalid
+            - button "RTX A+ LONG 10h ago ✕ invalid" [ref=e2964] [cursor=pointer]:
+              - generic [ref=e2965]: RTX
+              - generic [ref=e2966]: A+ LONG
+              - generic [ref=e2967]: 10h ago
+              - generic [ref=e2968]: ✕ invalid
+            - button "ANET B SHORT 22h ago ✓ target" [ref=e2969] [cursor=pointer]:
+              - generic [ref=e2970]: ANET
+              - generic [ref=e2971]: B SHORT
+              - generic [ref=e2972]: 22h ago
+              - generic [ref=e2973]: ✓ target
+            - button "MCD A+ SHORT 5h ago · open" [ref=e2974] [cursor=pointer]:
+              - generic [ref=e2975]: MCD
+              - generic [ref=e2976]: A+ SHORT
+              - generic [ref=e2977]: 5h ago
+              - generic [ref=e2978]: · open
+            - button "DIS B LONG 28h ago ✕ invalid" [ref=e2979] [cursor=pointer]:
+              - generic [ref=e2980]: DIS
+              - generic [ref=e2981]: B LONG
+              - generic [ref=e2982]: 28h ago
+              - generic [ref=e2983]: ✕ invalid
+            - button "DE A+ SHORT 27h ago ✓ target" [ref=e2984] [cursor=pointer]:
+              - generic [ref=e2985]: DE
+              - generic [ref=e2986]: A+ SHORT
+              - generic [ref=e2987]: 27h ago
+              - generic [ref=e2988]: ✓ target
+            - button "BX A+ SHORT 38h ago ✕ invalid" [ref=e2989] [cursor=pointer]:
+              - generic [ref=e2990]: BX
+              - generic [ref=e2991]: A+ SHORT
+              - generic [ref=e2992]: 38h ago
+              - generic [ref=e2993]: ✕ invalid
+            - button "PFE A+ SHORT 7h ago ✓ target" [ref=e2994] [cursor=pointer]:
+              - generic [ref=e2995]: PFE
+              - generic [ref=e2996]: A+ SHORT
+              - generic [ref=e2997]: 7h ago
+              - generic [ref=e2998]: ✓ target
+            - button "CVS B LONG 23h ago ✕ invalid" [ref=e2999] [cursor=pointer]:
+              - generic [ref=e3000]: CVS
+              - generic [ref=e3001]: B LONG
+              - generic [ref=e3002]: 23h ago
+              - generic [ref=e3003]: ✕ invalid
+            - button "BMY B SHORT 5h ago ✓ target" [ref=e3004] [cursor=pointer]:
+              - generic [ref=e3005]: BMY
+              - generic [ref=e3006]: B SHORT
+              - generic [ref=e3007]: 5h ago
+              - generic [ref=e3008]: ✓ target
+            - button "PGR B LONG 10h ago · open" [ref=e3009] [cursor=pointer]:
+              - generic [ref=e3010]: PGR
+              - generic [ref=e3011]: B LONG
+              - generic [ref=e3012]: 10h ago
+              - generic [ref=e3013]: · open
+            - button "PH B LONG 10h ago ✕ invalid" [ref=e3014] [cursor=pointer]:
+              - generic [ref=e3015]: PH
+              - generic [ref=e3016]: B LONG
+              - generic [ref=e3017]: 10h ago
+              - generic [ref=e3018]: ✕ invalid
+        - paragraph [ref=e3019]: Hourly ICT setups (validated timeframe) · a heads-up to drop to a lower timeframe for entry · not advice.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

@@ -1,0 +1,304 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e3473]:
+        - generic [ref=e3474]:
+          - generic [ref=e3475]:
+            - heading "Futures performance" [level=2] [ref=e3476]
+            - generic [ref=e3477]: 68 round-trips · times ET
+            - button "Re-import CSVs" [ref=e3479] [cursor=pointer]
+          - generic [ref=e3480]:
+            - generic [ref=e3481]:
+              - generic [ref=e3482]: Expectancy / trade
+              - generic [ref=e3483]: $105
+              - generic [ref=e3484]: +6.65pt
+            - generic [ref=e3485]:
+              - generic [ref=e3486]: "Reward : Risk"
+              - generic [ref=e3487]: "1.11"
+              - generic [ref=e3488]: 50.4 / 45.6pt
+            - generic [ref=e3489]:
+              - generic [ref=e3490]: Win rate
+              - generic [ref=e3491]: 54%
+            - generic [ref=e3492]:
+              - generic [ref=e3493]: Profit factor
+              - generic [ref=e3494]: "1.32"
+            - generic [ref=e3495]:
+              - generic [ref=e3496]: Max drawdown
+              - generic [ref=e3497]: $16,279
+              - generic [ref=e3503]: 421%
+        - generic [ref=e3504]: "⚠️ Partial data: The export is a WINDOW, not full history: ~16 closing fill(s) have opening fills from before the window, so those positions can't be paired here. Computed round-trip P&L ($7,148) does NOT match the broker's realized PnL ($2,277). Treat the win-rate/P&L below as a PARTIAL sample of the fully-paired trades in-window, not the whole account. It improves as you export more complete history."
+        - generic [ref=e3506]:
+          - text: Equity curve — cumulative P&L
+          - generic [ref=e3507]: (final $7,149; dashed = running peak)
+        - generic [ref=e3512]:
+          - generic [ref=e3513]: Recommendations to improve your win rate
+          - generic [ref=e3514]:
+            - generic [ref=e3515]: RULES (from your numbers)
+            - generic [ref=e3516]:
+              - generic [ref=e3517]:
+                - generic [ref=e3518]: →
+                - generic [ref=e3519]:
+                  - generic [ref=e3520]: Aim for bigger winners. Your reward:risk is 1.11 — winners (50.4pt) barely beat losers (46pt). Target ~68pt+ on winners (1.5R) so a ~50% hit rate clearly pays.
+                  - generic [ref=e3521]: avg win 50.4pt vs avg loss 46pt (n=68)
+              - generic [ref=e3522]:
+                - generic [ref=e3523]: →
+                - generic [ref=e3524]:
+                  - generic [ref=e3525]: Every trade is worth about +6.7pt / $+105 on average. Positive but thin — protect it by cutting the leaks below.
+                  - generic [ref=e3526]: expectancy over 68 trades
+              - generic [ref=e3527]:
+                - generic [ref=e3528]: →
+                - generic [ref=e3529]:
+                  - generic [ref=e3530]: Don't let losers run. Your typical trade lasts 27 min, but a loser was held 584 min — hoping it comes back. Time-stop trades that aren't working.
+                  - generic [ref=e3531]: median hold 27m vs longest loser 584m
+              - generic [ref=e3532]:
+                - generic [ref=e3533]: →
+                - generic [ref=e3534]:
+                  - generic [ref=e3535]: Set a daily stop. Your worst streak was 8 losers in a row — that's when revenge-trading compounds. Walk after 3 straight losses.
+                  - generic [ref=e3536]: 8 consecutive losers
+          - generic [ref=e3537]:
+            - generic [ref=e3538]: DO MORE / DO LESS
+            - generic [ref=e3539]:
+              - generic [ref=e3540]:
+                - generic [ref=e3541]: •
+                - generic [ref=e3542]:
+                  - generic [ref=e3543]: High order-churn (47% of orders cancelled). Lots of placing-and-pulling signals hesitation or over-managing — decide the level, place the order, let it work.
+                  - generic [ref=e3544]: 371 of 782 orders cancelled
+              - generic [ref=e3545]:
+                - generic [ref=e3546]: •
+                - generic [ref=e3547]:
+                  - generic [ref=e3548]: "Cut back on <1m holds: 0% win, net $-800 — a clear drag on your results."
+                  - generic [ref=e3549]: n=7, well below your 54% average
+              - generic [ref=e3550]:
+                - generic [ref=e3551]: •
+                - generic [ref=e3552]:
+                  - generic [ref=e3553]: "Do MORE of the 14:00 ET hour: 100% win, net $11,505 — your strongest edge."
+                  - generic [ref=e3554]: n=5, clearly above average
+              - generic [ref=e3555]:
+                - generic [ref=e3556]: •
+                - generic [ref=e3557]:
+                  - generic [ref=e3558]: "Do MORE of the 12:00 ET hour: 92% win, net $6,570 — your strongest edge."
+                  - generic [ref=e3559]: n=12, clearly above average
+              - generic [ref=e3560]:
+                - generic [ref=e3561]: •
+                - generic [ref=e3562]:
+                  - generic [ref=e3563]: "Do MORE of entries neutral the playbook: 80% win, net $8,117 — your strongest edge."
+                  - generic [ref=e3564]: n=15, clearly above average
+              - generic [ref=e3565]:
+                - generic [ref=e3566]: •
+                - generic [ref=e3567]:
+                  - generic [ref=e3568]: "Do MORE of 30m+ holds: 71% win, net $8,264 — your strongest edge."
+                  - generic [ref=e3569]: n=31, clearly above average
+              - generic [ref=e3570]:
+                - generic [ref=e3571]: •
+                - generic [ref=e3572]:
+                  - generic [ref=e3573]: "Cut back on entries with the playbook: 41% win, net $-9,254 — a clear drag on your results."
+                  - generic [ref=e3574]: n=44, well below your 54% average
+        - generic [ref=e3575]:
+          - generic [ref=e3576]: Risk & discipline
+          - generic [ref=e3577]:
+            - generic [ref=e3578]:
+              - generic [ref=e3579]: Biggest single loss
+              - generic [ref=e3580]: "-$5,880 (294pt)"
+              - generic [ref=e3581]: 8.1× a normal loser
+            - generic [ref=e3582]:
+              - generic [ref=e3583]: Worst losing streak
+              - generic [ref=e3584]: 8 in a row
+              - generic [ref=e3585]: revenge-trade risk
+            - generic [ref=e3586]:
+              - generic [ref=e3587]: Typical hold
+              - generic [ref=e3588]: 26.9m
+              - generic [ref=e3589]: longest loser held 584m
+        - generic [ref=e3590]:
+          - generic [ref=e3591]: Next-session watch (generic NQ playbook)
+          - generic [ref=e3592]:
+            - generic [ref=e3593]: NQ ~28786, below the line — moves can run (VWAP 29678).
+            - generic [ref=e3594]: Watch resistance near 30891/30738 — good spots to sell rallies into.
+            - generic [ref=e3595]: This is a prospective read from the generic playbook, not from your trade history.
+        - generic [ref=e3596]:
+          - generic [ref=e3597]: NQ levels — from the QQQ 0DTE playbook (×41.399)
+          - generic [ref=e3598]:
+            - generic [ref=e3599]:
+              - generic [ref=e3600]: resistance
+              - generic [ref=e3601]: 29853–29877
+              - generic [ref=e3602]: support (2x) · volume PoC
+            - generic [ref=e3603]:
+              - generic [ref=e3604]: resistance
+              - generic [ref=e3605]: 29401–29435
+              - generic [ref=e3606]: support (2x) · max pain
+          - generic [ref=e3607]: NQ levels projected from the QQQ 0DTE playbook (×41.40). The Nasdaq-100/Russell-2000 dealer-gamma regime lives in the index/ETF options; the future respects the same levels. Context, not a signal (ADR-008); no orders (ADR-010).
+        - group [ref=e3608]:
+          - generic "How you exited" [ref=e3609] [cursor=pointer]
+          - generic [ref=e3610]:
+            - generic [ref=e3611]:
+              - generic [ref=e3612]: 62%
+              - generic [ref=e3613]: Discretionary (market)
+              - generic [ref=e3614]: n=34 · net $8,711
+            - generic [ref=e3615]:
+              - generic [ref=e3616]: 37%
+              - generic [ref=e3617]: Stop
+              - generic [ref=e3618]: n=19 · net -$4,292
+            - generic [ref=e3619]:
+              - generic [ref=e3620]: 50%
+              - generic [ref=e3621]: Stop-loss
+              - generic [ref=e3622]: n=12 · net -$1,520
+            - generic [ref=e3623]:
+              - generic [ref=e3624]: 100%
+              - generic [ref=e3625]: Limit (target)
+              - generic [ref=e3626]: n=3 · net $4,250 · thin
+        - group [ref=e3627]:
+          - generic "How long you held" [ref=e3628] [cursor=pointer]
+        - group [ref=e3629]:
+          - generic "Entry hour (ET)" [ref=e3630] [cursor=pointer]
+        - group [ref=e3631]:
+          - generic "Vs the playbook" [ref=e3632] [cursor=pointer]
+        - group [ref=e3633]:
+          - generic "Direction" [ref=e3634] [cursor=pointer]
+        - group [ref=e3635]:
+          - generic "Contract" [ref=e3636] [cursor=pointer]
+        - generic [ref=e3637]:
+          - generic [ref=e3638]: Order behavior
+          - generic [ref=e3639]:
+            - generic [ref=e3640]: "Cancel rate: 47% (371 of 782 orders)"
+            - generic [ref=e3641]: "Filled: 410 · Stop orders: 266"
+        - group [ref=e3498]:
+          - generic "What these terms mean" [ref=e3499] [cursor=pointer]
+        - generic [ref=e3500]:
+          - generic [ref=e3501]: P&L is gross of commissions (not in the AMP export). Times are ET. Reward:risk and edges use points so micro/mini aren't conflated.
+          - generic [ref=e3502]: Context for reviewing your trading, not a signal (ADR-010). Reads your CSV export; places no orders.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

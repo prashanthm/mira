@@ -1,0 +1,384 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e2508]:
+        - generic [ref=e2509]:
+          - generic [ref=e2510]:
+            - heading "0DTE SPX Playbook" [level=2] [ref=e2511]
+            - tablist "underlying" [ref=e2513]:
+              - tab "SPX" [selected] [ref=e2514] [cursor=pointer]
+              - tab "QQQ" [ref=e2515] [cursor=pointer]
+              - tab "IWM" [ref=e2516] [cursor=pointer]
+            - generic [ref=e2517]: for 2026-07-20 · gamma negative · VIX 18.8 (normal)
+            - generic [ref=e2518]:
+              - button "Export to Pine" [ref=e2519] [cursor=pointer]
+              - button "Recompute" [ref=e2520] [cursor=pointer]
+          - generic [ref=e2521]:
+            - generic [ref=e2522]:
+              - generic [ref=e2523]: Spot
+              - generic [ref=e2524]: "7457.7"
+            - generic [ref=e2525]:
+              - generic [ref=e2526]: Flip
+              - generic [ref=e2527]: "7522"
+            - generic [ref=e2528]:
+              - generic [ref=e2529]: Put wall
+              - generic [ref=e2530]: "7300"
+            - generic [ref=e2531]:
+              - generic [ref=e2532]: Call wall
+              - generic [ref=e2533]: "7600"
+        - generic [ref=e2534]:
+          - generic [ref=e2535]: Today's read
+          - generic [ref=e2536]: "Here is the rewritten playbook in plain, simple English. **0DTE SPX Playbook – July 20, 2026** **Regime:** Dealer gamma is negative, which can make price moves bigger. SPX sits at 7457.7, below its VWAP, meaning sellers are in control. VIX is 18.8 (normal). **Key Levels:** - Resistance: 7600 (call wall), 7576, 7549, 7547, 7537 (magnet) - Pivot: 7522 (gamma flip – the line between trends) - Support: 7525 (max pain), 7532 **Setups:** 1. **If SPX stays below 7522:** Trade with the move, not against it. The next downside target is 7300. If it climbs back above 7522, that means selling pressure is easing. 2. **If SPX climbs back above 7522:** Expect a range again. Sell rallies near the 7600 resistance. **What to Watch:** Watch if SPX can hold above or below the 7522 pivot. This line decides whether the trend stays bearish or shifts back to a range. **Caveat:** The dealer-gamma (GEX) read is computed from overnight open interest and is BLIND to 0DTE positioning — roughly half of SPX option volume. Treat it as context, not a guarantee. Context for reading the tape, NOT a signal (ADR-008). Places no orders (ADR-010). Not financial advice."
+          - generic [ref=e2537]: "Structure: trending up (rising highs and lows); just dropped below 7464 (turning down)"
+          - generic [ref=e2538]: "Volume: above-median volume — active tape"
+        - generic [ref=e2539]:
+          - generic [ref=e2540]: Market context
+          - generic [ref=e2541]: The whole-market read behind today's bias — breadth, volatility term structure, sector rotation, and the cross-asset backdrop. Context only (ADR-008).
+          - generic [ref=e2542]:
+            - generic [ref=e2543]:
+              - generic [ref=e2544]: Breadth
+              - generic [ref=e2545]: 63.6% above 50-day
+              - generic [ref=e2546]: A/D 0.1
+              - generic [ref=e2547]: Broad participation — historically a calmer, tighter next day.
+            - generic [ref=e2548]:
+              - generic [ref=e2549]: Volatility
+              - generic [ref=e2550]: VIX 18.8 normal
+              - generic [ref=e2551]: term structure contango (+1.77 vs VIX3M)
+              - generic [ref=e2552]: Term structure calm (contango).
+            - generic [ref=e2553]:
+              - generic [ref=e2554]: Sector rotation
+              - generic [ref=e2555]: ▲ Health Care +6.89% 20d
+              - generic [ref=e2556]: ▼ Technology -5.5% 20d
+            - generic [ref=e2557]:
+              - generic [ref=e2558]: Intermarket
+              - generic [ref=e2559]:
+                - generic [ref=e2560]: DXY
+                - generic [ref=e2561]: "100.72"
+                - generic [ref=e2562]: "-0.03%"
+              - generic [ref=e2563]:
+                - generic [ref=e2564]: 10Y
+                - generic [ref=e2565]: "4.54"
+                - generic [ref=e2566]: "-0.61%"
+              - generic [ref=e2567]:
+                - generic [ref=e2568]: Oil
+                - generic [ref=e2569]: "83.5"
+                - generic [ref=e2570]: +1.22%
+              - generic [ref=e2571]:
+                - generic [ref=e2572]: Gold
+                - generic [ref=e2573]: "4020.8"
+                - generic [ref=e2574]: +0.20%
+        - generic [ref=e2575]:
+          - generic [ref=e2576]: Today, in plain English
+          - generic [ref=e2577]:
+            - paragraph [ref=e2578]:
+              - text: Dealers are in
+              - generic [ref=e2579]: negative gamma
+              - text: "today (VIX 18.8). That means their hedging amplifies moves — selling into drops, buying into rallies — so moves can run. This is a momentum tape: trade with the move, not against it, and respect breakouts."
+            - paragraph [ref=e2580]:
+              - text: Your line in the sand is the
+              - generic [ref=e2581]: gamma flip at 7522
+              - text: ": while price holds above it you're in the current regime; a break below flips it to the faster, trending mode. Rallies tend to stall at the"
+              - generic [ref=e2582]: call wall (7600)
+              - text: ", and dips get bought near the"
+              - generic [ref=e2583]: put wall (7300)
+              - text: .
+        - generic [ref=e2584]:
+          - generic [ref=e2585]: Durable levels ★ (memory)
+          - generic [ref=e2586]: Levels the tape kept respecting across many sessions — the "traces back weeks" levels.
+          - generic [ref=e2587]:
+            - generic [ref=e2588]:
+              - generic [ref=e2589]: "7519.2"
+              - generic [ref=e2590]: durable resistance
+              - generic [ref=e2591]: 17× sessions · respected 6
+            - generic [ref=e2592]:
+              - generic [ref=e2593]: "7541.7"
+              - generic [ref=e2594]: resistance (5x tested)
+              - generic [ref=e2595]: 11× sessions · respected 5
+            - generic [ref=e2596]:
+              - generic [ref=e2597]: "7467.1"
+              - generic [ref=e2598]: resistance (2x tested)
+              - generic [ref=e2599]: 11× sessions · respected 2
+            - generic [ref=e2600]:
+              - generic [ref=e2601]: "7528.2"
+              - generic [ref=e2602]: durable resistance
+              - generic [ref=e2603]: 10× sessions · respected 10
+            - generic [ref=e2604]:
+              - generic [ref=e2605]: "7507.1"
+              - generic [ref=e2606]: resistance (4x tested)
+              - generic [ref=e2607]: 10× sessions · respected 5
+            - generic [ref=e2608]:
+              - generic [ref=e2609]: "7424.7"
+              - generic [ref=e2610]: durable support
+              - generic [ref=e2611]: 10× sessions
+        - generic [ref=e2612]:
+          - generic [ref=e2613]: Confluence zones ✦
+          - generic [ref=e2614]: Bands where 2+ dimensions (GEX wall / fib / PoC / S-R) line up — the high-signal levels.
+          - generic [ref=e2615]:
+            - generic [ref=e2616]:
+              - generic [ref=e2617]: "7548.5"
+              - generic [ref=e2618]: fib 78.6% + resistance (9x)
+              - generic [ref=e2619]: resistance · 2 dims
+              - button "ticket" [ref=e2620] [cursor=pointer]
+            - generic [ref=e2621]:
+              - generic [ref=e2622]: "7534.9"
+              - generic [ref=e2623]: support (9x) + volume PoC
+              - generic [ref=e2624]: resistance · 2 dims
+              - button "ticket" [ref=e2625] [cursor=pointer]
+            - generic [ref=e2626]:
+              - generic [ref=e2627]: "7522.5"
+              - generic [ref=e2628]: fib 61.8% + gamma flip + max pain
+              - generic [ref=e2629]: resistance · 3 dims
+              - button "ticket" [ref=e2630] [cursor=pointer]
+            - generic [ref=e2631]:
+              - generic [ref=e2632]: "7504.1"
+              - generic [ref=e2633]: round number + fib 50.0% + support (4x)
+              - generic [ref=e2634]: resistance · 3 dims
+              - button "ticket" [ref=e2635] [cursor=pointer]
+            - generic [ref=e2636]:
+              - generic [ref=e2637]: "7481.6"
+              - generic [ref=e2638]: support (3x) + fib 38.2%
+              - generic [ref=e2639]: resistance · 2 dims
+              - button "ticket" [ref=e2640] [cursor=pointer]
+        - generic [ref=e2641]:
+          - generic [ref=e2642]: Conditional setups
+          - generic [ref=e2643]:
+            - generic [ref=e2644]:
+              - generic [ref=e2645]: IF SPX stays below the 7522 line
+              - generic [ref=e2646]: faster, trendier day — go with the move
+              - generic [ref=e2647]: Trade with the move, not against it. 7300 is the next downside target; a move back above 7522 means things are calming down.
+            - generic [ref=e2648]:
+              - generic [ref=e2649]: IF SPX climbs back above the 7522 line
+              - generic [ref=e2650]: calming down — back to a range
+              - generic [ref=e2651]: Above 7522, expect a range again — sell rallies near 7600.
+        - group [ref=e2652]:
+          - generic "Level ladder (17)" [ref=e2653] [cursor=pointer]
+          - generic [ref=e2654]:
+            - generic [ref=e2655]:
+              - generic [ref=e2656]: "7600"
+              - generic [ref=e2657]: GEX call wall (resistance)
+              - generic [ref=e2658]: GEX
+              - button "ticket" [ref=e2659] [cursor=pointer]
+            - generic [ref=e2660]:
+              - generic [ref=e2661]: "7576.1"
+              - generic [ref=e2662]: resistance (5x tested)
+              - generic [ref=e2663]: chart
+              - button "ticket" [ref=e2664] [cursor=pointer]
+            - generic [ref=e2665]:
+              - generic [ref=e2666]: "7549.6"
+              - generic [ref=e2667]: resistance (9x tested)
+              - generic [ref=e2668]: chart
+              - button "ticket" [ref=e2669] [cursor=pointer]
+            - generic [ref=e2670]:
+              - generic [ref=e2671]: "7547.3"
+              - generic [ref=e2672]: fib 78.6%
+              - generic [ref=e2673]: chart
+              - button "ticket" [ref=e2674] [cursor=pointer]
+            - generic [ref=e2675]:
+              - generic [ref=e2676]: "7537.7"
+              - generic [ref=e2677]: volume PoC (magnet)
+              - generic [ref=e2678]: chart
+              - button "ticket" [ref=e2679] [cursor=pointer]
+            - generic [ref=e2680]:
+              - generic [ref=e2681]: "7532"
+              - generic [ref=e2682]: support (9x tested)
+              - generic [ref=e2683]: chart
+              - button "ticket" [ref=e2684] [cursor=pointer]
+            - generic [ref=e2685]:
+              - generic [ref=e2686]: "7525"
+              - generic [ref=e2687]: max pain (pin)
+              - generic [ref=e2688]: GEX
+              - button "ticket" [ref=e2689] [cursor=pointer]
+            - generic [ref=e2690]:
+              - generic [ref=e2691]: "7522"
+              - generic [ref=e2692]: gamma flip (regime line)
+              - generic [ref=e2693]: GEX
+              - button "ticket" [ref=e2694] [cursor=pointer]
+            - generic [ref=e2695]:
+              - generic [ref=e2696]: "7520.5"
+              - generic [ref=e2697]: fib 61.8%
+              - generic [ref=e2698]: chart
+              - button "ticket" [ref=e2699] [cursor=pointer]
+            - generic [ref=e2700]:
+              - generic [ref=e2701]: "7510.6"
+              - generic [ref=e2702]: support (4x tested)
+              - generic [ref=e2703]: chart
+              - button "ticket" [ref=e2704] [cursor=pointer]
+            - generic [ref=e2705]:
+              - generic [ref=e2706]: "7501.7"
+              - generic [ref=e2707]: fib 50.0%
+              - generic [ref=e2708]: chart
+              - button "ticket" [ref=e2709] [cursor=pointer]
+            - generic [ref=e2710]:
+              - generic [ref=e2711]: "7500"
+              - generic [ref=e2712]: round number
+              - generic [ref=e2713]: psych
+              - button "ticket" [ref=e2714] [cursor=pointer]
+            - generic [ref=e2715]:
+              - generic [ref=e2716]: "7482.8"
+              - generic [ref=e2717]: fib 38.2%
+              - generic [ref=e2718]: chart
+              - button "ticket" [ref=e2719] [cursor=pointer]
+            - generic [ref=e2720]:
+              - generic [ref=e2721]: "7480.3"
+              - generic [ref=e2722]: support (3x tested)
+              - generic [ref=e2723]: chart
+              - button "ticket" [ref=e2724] [cursor=pointer]
+            - generic [ref=e2725]:
+              - generic [ref=e2726]: "7450"
+              - generic [ref=e2727]: round number
+              - generic [ref=e2728]: psych
+              - button "ticket" [ref=e2729] [cursor=pointer]
+            - generic [ref=e2730]:
+              - generic [ref=e2731]: "7400"
+              - generic [ref=e2732]: round number
+              - generic [ref=e2733]: psych
+              - button "ticket" [ref=e2734] [cursor=pointer]
+            - generic [ref=e2735]:
+              - generic [ref=e2736]: "7300"
+              - generic [ref=e2737]: GEX put wall (support)
+              - generic [ref=e2738]: GEX
+              - button "ticket" [ref=e2739] [cursor=pointer]
+        - group [ref=e2740]:
+          - generic "Lookback edges" [ref=e2741] [cursor=pointer]
+        - group [ref=e2742]:
+          - generic "What these terms mean" [ref=e2743] [cursor=pointer]
+        - generic [ref=e2744]:
+          - generic [ref=e2745]: The dealer-gamma (GEX) read is computed from overnight open interest and is BLIND to 0DTE positioning — roughly half of SPX option volume. Treat it as context, not a guarantee.
+          - generic [ref=e2746]: Context for reading the tape, NOT a signal (ADR-008). Places no orders (ADR-010). Not financial advice.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: SPX · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News 10 · positive" [ref=e2218] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · positive
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

@@ -18,6 +18,7 @@ exactly as before, so existing callers are unaffected.
 
 from __future__ import annotations
 
+import contextvars
 import time
 from typing import Any, Callable
 
@@ -26,6 +27,32 @@ from mira.model.routing import BudgetCap, CostLatencySpan, ModelRoute, Router, S
 from mira.model.tiering import TierPolicy
 from mira.providers.bundle import ProviderBundle
 from mira.providers.protocols import ILLMProvider
+
+# Per-turn tags that ride into the LLM-call log without threading through every
+# signature: the OP (classify / turn_synthesis / analyze_synthesis / …) and the
+# turn's correlation_id. Contextvars so concurrent turns never cross-tag. Call
+# sites set them via call_context(); default to unknown/None.
+_OP: contextvars.ContextVar[str | None] = contextvars.ContextVar("mira_llm_op", default=None)
+_CORR: contextvars.ContextVar[str | None] = contextvars.ContextVar("mira_llm_corr", default=None)
+
+
+class call_context:  # noqa: N801 — used as a context manager, reads like a with-block
+    """Tag every gateway call made inside the block with an op label (+ optional
+    correlation_id) for the LLM-call log. Nestable + concurrency-safe."""
+
+    def __init__(self, op: str, *, correlation_id: str | None = None) -> None:
+        self._op, self._corr = op, correlation_id
+        self._toks: list[Any] = []
+
+    def __enter__(self) -> "call_context":
+        self._toks = [_OP.set(self._op)]
+        if self._corr is not None:
+            self._toks.append(_CORR.set(self._corr))
+        return self
+
+    def __exit__(self, *exc: Any) -> None:
+        for tok in reversed(self._toks):
+            tok.var.reset(tok)
 
 
 class Gateway:
@@ -64,9 +91,22 @@ class Gateway:
         budget_cap: BudgetCap | None = None,
         tier: str | None = None,
     ) -> str:
-        # Backward-compatible fast path: no resilience wiring -> delegate as before.
+        # Backward-compatible fast path: no resilience wiring -> delegate as before
+        # (but STILL persist the call — the deployed config runs this path).
         if self._router is None and self._fallback_chain is None:
-            return self._backend.complete(prompt, model=model)
+            started = self._clock()
+            err = None
+            result = ""
+            try:
+                result = self._backend.complete(prompt, model=model)
+                return result
+            except Exception as exc:  # noqa: BLE001 — record the failure, then re-raise
+                err = str(exc)
+                raise
+            finally:
+                self._persist_call("complete", prompt, result, route=None, model=model,
+                                   agent=agent, tenant=tenant, tier=tier,
+                                   latency_ms=(self._clock() - started) * 1000.0, error=err)
 
         # The router is a real gate: select() enforces strategy + budget caps and
         # raises BudgetExceeded (when on_exceed="reject") or downgrades to an
@@ -76,11 +116,20 @@ class Gateway:
             prompt, model=model, tenant=tenant, agent=agent, budget_cap=budget_cap, tier=tier
         )
         started = self._clock()
+        err = None
+        result = ""
         try:
             result = self._run(prompt, model=model, route=route)
+            return result
+        except Exception as exc:  # noqa: BLE001
+            err = str(exc)
+            raise
         finally:
-            self._emit_span(route, latency_ms=(self._clock() - started) * 1000.0)
-        return result
+            latency = (self._clock() - started) * 1000.0
+            self._emit_span(route, latency_ms=latency)
+            self._persist_call("complete", prompt, result, route=route, model=model,
+                               agent=agent, tenant=tenant, tier=tier,
+                               latency_ms=latency, error=err)
 
     def chat(
         self,
@@ -109,26 +158,38 @@ class Gateway:
 
         backend_chat = getattr(self._backend, "chat", None)
         if backend_chat is None:
+            # complete() already persists this call — don't double-log.
             text = self.complete(
                 prompt, model=model, tenant=tenant, agent=agent,
                 budget_cap=budget_cap, tier=tier,
             )
             return _TextOnlyChatResult(text=text)
 
-        if self._router is None:
-            return backend_chat(messages, model=model, tools=tools, tool_choice=tool_choice)
-
-        route = self._select_route(
-            prompt, model=model, tenant=tenant, agent=agent, budget_cap=budget_cap, tier=tier
-        )
-        chosen_model = route.model if route is not None else model
+        route = None
+        chosen_model = model
+        if self._router is not None:
+            route = self._select_route(
+                prompt, model=model, tenant=tenant, agent=agent, budget_cap=budget_cap, tier=tier
+            )
+            chosen_model = route.model if route is not None else model
         started = self._clock()
+        err = None
+        result: Any = None
         try:
-            return backend_chat(
+            result = backend_chat(
                 messages, model=chosen_model, tools=tools, tool_choice=tool_choice
             )
+            return result
+        except Exception as exc:  # noqa: BLE001
+            err = str(exc)
+            raise
         finally:
-            self._emit_span(route, latency_ms=(self._clock() - started) * 1000.0)
+            latency = (self._clock() - started) * 1000.0
+            if route is not None:
+                self._emit_span(route, latency_ms=latency)
+            self._persist_call("chat", prompt, result, route=route, model=chosen_model,
+                               agent=agent, tenant=tenant, tier=tier,
+                               latency_ms=latency, error=err)
 
     def for_agent(self, name: str) -> _AgentBoundLLM:
         """An ``ILLMProvider``-shaped view that forwards ``agent=name`` (ADR-052).
@@ -173,6 +234,36 @@ class Gateway:
         return self._router.select(
             tenant=tenant, agent=agent, budget_cap=budget_cap, tier=resolved_tier
         )
+
+    def _persist_call(self, kind: str, prompt: str, result: Any, *,
+                      route: ModelRoute | None, model: str | None, agent: str,
+                      tenant: str, tier: str | None, latency_ms: float,
+                      error: str | None) -> None:
+        """Record one gateway call to the durable LLM-call log. Best-effort:
+        persistence must never break or slow the answer path, so every failure
+        is swallowed. Real token usage rides on a ChatResult.usage; a plain
+        str completion has none (cost then falls back to the route estimate)."""
+        try:
+            from mira.core.persistence import get_persistence
+            text = getattr(result, "text", None)
+            text = text if isinstance(text, str) else (result if isinstance(result, str) else "")
+            usage = getattr(result, "usage", None) or {}
+            pt, ct, tt = (usage.get("prompt_tokens"), usage.get("completion_tokens"),
+                          usage.get("total_tokens"))
+            provider = route.provider if route is not None else "gateway"
+            model_name = route.model if route is not None else (model or "default")
+            # cost: usage-derived when tokens known, else the route's flat estimate
+            cost = None
+            if route is not None and tt:
+                cost = round(route.cost_per_1k_tokens * (tt / 1000.0), 6)
+            get_persistence().record_llm_call(
+                op=_OP.get(), agent=agent, tenant=tenant, tier=tier,
+                provider=provider, model=model_name, request=prompt, response=text,
+                prompt_tokens=pt, completion_tokens=ct, total_tokens=tt,
+                cost_usd=cost, latency_ms=round(latency_ms, 2),
+                correlation_id=_CORR.get(), error=error)
+        except Exception:  # noqa: BLE001 — logging a call must never break the call
+            pass
 
     def _emit_span(self, route: ModelRoute | None, *, latency_ms: float) -> None:
         if self._span_observer is None:

@@ -1,0 +1,196 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e2146]:
+        - generic [ref=e2147]:
+          - generic [ref=e2148]: SPX
+          - textbox "Change chart symbol" [ref=e2149]:
+            - /placeholder: symbol…
+          - generic [ref=e2150]:
+            - button "1m" [ref=e2151] [cursor=pointer]
+            - button "5m" [ref=e2152] [cursor=pointer]
+            - button "15m" [ref=e2153] [cursor=pointer]
+            - button "1H" [ref=e2154] [cursor=pointer]
+            - button "4H" [ref=e2155] [cursor=pointer]
+            - button "1D" [ref=e2156] [cursor=pointer]
+            - button "1W" [ref=e2157] [cursor=pointer]
+            - button "1M" [ref=e2158] [cursor=pointer]
+          - button "Refresh SPX bars" [ref=e2159] [cursor=pointer]: ↻
+        - generic [ref=e2160]:
+          - button "MA20" [ref=e2161] [cursor=pointer]
+          - button "MA50" [ref=e2162] [cursor=pointer]
+          - button "VWAP" [ref=e2163] [cursor=pointer]
+          - button "Vol" [ref=e2164] [cursor=pointer]
+          - button "RSI" [ref=e2165] [cursor=pointer]
+          - generic [ref=e2166]:
+            - button "Cursor / pan" [ref=e2167] [cursor=pointer]: ⌖
+            - button "Horizontal line" [ref=e2168] [cursor=pointer]: ─
+            - button "Trendline" [ref=e2169] [cursor=pointer]: ╱
+            - button "Ray" [ref=e2170] [cursor=pointer]: →
+            - button "Rectangle" [ref=e2171] [cursor=pointer]: ▭
+            - button "Undo last drawing" [disabled] [ref=e2172]: ⌫
+            - button "Clear all drawings" [disabled] [ref=e2173]: ✕
+        - generic [ref=e2174]:
+          - generic [ref=e2175]: DNA
+          - button "Levels" [ref=e2176] [cursor=pointer]
+          - button "OB" [ref=e2177] [cursor=pointer]
+          - button "FVG" [ref=e2178] [cursor=pointer]
+          - button "Liq" [ref=e2179] [cursor=pointer]
+          - button "Draw" [ref=e2180] [cursor=pointer]
+          - button "PD H/L/C" [ref=e2181] [cursor=pointer]
+          - button "GEX" [ref=e2182] [cursor=pointer]
+          - button "Position" [ref=e2183] [cursor=pointer]
+          - button "Forecast" [ref=e2184] [cursor=pointer]
+          - button "Replay" [ref=e2185] [cursor=pointer]
+          - generic [ref=e2186]: …
+          - button "🔮 Forecast now" [ref=e2187] [cursor=pointer]
+        - generic [ref=e2188]:
+          - progressbar "Loading"
+          - table [ref=e2191]:
+            - row [ref=e2192]:
+              - cell
+              - cell [ref=e2193]:
+                - link "Charting by TradingView" [ref=e2197] [cursor=pointer]:
+                  - /url: https://www.tradingview.com/?utm_medium=lwc-link&utm_campaign=lwc-chart&utm_source=localhost/index.html
+              - cell [ref=e2202]
+            - row [ref=e2206]:
+              - cell
+              - cell [ref=e2207]
+              - cell [ref=e2211]
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e80]:
+          - generic [ref=e81]: SPX
+          - generic [ref=e82]: · not held
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPX. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPX…" [ref=e2214]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation —" [ref=e2215] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: —
+          - group [ref=e109]:
+            - generic "▸ News none" [ref=e2216] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: none
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

@@ -1,0 +1,325 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e748]:
+        - heading "Holdings" [level=2] [ref=e749]
+        - paragraph [ref=e750]: All accounts · 0 tickers · 0 actionable · grouped by symbol · click to expand
+        - generic [ref=e751]:
+          - generic [ref=e752]:
+            - button "All" [ref=e753] [cursor=pointer]
+            - button "Has equity" [ref=e754] [cursor=pointer]
+            - button "Has options" [ref=e755] [cursor=pointer]
+            - button "Losers" [ref=e756] [cursor=pointer]
+          - generic [ref=e757]:
+            - combobox "Filter by recommendation" [ref=e758]:
+              - option "Any recommendation" [selected]
+              - option "Actionable only"
+              - option "Hold & sell call"
+              - option "Close & book loss"
+              - option "Monitor"
+            - combobox "Sort by" [ref=e759]:
+              - 'option "Sort: Action priority"'
+              - 'option "Sort: Value" [selected]'
+              - 'option "Sort: Unrealized"'
+              - 'option "Sort: Weight"'
+              - 'option "Sort: Day P/L"'
+              - 'option "Sort: Symbol"'
+            - textbox "Search symbol…" [ref=e760]
+        - table [ref=e762]:
+          - rowgroup [ref=e763]:
+            - row [ref=e764]:
+              - columnheader "Symbol" [ref=e765]
+              - columnheader "Value" [ref=e766]
+              - columnheader "Day" [ref=e767]
+              - columnheader "Unrealized" [ref=e768]
+              - columnheader "Weight" [ref=e769]
+              - columnheader "Recommendation" [ref=e770]
+          - rowgroup [ref=e771]:
+            - row [ref=e772]:
+              - cell "No holdings match the current filters." [ref=e773]
+        - generic [ref=e774]:
+          - generic [ref=e775]:
+            - generic [ref=e776]: Scanner spreads
+            - generic [ref=e777]: auto-logged from A+ setups · debit spreads · separate from the reclaim record · Alpaca paper (real fills)
+          - generic [ref=e778]:
+            - generic [ref=e779]:
+              - generic [ref=e780]: Net P&L
+              - generic [ref=e781]: "-$12,000"
+            - generic [ref=e782]:
+              - generic [ref=e783]: Win rate
+              - generic [ref=e784]: 31%
+            - generic [ref=e785]:
+              - generic [ref=e786]: Profit factor
+              - generic [ref=e787]: "0.39"
+            - generic [ref=e788]:
+              - generic [ref=e789]: Closed
+              - generic [ref=e790]: "26"
+          - generic [ref=e791]: Open (11)
+          - generic [ref=e792]:
+            - generic [ref=e793]:
+              - generic [ref=e794]: PUT
+              - generic [ref=e795]: XEL PUT 80.00/79.00 ×4
+              - generic [ref=e796]: target 79.00 · invalid 80.31
+            - generic [ref=e797]:
+              - generic [ref=e798]: PUT
+              - generic [ref=e799]: CCEP PUT 106.00/103.00 ×4
+              - generic [ref=e800]: target 103.00 · invalid 106.19
+            - generic [ref=e801]:
+              - generic [ref=e802]: PUT
+              - generic [ref=e803]: XEL PUT 80.00/79.00 ×4
+              - generic [ref=e804]: target 79.00 · invalid 80.31
+            - generic [ref=e805]:
+              - generic [ref=e806]: PUT
+              - generic [ref=e807]: AEP PUT 134.00/132.00 ×4
+              - generic [ref=e808]: target 132.00 · invalid 134.34
+            - generic [ref=e809]:
+              - generic [ref=e810]: PUT
+              - generic [ref=e811]: GOOGL PUT 355.00/345.00 ×4
+              - generic [ref=e812]: filled
+              - generic [ref=e813]: target 345.00 · invalid 359.81
+            - generic [ref=e814]:
+              - generic [ref=e815]: PUT
+              - generic [ref=e816]: BMY PUT 61.00/58.00 ×4
+              - generic [ref=e817]: target 58.00 · invalid 61.33
+            - generic [ref=e818]:
+              - generic [ref=e819]: PUT
+              - generic [ref=e820]: PG PUT 151.00/147.00 ×4
+              - generic [ref=e821]: target 147.00 · invalid 151.18
+            - generic [ref=e822]:
+              - generic [ref=e823]: PUT
+              - generic [ref=e824]: KO PUT 82.00/80.00 ×4
+              - generic [ref=e825]: target 80.00 · invalid 82.35
+            - generic [ref=e826]:
+              - generic [ref=e827]: PUT
+              - generic [ref=e828]: XEL PUT 79.00/78.00 ×4
+              - generic [ref=e829]: target 78.00 · invalid 79.68
+            - generic [ref=e830]:
+              - generic [ref=e831]: CALL
+              - generic [ref=e832]: RTX CALL 196.00/198.00 ×4
+              - generic [ref=e833]: target 198.00 · invalid 194.37
+            - generic [ref=e834]:
+              - generic [ref=e835]: CALL
+              - generic [ref=e836]: NXPI CALL 265.00/280.00 ×4
+              - generic [ref=e837]: target 280.00 · invalid 266.13
+          - img "Cumulative P&L equity curve" [ref=e839]:
+            - generic [ref=e844]: "-$12,000"
+          - generic [ref=e845]:
+            - generic [ref=e846]:
+              - generic [ref=e848]: $200
+              - generic [ref=e849]: EXC PUT 47.00/46.00 ×4
+              - generic [ref=e850]: → 46.00
+              - generic [ref=e851]: target
+            - generic [ref=e852]:
+              - generic [ref=e854]: "-$800"
+              - generic [ref=e855]: COP PUT 114.00/110.00 ×4
+              - generic [ref=e856]: × 114.50
+              - generic [ref=e857]: invalidation
+            - generic [ref=e858]:
+              - generic [ref=e860]: "-$600"
+              - generic [ref=e861]: KO CALL 83.00/86.00 ×4
+              - generic [ref=e862]: × 82.46
+              - generic [ref=e863]: invalidation
+            - generic [ref=e864]:
+              - generic [ref=e866]: $1,600
+              - generic [ref=e867]: ORCL PUT 130.00/122.00 ×4
+              - generic [ref=e868]: → 122.00
+              - generic [ref=e869]: target
+            - generic [ref=e870]:
+              - generic [ref=e872]: $800
+              - generic [ref=e873]: WDAY PUT 145.00/141.00 ×4
+              - generic [ref=e874]: → 141.00
+              - generic [ref=e875]: target
+            - generic [ref=e876]:
+              - generic [ref=e878]: "-$3,000"
+              - generic [ref=e879]: ROP CALL 360.00/375.00 ×4
+              - generic [ref=e880]: × 356.47
+              - generic [ref=e881]: invalidation
+            - generic [ref=e882]:
+              - generic [ref=e884]: $800
+              - generic [ref=e885]: TRI PUT 100.00/96.00 ×4
+              - generic [ref=e886]: → 96.00
+              - generic [ref=e887]: target
+            - generic [ref=e888]:
+              - generic [ref=e890]: $1,000
+              - generic [ref=e891]: HONA PUT 210.00/205.00 ×4
+              - generic [ref=e892]: → 205.00
+              - generic [ref=e893]: target
+            - generic [ref=e894]:
+              - generic [ref=e896]: $2,000
+              - generic [ref=e897]: INTU PUT 290.00/280.00 ×4
+              - generic [ref=e898]: → 280.00
+              - generic [ref=e899]: target
+            - generic [ref=e900]:
+              - generic [ref=e902]: "-$1,000"
+              - generic [ref=e903]: ADBE CALL 230.00/235.00 ×4
+              - generic [ref=e904]: × 229.91
+              - generic [ref=e905]: invalidation
+            - generic [ref=e906]:
+              - generic [ref=e908]: $400
+              - generic [ref=e909]: MNST PUT 99.00/97.00 ×4
+              - generic [ref=e910]: → 97.00
+              - generic [ref=e911]: target
+            - generic [ref=e912]:
+              - generic [ref=e914]: "-$800"
+              - generic [ref=e915]: FTNT CALL 161.00/165.00 ×4
+              - generic [ref=e916]: × 161.01
+              - generic [ref=e917]: invalidation
+            - generic [ref=e918]:
+              - generic [ref=e920]: "-$600"
+              - generic [ref=e921]: SHOP PUT 124.00/121.00 ×4
+              - generic [ref=e922]: × 125.10
+              - generic [ref=e923]: invalidation
+            - generic [ref=e924]:
+              - generic [ref=e926]: "-$3,000"
+              - generic [ref=e927]: KLAC CALL 215.00/230.00 ×4
+              - generic [ref=e928]: × 212.60
+              - generic [ref=e929]: invalidation
+            - generic [ref=e930]:
+              - generic [ref=e932]: $1,000
+              - generic [ref=e933]: PANW CALL 360.00/365.00 ×4
+              - generic [ref=e934]: → 365.00
+              - generic [ref=e935]: target
+            - button "show 1 more" [ref=e936] [cursor=pointer]
+            - generic [ref=e937]: 10 no-fill / voided (10 never filled · 0 voided) — $0, excluded from win-rate
+          - generic [ref=e938]: "Book of record: Alpaca paper — real multi-leg fills, closed on the invalidation (stop-loss) or target. Paper account only, no real money."
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: SPY
+            - generic [ref=e82]: State Street SPDR S&P 500 ETF T · not held
+          - generic [ref=e411]:
+            - generic [ref=e412]: $742.09
+            - generic [ref=e413]: close $743.29
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPY at $742.09. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPY…" [ref=e93]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation P/E 26.7" [ref=e414] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: P/E 26.7
+          - group [ref=e109]:
+            - generic "▸ News 10 · neutral" [ref=e415] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · neutral
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

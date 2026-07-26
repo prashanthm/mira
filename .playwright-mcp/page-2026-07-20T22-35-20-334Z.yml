@@ -1,0 +1,392 @@
+- generic [ref=e3]:
+  - generic [ref=e4]: AI-generated analysis · Educational purposes only — not financial, investment, or tax advice
+  - generic [ref=e5]:
+    - generic [ref=e6]: Vantage
+    - generic [ref=e7]:
+      - generic [ref=e123]:
+        - generic [ref=e124]: S&P 500
+        - generic [ref=e125]: "742.09"
+        - generic [ref=e126]: −0.05%
+      - generic [ref=e127]:
+        - generic [ref=e128]: Nasdaq 100
+        - generic [ref=e129]: "696.06"
+        - generic [ref=e130]: +0.33%
+      - generic [ref=e131]:
+        - generic [ref=e132]: Russell 2000
+        - generic [ref=e133]: "292.31"
+        - generic [ref=e134]: −0.40%
+      - generic [ref=e135]:
+        - generic [ref=e136]: Total Market
+        - generic [ref=e137]: "366.25"
+        - generic [ref=e138]: −0.20%
+    - generic [ref=e9]:
+      - 'generic "Backend live at http://127.0.0.1:8641 — quotes: yfinance, as of 2026-07-20T22:22:07+00:00" [ref=e139]': data live
+      - generic "Mira reachable at http://127.0.0.1:8080" [ref=e12]: AI live
+    - generic [ref=e14]:
+      - button "Toggle focus mode" [ref=e15] [cursor=pointer]: ⤢ Focus
+      - 'button "Theme: system. Click to switch." [ref=e16] [cursor=pointer]': ◐ system
+      - button "Settings" [ref=e17] [cursor=pointer]
+  - generic [ref=e18]:
+    - complementary [ref=e19]:
+      - generic [ref=e20]:
+        - generic [ref=e21]: Workspace
+        - button "Collapse navigation panel" [ref=e22] [cursor=pointer]: «
+      - generic [ref=e23]:
+        - navigation [ref=e24]:
+          - generic [ref=e25]:
+            - generic [ref=e26]: Portfolio
+            - button "🧭 Portfolio" [ref=e27] [cursor=pointer]:
+              - generic [ref=e28]: 🧭
+              - text: Portfolio
+            - button "◫ Dashboard" [ref=e29] [cursor=pointer]:
+              - generic [ref=e30]: ◫
+              - text: Dashboard
+            - button "▤ Positions" [ref=e31] [cursor=pointer]:
+              - generic [ref=e32]: ▤
+              - text: Positions
+            - button "🌾 Tax" [ref=e33] [cursor=pointer]:
+              - generic [ref=e34]: 🌾
+              - text: Tax
+          - generic [ref=e35]:
+            - generic [ref=e36]: Intelligence
+            - button "📈 Chart" [ref=e37] [cursor=pointer]:
+              - generic [ref=e38]: 📈
+              - text: Chart
+            - button "🎯 Today" [ref=e39] [cursor=pointer]:
+              - generic [ref=e40]: 🎯
+              - text: Today
+            - button "◎ Options" [ref=e41] [cursor=pointer]:
+              - generic [ref=e42]: ◎
+              - text: Options
+            - button "📐 Daily plan" [ref=e43] [cursor=pointer]:
+              - generic [ref=e44]: 📐
+              - text: Daily plan
+            - button "🔭 Scanner" [ref=e45] [cursor=pointer]:
+              - generic [ref=e46]: 🔭
+              - text: Scanner
+            - button "🤖 Strategies" [ref=e47] [cursor=pointer]:
+              - generic [ref=e48]: 🤖
+              - text: Strategies
+            - button "📓 Trading Journal" [ref=e49] [cursor=pointer]:
+              - generic [ref=e50]: 📓
+              - text: Trading Journal
+            - button "📉 Futures" [ref=e51] [cursor=pointer]:
+              - generic [ref=e52]: 📉
+              - text: Futures
+            - button "🧮 Performance" [ref=e53] [cursor=pointer]:
+              - generic [ref=e54]: 🧮
+              - text: Performance
+        - generic [ref=e55]:
+          - button "Scope All accounts accounts →" [ref=e57] [cursor=pointer]:
+            - generic [ref=e58]: Scope
+            - generic [ref=e59]: All accounts
+            - generic [ref=e60]: accounts →
+          - paragraph [ref=e61]: Read-only aggregation. Vantage never holds funds or places orders.
+          - paragraph [ref=e62]: Vantage · built on the Lookey design system · AI analysis is educational only — not financial, investment, or tax advice.
+    - main [ref=e63]:
+      - generic [ref=e64]:
+        - generic [ref=e65]:
+          - heading "Portfolio" [level=2] [ref=e66]
+          - generic [ref=e67]: "Roll-up analysis · scope: all accounts"
+          - group "currency" [ref=e141]:
+            - button "USD" [ref=e142] [cursor=pointer]
+            - button "INR" [ref=e143] [cursor=pointer]
+        - generic [ref=e69]:
+          - button "All $421,655 · ₹36,27,681" [ref=e144] [cursor=pointer]:
+            - generic [ref=e71]: All
+            - generic [ref=e145]: $421,655 · ₹36,27,681
+          - button "RH $9,723" [ref=e146] [cursor=pointer]:
+            - generic [ref=e147]: RH
+            - generic [ref=e148]: $9,723
+          - button "RH Margin $72,970" [ref=e149] [cursor=pointer]:
+            - generic [ref=e150]: RH Margin
+            - generic [ref=e151]: $72,970
+          - button "Fid BLink $238,405" [ref=e152] [cursor=pointer]:
+            - generic [ref=e153]: Fid BLink
+            - generic [ref=e154]: $238,405
+          - button "Fid HSA $51,102" [ref=e155] [cursor=pointer]:
+            - generic [ref=e156]: Fid HSA
+            - generic [ref=e157]: $51,102
+          - button "Fid Roth $49,456" [ref=e158] [cursor=pointer]:
+            - generic [ref=e159]: Fid Roth
+            - generic [ref=e160]: $49,456
+          - button "Zerodha ₹36,27,681" [ref=e161] [cursor=pointer]:
+            - generic [ref=e162]: Zerodha
+            - generic [ref=e163]: ₹36,27,681
+          - button "Charles Schw $0" [ref=e164] [cursor=pointer]:
+            - generic [ref=e165]: Charles Schw
+            - generic [ref=e166]: $0
+          - button "⚙ Manage" [ref=e72]
+        - paragraph [ref=e167]: ⚠ Charles Schw has no holdings imported — excluded from the analysis below. Upload a positions/holdings CSV (⚙ Manage) or sync to include it.
+        - generic [ref=e168]:
+          - generic [ref=e169]:
+            - generic [ref=e170]:
+              - generic [ref=e171]: Mira · portfolio actions
+              - button "Analyze my portfolio" [ref=e172]
+            - paragraph [ref=e173]: Mira reads your portfolio DNA and recommends actions — decision-support, not orders.
+          - generic [ref=e174]:
+            - generic [ref=e175]:
+              - generic [ref=e176]: Diversification
+              - generic [ref=e177]: diversified · HHI 0.1268
+            - generic [ref=e178]:
+              - generic [ref=e179]:
+                - generic [ref=e180]: Top 5 holdings
+                - generic [ref=e181]: 59.6%
+                - generic [ref=e182]: of the book
+              - generic [ref=e183]:
+                - generic [ref=e184]: Largest position
+                - generic [ref=e185]: 30.8%
+                - generic [ref=e186]: CASH
+              - generic [ref=e187]:
+                - generic [ref=e188]: Largest sector
+                - generic [ref=e189]: 41.9%
+                - generic [ref=e190]: Unknown
+            - generic [ref=e191]:
+              - generic [ref=e192]:
+                - generic [ref=e193]: Unknown
+                - generic [ref=e196]: 41.9%
+              - generic [ref=e197]:
+                - generic [ref=e198]: Cash
+                - generic [ref=e201]: 30.8%
+              - generic [ref=e202]:
+                - generic [ref=e203]: Healthcare
+                - generic [ref=e206]: 10.7%
+              - generic [ref=e207]:
+                - generic [ref=e208]: Technology
+                - generic [ref=e211]: 9.6%
+              - generic [ref=e212]:
+                - generic [ref=e213]: Communication Services
+                - generic [ref=e216]: 3.4%
+              - generic [ref=e217]:
+                - generic [ref=e218]: Industrials
+                - generic [ref=e221]: 2.3%
+              - generic [ref=e222]:
+                - generic [ref=e223]: Financial Services
+                - generic [ref=e226]: 0.9%
+              - generic [ref=e227]:
+                - generic [ref=e228]: Real Estate
+                - generic [ref=e231]: 0.3%
+              - generic [ref=e232]:
+                - generic [ref=e233]: Consumer Cyclical
+                - generic [ref=e236]: 0.1%
+              - generic [ref=e237]:
+                - generic [ref=e238]: Consumer Defensive
+                - generic [ref=e240]: 0.0%
+            - paragraph [ref=e241]: "Concentrated single names (>7%): CASH 30.8% · UNH 10.3% · SQQQ 7.3%"
+          - generic [ref=e242]:
+            - generic [ref=e243]:
+              - generic [ref=e244]: Winners & losers
+              - generic [ref=e245]: by gain %
+            - generic [ref=e246]: Top winners
+            - generic [ref=e247]:
+              - generic [ref=e248]:
+                - generic "SNK 2026-08-21 13C" [ref=e249]: SNK 13C
+                - generic [ref=e250]: +312.77%
+                - generic [ref=e251]: $1,470
+              - generic [ref=e252]:
+                - generic "SNK" [ref=e253]
+                - generic [ref=e254]: +151.84%
+                - generic [ref=e255]: $1,939
+              - generic [ref=e256]:
+                - generic "SOXS2 2028-01-21 3C" [ref=e257]: SOXS2 3C
+                - generic [ref=e258]: +65.98%
+                - generic [ref=e259]: $1,610
+              - generic [ref=e260]:
+                - generic "UNH" [ref=e261]
+                - generic [ref=e262]: +52.59%
+                - generic [ref=e263]: $15,030
+              - generic [ref=e264]:
+                - generic "ADBG" [ref=e265]
+                - generic [ref=e266]: +26.97%
+                - generic [ref=e267]: $164
+            - generic [ref=e268]: Worst losers
+            - generic [ref=e269]:
+              - generic [ref=e270]:
+                - generic "MMEX" [ref=e271]
+                - generic [ref=e272]: −100.00%
+                - generic [ref=e273]: "-$130"
+              - generic [ref=e274]:
+                - generic "BANT" [ref=e275]
+                - generic [ref=e276]: −100.00%
+                - generic [ref=e277]: "-$472"
+              - generic [ref=e278]:
+                - generic "FRCB" [ref=e279]
+                - generic [ref=e280]: −100.00%
+                - generic [ref=e281]: "-$19,893"
+              - generic [ref=e282]:
+                - generic "AITX" [ref=e283]
+                - generic [ref=e284]: −99.89%
+                - generic [ref=e285]: "-$73"
+              - generic [ref=e286]:
+                - generic "ENZC" [ref=e287]
+                - generic [ref=e288]: −99.71%
+                - generic [ref=e289]: "-$209"
+          - generic [ref=e290]:
+            - generic [ref=e291]:
+              - generic [ref=e292]: Risk
+              - generic [ref=e293]: Sharpe 0.24
+            - generic [ref=e294]:
+              - generic [ref=e295]:
+                - generic [ref=e296]: Annualized vol
+                - generic [ref=e297]: 9.3%
+              - generic [ref=e298]:
+                - generic [ref=e299]: Sortino
+                - generic [ref=e300]: "0.3"
+              - generic [ref=e301]:
+                - generic [ref=e302]: Max drawdown
+                - generic [ref=e303]: "-4.9%"
+            - paragraph [ref=e304]: 79d window · 78.4% of book has bars
+          - generic [ref=e305]:
+            - generic [ref=e306]: Income
+            - generic [ref=e308]:
+              - generic [ref=e309]:
+                - generic [ref=e310]: Projected annual
+                - generic [ref=e311]: $5,432
+                - generic [ref=e312]: from dividends
+              - generic [ref=e313]:
+                - generic [ref=e314]: Portfolio yield
+                - generic [ref=e315]: 1.29%
+              - generic [ref=e316]:
+                - generic [ref=e317]: Yield on cost
+                - generic [ref=e318]: 1.11%
+            - table [ref=e319]:
+              - rowgroup [ref=e320]:
+                - row [ref=e321]:
+                  - columnheader "symbol" [ref=e322]
+                  - columnheader "yield" [ref=e323]
+                  - columnheader "annual" [ref=e324]
+              - rowgroup [ref=e325]:
+                - row [ref=e326]:
+                  - cell "SQQQ" [ref=e327]
+                  - cell "11.03%" [ref=e328]
+                  - cell "$3,397" [ref=e329]
+                - row [ref=e330]:
+                  - cell "UNH" [ref=e331]
+                  - cell "2.18%" [ref=e332]
+                  - cell "$951" [ref=e333]
+                - row [ref=e334]:
+                  - cell "ACN" [ref=e335]
+                  - cell "4.54%" [ref=e336]
+                  - cell "$690" [ref=e337]
+                - row [ref=e338]:
+                  - cell "INDL" [ref=e339]
+                  - cell "1.41%" [ref=e340]
+                  - cell "$124" [ref=e341]
+                - row [ref=e342]:
+                  - cell "TQQQ" [ref=e343]
+                  - cell "0.46%" [ref=e344]
+                  - cell "$94" [ref=e345]
+                - row [ref=e346]:
+                  - cell "EMBJ" [ref=e347]
+                  - cell "1.22%" [ref=e348]
+                  - cell "$80" [ref=e349]
+                - row [ref=e350]:
+                  - cell "O" [ref=e351]
+                  - cell "4.95%" [ref=e352]
+                  - cell "$54" [ref=e353]
+                - row [ref=e354]:
+                  - cell "HTHIY" [ref=e355]
+                  - cell "1.08%" [ref=e356]
+                  - cell "$32" [ref=e357]
+          - generic [ref=e358]:
+            - generic [ref=e359]:
+              - generic [ref=e360]: Rebalance
+              - generic [ref=e361]: drift 25.9%
+            - generic [ref=e362]:
+              - generic [ref=e363]:
+                - generic [ref=e364]: cash (30.9% → 5.0%)
+                - generic [ref=e367]: trim $109,335
+              - generic [ref=e368]:
+                - generic [ref=e369]: usEquity (54.3% → 70.0%)
+                - generic [ref=e372]: add $66,326
+              - generic [ref=e373]:
+                - generic [ref=e374]: bonds (0.0% → 15.0%)
+                - generic [ref=e377]: add $63,248
+              - generic [ref=e378]:
+                - generic [ref=e379]: intlEquity (0.0% → 10.0%)
+                - generic [ref=e382]: add $42,166
+            - paragraph [ref=e383]: "Target model: usEquity 70% · intlEquity 10% · bonds 15% · cash 5%"
+          - generic [ref=e384]:
+            - generic [ref=e385]: Portfolio character
+            - generic [ref=e387]:
+              - generic [ref=e388]:
+                - generic [ref=e389]: Weighted beta
+                - generic [ref=e390]: "1.14"
+                - generic [ref=e391]: more volatile than the market
+              - generic [ref=e392]:
+                - generic [ref=e393]: Blended P/E
+                - generic [ref=e394]: "25.95"
+              - generic [ref=e395]:
+                - generic [ref=e396]: Beta coverage
+                - generic [ref=e397]: 39.4%
+                - generic [ref=e398]: of value has a beta
+          - generic [ref=e399]:
+            - generic [ref=e400]:
+              - generic [ref=e401]: Performance
+              - generic [ref=e402]: point-in-time
+            - generic [ref=e403]:
+              - generic [ref=e404]:
+                - generic [ref=e405]: Book value · USD
+                - generic [ref=e406]: $421,655
+              - generic [ref=e407]:
+                - generic [ref=e408]: Book value · INR
+                - generic [ref=e409]: ₹36,27,681
+            - paragraph [ref=e410]: Time-weighted return + benchmark accrue once nightly value snapshots begin — no history yet.
+    - complementary [ref=e73]:
+      - separator "Resize notebook panel" [ref=e74]
+      - generic [ref=e75]:
+        - button "Collapse notebook panel" [ref=e76] [cursor=pointer]: »
+        - generic [ref=e77]: Notebook
+      - generic [ref=e78]:
+        - generic [ref=e79]:
+          - generic [ref=e80]:
+            - generic [ref=e81]: SPY
+            - generic [ref=e82]: State Street SPDR S&P 500 ETF T · not held
+          - generic [ref=e411]:
+            - generic [ref=e412]: $742.09
+            - generic [ref=e413]: close $743.29
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: Ask Mira about SPY at $742.09. Every answer is a multi-facet read (technical · fundamental · news · position), grounded in the Vantage engine.
+            - generic [ref=e86]:
+              - button "Full analysis" [ref=e87] [cursor=pointer]
+              - button "Technical" [ref=e88] [cursor=pointer]
+              - button "Fundamental" [ref=e89] [cursor=pointer]
+              - button "News" [ref=e90] [cursor=pointer]
+          - generic [ref=e91]:
+            - generic [ref=e92]:
+              - textbox "Ask about SPY…" [ref=e93]
+              - button "Ask" [disabled] [ref=e94]
+            - paragraph [ref=e95]: Educational only — not financial advice.
+        - generic [ref=e96]:
+          - group [ref=e97]:
+            - generic "▸ Position & P&L not held" [ref=e98] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e99]: Position & P&L
+              - generic [ref=e100]: not held
+          - group [ref=e101]:
+            - generic "▸ AI recommendation not journaled" [ref=e102] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e103]: AI recommendation
+              - generic [ref=e104]: not journaled
+          - group [ref=e105]:
+            - generic "▸ Valuation P/E 26.7" [ref=e414] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e107]: Valuation
+              - generic [ref=e108]: P/E 26.7
+          - group [ref=e109]:
+            - generic "▸ News 10 · neutral" [ref=e415] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e111]: News
+              - generic [ref=e112]: 10 · neutral
+          - group [ref=e113]:
+            - generic "▸ My plan empty" [ref=e114] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e115]: My plan
+              - generic [ref=e116]: empty
+          - group [ref=e117]:
+            - generic "▸ Journal empty" [ref=e118] [cursor=pointer]:
+              - text: ▸
+              - generic [ref=e119]: Journal
+              - generic [ref=e120]: empty
+  - button "Notifications" [ref=e122] [cursor=pointer]: 🔔

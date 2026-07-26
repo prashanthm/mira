@@ -114,8 +114,10 @@ def classify_with_model(llm: Any, query: str, cards) -> str | None:
     catalog = "\n".join(f"- {c.name}: {c.description}" for c in cards)
     user = f"REQUEST:\n{query}\n\nDOMAINS:\n{catalog}\n\nBest domain name (or NONE):"
     try:
+        from mira.model.gateway import call_context
         from mira.orchestration.synthesis import SYNTHESIS_TIER, _invoke
-        reply = (_invoke(llm, _CLASSIFY_SYSTEM, user, tier=SYNTHESIS_TIER) or "").strip()
+        with call_context("classify"):
+            reply = (_invoke(llm, _CLASSIFY_SYSTEM, user, tier=SYNTHESIS_TIER) or "").strip()
     except Exception:  # noqa: BLE001 — routing must never crash on a model failure
         logging.getLogger(__name__).exception("llm route classify failed")
         return None
@@ -152,7 +154,9 @@ def _synthesize_with_model(llm: Any, query: str, results: list[dict[str, Any]],
     if hint:
         user += f"\n\nDOMAIN GUIDANCE (how to shape this answer):\n{hint}"
     try:
-        return _invoke(llm, _TURN_SYSTEM_PROMPT, user, tier=SYNTHESIS_TIER).strip()
+        from mira.model.gateway import call_context
+        with call_context("turn_synthesis"):
+            return _invoke(llm, _TURN_SYSTEM_PROMPT, user, tier=SYNTHESIS_TIER).strip()
     except Exception:  # noqa: BLE001 — degrade to deterministic, never crash
         # loud on the way down: a provider break (e.g. a retired model name)
         # otherwise degrades EVERY routed turn to the raw digest, silently
