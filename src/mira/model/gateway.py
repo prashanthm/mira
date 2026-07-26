@@ -262,10 +262,10 @@ class Gateway:
                 prompt_tokens=pt, completion_tokens=ct, total_tokens=tt,
                 cost_usd=cost, latency_ms=round(latency_ms, 2),
                 correlation_id=_CORR.get(), error=error)
-            # second sink: Langfuse (live dashboard + eval/scoring). Opt-in +
-            # fail-open — a no-op unless LANGFUSE_* is set.
-            from mira.model.langfuse_export import export_call
-            export_call(op=_OP.get(), agent=agent, model=model_name, provider=provider,
+            # second sink: OpenTelemetry gen_ai span over OTLP (backend-agnostic
+            # — Langfuse/Jaeger/Tempo via the collector). Opt-in + fail-open.
+            from mira.model.otel import gen_ai_span
+            gen_ai_span(op=_OP.get(), agent=agent, model=model_name, provider=provider,
                         request=prompt, response=text, usage=usage or None,
                         cost_usd=cost, latency_ms=round(latency_ms, 2),
                         correlation_id=_CORR.get(), error=error)

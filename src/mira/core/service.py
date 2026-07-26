@@ -53,9 +53,23 @@ from collections.abc import Callable, Iterable, Iterator
 from contextlib import contextmanager
 from typing import Any
 
+import contextvars
+
 from mira.config.slos import SloTracker, slo_health_payload
 from mira.core.cors import wrap_cors
 from mira.core.decision_trace import TraceRecord, TraceStore, uncertainty_for
+
+# The inbound request's W3C trace headers (traceparent/tracestate), stashed at
+# the /turn boundary so the turn generator — which runs past the WSGI environ —
+# can extract the parent context and make its span a child of the caller's.
+# Contextvar so concurrent requests never cross-read.
+_INBOUND_TRACE: contextvars.ContextVar[dict] = contextvars.ContextVar(
+    "mira_inbound_trace", default={})
+
+
+def inbound_trace_headers() -> dict:
+    """The current request's trace headers (empty when none / not on a request)."""
+    return _INBOUND_TRACE.get()
 
 StartResponse = Callable[[str, list[tuple[str, str]]], Any]
 WSGIApp = Callable[[dict[str, Any], StartResponse], Iterable[bytes]]
@@ -298,6 +312,12 @@ class WarmService:
                 {"error": "invalid_request", "detail": "'thread_id' must be a non-empty string"},
             )
 
+        # stash the inbound W3C trace headers for the turn generator to read
+        # (it runs past this environ). WSGI puts headers in HTTP_* upper-snake.
+        _INBOUND_TRACE.set({
+            "traceparent": environ.get("HTTP_TRACEPARENT", ""),
+            "tracestate": environ.get("HTTP_TRACESTATE", ""),
+        })
         handler = self._turn_handler(prompt, thread_id)
         return handler(environ, start_response)
 

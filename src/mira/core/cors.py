@@ -28,7 +28,7 @@ from typing import Any
 CORS_ALLOW_ORIGINS_ENV = "CORS_ALLOW_ORIGINS"
 
 ALLOW_METHODS = "GET,POST,OPTIONS"
-ALLOW_HEADERS = "Content-Type"
+ALLOW_HEADERS = "Content-Type, traceparent, tracestate"
 
 # Default policy: any localhost / loopback dev origin, any port (or none).
 _LOCAL_ORIGIN_RE = re.compile(r"^http://(localhost|127\.0\.0\.1)(:\d+)?$")

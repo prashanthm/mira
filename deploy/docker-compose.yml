@@ -45,12 +45,12 @@ services:
       # Durable persistence (LLM-call log, turn records, thread memory) — a
       # SQLite db on the mounted volume below. Unset = in-RAM (lost on restart).
       MIRA_DATA_DIR: "${MIRA_DATA_DIR:-/data}"
-      # Langfuse export (observability + eval + scoring). Unset = the exporter
-      # is a no-op; the durable SQLite store still records every call. Stand up
-      # docker-compose.langfuse.yml, create a project, paste the keys here.
-      LANGFUSE_HOST: "${LANGFUSE_HOST:-}"
-      LANGFUSE_PUBLIC_KEY: "${LANGFUSE_PUBLIC_KEY:-}"
-      LANGFUSE_SECRET_KEY: "${LANGFUSE_SECRET_KEY:-}"
+      # OpenTelemetry (observability). Unset = tracing is a no-op; the durable
+      # SQLite store still records every call. Point at the host-level OTLP
+      # collector (deploy/otel-collector.yml) — the two stacks share no docker
+      # network, so it's reached via host.docker.internal, not a service name.
+      OTEL_EXPORTER_OTLP_ENDPOINT: "${OTEL_EXPORTER_OTLP_ENDPOINT:-}"
+      OTEL_SERVICE_NAME: "${OTEL_SERVICE_NAME:-mira}"
     volumes:
       # Durable store: mira.db (LLM calls, turns, thread memory) survives
       # restarts. The container was stateless-by-construction before this.

@@ -43,7 +43,8 @@ def test_allowed_localhost_origin_is_echoed_by_default() -> None:
     assert status == 200
     assert headers["Access-Control-Allow-Origin"] == "http://localhost:3000"
     assert headers["Access-Control-Allow-Methods"] == "GET,POST,OPTIONS"
-    assert headers["Access-Control-Allow-Headers"] == "Content-Type"
+    assert "traceparent" in headers["Access-Control-Allow-Headers"]  # W3C trace propagation
+    assert "Content-Type" in headers["Access-Control-Allow-Headers"]
     assert json.loads(body) == {"status": "ok"}
 
 
@@ -73,7 +74,7 @@ def test_options_preflight_on_known_path_returns_204() -> None:
     assert body == b""
     assert headers["Access-Control-Allow-Origin"] == "http://localhost:3000"
     assert "POST" in headers["Access-Control-Allow-Methods"]
-    assert headers["Access-Control-Allow-Headers"] == "Content-Type"
+    assert "traceparent" in headers["Access-Control-Allow-Headers"]
 
 
 def test_options_preflight_on_unknown_path_falls_through() -> None:

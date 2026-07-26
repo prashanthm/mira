@@ -38,10 +38,14 @@ llm = ["openai>=1.40"]
 # langchain-mcp-adapters' MultiServerMCPClient over Streamable HTTP.
 # 0.2+ imports langchain_core.messages.content (langchain-core 1.x only).
 mcp = ["mcp>=1.23", "langchain-mcp-adapters>=0.1.14,<0.2"]
-# Langfuse export (observability + eval + fine-tune corpus). Optional so the
-# core import path stays dependency-free; the exporter is a no-op when the SDK
-# is absent or LANGFUSE_* is unset.
-langfuse = ["langfuse>=3.0"]
+# OpenTelemetry tracing (observability). Vendor-neutral OTLP spans; a no-op
+# when the SDK is absent or no OTLP endpoint is set. Langfuse ingests OTLP, so
+# it's reached via the collector — no Langfuse-specific SDK needed here.
+otel = [
+    "opentelemetry-sdk>=1.27",
+    "opentelemetry-api>=1.27",
+    "opentelemetry-exporter-otlp-proto-http>=1.27",
+]
 
 [tool.setuptools.packages.find]
 where = ["src"]

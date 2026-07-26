@@ -168,11 +168,22 @@ class App:
 
         import uuid
 
+        from mira.core.service import inbound_trace_headers
+        from mira.model import otel
+        from mira.model.gateway import call_context
+
         # one correlation id for the whole turn — the LLM calls made during it
         # tag themselves with it (via call_context) so llm_calls ↔ turns join.
         correlation_id = str(uuid.uuid4())
-        from mira.model.gateway import call_context
-        with self.service.track_in_flight(), call_context("turn", correlation_id=correlation_id):
+        # inbound W3C trace context (SPA/Vantage traceparent) → the turn span is
+        # a CHILD of the caller's span, joining one distributed trace. None when
+        # tracing is off or no header was sent (then this turn is trace-root).
+        ctx = otel.extract_context(inbound_trace_headers())
+        with self.service.track_in_flight(), \
+                call_context("turn", correlation_id=correlation_id), \
+                otel.span("mira /turn", context=ctx,
+                          attributes={"vantage.correlation_id": correlation_id,
+                                      "mira.thread_id": thread_id}):
             try:
                 result = self.supervisor.invoke(prompt, thread_id=thread_id)
             except Exception as exc:  # noqa: BLE001 — surfaced as a typed error event
