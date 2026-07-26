@@ -88,3 +88,30 @@ def test_record_turn_stores_input_reply_and_sections(tmp_path):
     import json
     assert json.loads(row["reply_sections"])[0]["kind"] == "prose"
     assert row["correlation_id"] == "c1"
+
+
+def test_chat_cli_routes_through_gateway_and_persists(tmp_path, monkeypatch):
+    """mira-chat now wraps the raw provider in a Gateway, so its LLM calls hit
+    the same _persist_call chokepoint (SQLite + gen_ai span) as every other
+    entry point — no bypass."""
+    import mira.core.persistence as persistence_mod
+    store = Persistence(tmp_path)
+    monkeypatch.setattr(persistence_mod, "_INSTANCE", store)
+
+    from mira.model.gateway import Gateway, call_context
+    from mira.providers.bundle import ProviderBundle
+    from mira.providers.openai_compatible import ChatResult, ToolCall
+
+    class _FakeChatProvider:
+        def chat(self, messages, *, model=None, tools=None, tool_choice="auto"):
+            return ChatResult(text="hi", tool_calls=(),
+                              usage={"prompt_tokens": 5, "completion_tokens": 2,
+                                     "total_tokens": 7})
+    gw = Gateway(ProviderBundle(llm=_FakeChatProvider(), secrets=None,
+                                object_store=None, state_store=None, observability=None))
+    with call_context("chat_cli", correlation_id="chat-1"):
+        res = gw.chat([{"role": "user", "content": "hello"}], agent="chat")
+    assert res.text == "hi"
+    (row,) = _rows(store, "llm_calls")
+    assert row["op"] == "chat_cli" and row["total_tokens"] == 7
+    assert row["correlation_id"] == "chat-1" and row["response"] == "hi"

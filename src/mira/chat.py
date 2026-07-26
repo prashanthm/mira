@@ -22,6 +22,7 @@ import json
 import os
 import sys
 import urllib.request
+from typing import Any
 
 from mira.connectors.mcp_registry import McpServerSpec
 from mira.orchestration.mcp_tools import aload_mcp_tools, to_openai_specs
@@ -117,7 +118,7 @@ def _autodetect_model(llm_url: str, api_key: str) -> str | None:
     return None
 
 
-async def _build(args: argparse.Namespace) -> tuple[OpenAICompatibleLLMProvider, list, list[dict]]:
+async def _build(args: argparse.Namespace) -> tuple[Any, list, list[dict]]:
     """Resolve the LLM provider, discover MCP tools, and pre-convert their OpenAI specs."""
     model = args.model or _autodetect_model(args.llm_url, args.api_key)
     if not model:
@@ -127,9 +128,17 @@ async def _build(args: argparse.Namespace) -> tuple[OpenAICompatibleLLMProvider,
             "Run `ollama pull qwen2.5:7b` (or llama3.1) then "
             "`mira-chat --model qwen2.5:7b`."
         )
-    provider = OpenAICompatibleLLMProvider(
+    # Route through the Gateway (not the raw provider) so chat's LLM calls get
+    # the SAME treatment as every other entry point: the gateway chokepoint
+    # persists them to llm_calls + emits the gen_ai OTel span. Same chat()
+    # signature + ChatResult shape, so _answer is unchanged.
+    from mira.model.gateway import Gateway
+    from mira.providers.bundle import ProviderBundle
+    raw = OpenAICompatibleLLMProvider(
         base_url=args.llm_url, api_key=args.api_key, model=model
     )
+    provider = Gateway(ProviderBundle(llm=raw, secrets=None, object_store=None,
+                                      state_store=None, observability=None))
 
     # Single declared server; carry a bearer token via env if --token/$*_TOKEN is set.
     token_env = None
@@ -161,7 +170,7 @@ async def _run_tool(tools_by_name: dict, name: str, tool_args: dict) -> str:
 
 
 async def _answer(
-    provider: OpenAICompatibleLLMProvider,
+    provider: Any,
     tools_by_name: dict,
     specs: list[dict],
     messages: list[dict],
@@ -227,7 +236,9 @@ async def _main(argv: list[str] | None = None) -> None:
             continue
 
         messages.append({"role": "user", "content": user})
-        answer = await _answer(provider, tools_by_name, specs, messages)
+        from mira.model import otel
+        with otel.root_span("mira chat-cli", op="chat_cli"):
+            answer = await _answer(provider, tools_by_name, specs, messages)
         print(f"bot> {answer}\n")
 
 
