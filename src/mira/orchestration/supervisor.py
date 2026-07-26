@@ -85,6 +85,13 @@ _TURN_SYSTEM_PROMPT = (
     "3. If the specialist returned an error or no data, say so plainly.\n"
     "4. No preamble, no disclaimers. Answer directly."
 )
+# Every model-synthesized turn (advisor, a single facet, the general chat
+# fallback) emits the A2UI contract too — so the Vantage renderer gets
+# structured sections uniformly, not just the specialists that opted in
+# per-card. Prose stays the graceful fallback (parseMira → clean text).
+from mira.orchestration.ui_contract import with_contract as _with_contract  # noqa: E402
+
+_TURN_SYSTEM_PROMPT = _with_contract(_TURN_SYSTEM_PROMPT)
 
 
 def _synthesis_hint(registry: AgentCardRegistry, domain: str | None) -> str:

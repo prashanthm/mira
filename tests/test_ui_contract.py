@@ -41,3 +41,26 @@ def test_analysts_emit_the_contract():
 def test_contract_forbids_invention_and_allows_prose_fallback():
     assert "never invent" in A2UI_OUTPUT_CONTRACT.lower()
     assert "plain prose" in A2UI_OUTPUT_CONTRACT.lower()
+
+
+def test_both_model_synthesizers_carry_the_contract():
+    """The A2UI contract lives in BOTH model synthesizer system prompts (solo
+    /turn + equity fan-out) — so every chat/advisor/facet answer is A2UI-
+    capable, not only the specialists that wrap per-card."""
+    from mira.orchestration.supervisor import _TURN_SYSTEM_PROMPT
+    from mira.orchestration.synthesis import _SYSTEM_PROMPT
+    assert "OUTPUT FORMAT" in _TURN_SYSTEM_PROMPT
+    assert "OUTPUT FORMAT" in _SYSTEM_PROMPT
+
+
+def test_fanout_guidance_strips_the_duplicated_contract():
+    """A card hint that carries the contract (trade_analyst) is de-duped in the
+    fan-out guidance block — the schema is stated once (system prompt), not per
+    present domain."""
+    from mira.orchestration.synthesis import _guidance_block
+    from mira.orchestration.ui_contract import with_contract
+    results = [{"domain": "d", "answer": {"x": 1}}]
+    hints = {"d": with_contract("Analyze the thing.")}
+    block = _guidance_block(results, hints)
+    assert "Analyze the thing." in block
+    assert "OUTPUT FORMAT" not in block   # stripped — lives in the system prompt

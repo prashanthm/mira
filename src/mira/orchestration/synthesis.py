@@ -83,6 +83,12 @@ _SYSTEM_PROMPT = (
     "4. Cover every domain with data; end with a one-line net takeaway. No "
     "preamble. Keep the whole synthesis under 250 words."
 )
+# The equity fan-out synthesis emits the A2UI contract too (once, here — not
+# repeated per facet card), so multi-facet answers render as structured
+# sections. Prose remains the graceful fallback.
+from mira.orchestration.ui_contract import with_contract as _with_contract  # noqa: E402
+
+_SYSTEM_PROMPT = _with_contract(_SYSTEM_PROMPT)
 
 
 def _guidance_block(
@@ -98,8 +104,14 @@ def _guidance_block(
         return ""
     present = [r.get("domain") for r in results or []
                if _has_data(_trim(r.get("answer") if isinstance(r.get("answer"), Mapping) else {}))]
-    lines = [f"- {d}: {hints[d].strip()}"
-             for d in present if hints.get(d, "").strip()]
+    # the A2UI contract now lives in _SYSTEM_PROMPT once — strip it from any
+    # card hint that carries it (e.g. trade_analyst) so the fan-out prompt
+    # doesn't repeat the schema per present domain.
+    from mira.orchestration.ui_contract import A2UI_OUTPUT_CONTRACT
+    def _dehint(h: str) -> str:
+        return h.replace(A2UI_OUTPUT_CONTRACT, "").rstrip()
+    lines = [f"- {d}: {_dehint(hints[d]).strip()}"
+             for d in present if _dehint(hints.get(d, "")).strip()]
     if not lines:
         return ""
     return ("DOMAIN GUIDANCE (each line is that domain's own HARD RULE for "
