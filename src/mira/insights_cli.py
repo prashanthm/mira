@@ -97,7 +97,11 @@ def main(argv: list[str] | None = None) -> int:
         return _fail(f"MCP server at {args.mcp} exposes no vantage.* tools")
 
     specialist = build_advisor_specialist(registered_tools_from_mcp(vantage_tools))
-    report = generate_insight_report(specialist, thread_id="cli")
+    # same entry-point tracing pattern as the HTTP paths — a batch/CLI run mints
+    # its own root trace (no inbound header) so its LLM calls are traced too.
+    from mira.model import otel
+    with otel.root_span("mira insights-cli", op="insights_cli"):
+        report = generate_insight_report(specialist, thread_id="cli")
     payload = report.to_dict()
 
     print(json.dumps(payload, indent=2, sort_keys=True))

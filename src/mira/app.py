@@ -33,6 +33,20 @@ TurnRunner = Callable[[str, str], dict[str, Any]]
 DEFAULT_PROFILE = "kubernetes"
 
 
+def _traced_provider(provider, span_name: str, op: str):
+    """Wrap a cached LLM provider callable so every invocation opens the shared
+    root span (otel.root_span) — the same entry-point pattern /turn uses, so
+    /insights and /playbook trace identically. Signature-preserving."""
+    if provider is None:
+        return None
+
+    def wrapped(*args, **kwargs):
+        from mira.model import otel
+        with otel.root_span(span_name, op=op):
+            return provider(*args, **kwargs)
+    return wrapped
+
+
 def _parse_a2ui_sections(text: str) -> list | None:
     """Server-side mirror of the SPA's parseMira: if the reply is the A2UI
     JSON contract, return its ``sections`` list; else None (prose). Tolerant of
@@ -166,24 +180,16 @@ class App:
             yield from self.stream_events(prompt, thread_id=thread_id)
             return
 
-        import uuid
-
         from mira.core.service import inbound_trace_headers
         from mira.model import otel
-        from mira.model.gateway import call_context
 
-        # one correlation id for the whole turn — the LLM calls made during it
-        # tag themselves with it (via call_context) so llm_calls ↔ turns join.
-        correlation_id = str(uuid.uuid4())
-        # inbound W3C trace context (SPA/Vantage traceparent) → the turn span is
-        # a CHILD of the caller's span, joining one distributed trace. None when
-        # tracing is off or no header was sent (then this turn is trace-root).
-        ctx = otel.extract_context(inbound_trace_headers())
+        # the ONE entry-point pattern (otel.root_span) — same call every entry
+        # point makes. Child of an inbound traceparent when present, else a fresh
+        # trace-root; mints + yields the correlation id the turn's LLM calls tag.
         with self.service.track_in_flight(), \
-                call_context("turn", correlation_id=correlation_id), \
-                otel.span("mira /turn", context=ctx,
-                          attributes={"vantage.correlation_id": correlation_id,
-                                      "mira.thread_id": thread_id}):
+                otel.root_span("mira /turn", op="turn",
+                               inbound_headers=inbound_trace_headers(),
+                               attributes={"mira.thread_id": thread_id}) as correlation_id:
             try:
                 result = self.supervisor.invoke(prompt, thread_id=thread_id)
             except Exception as exc:  # noqa: BLE001 — surfaced as a typed error event
@@ -310,7 +316,7 @@ def build_app(
     if registry is not None:
         from mira.orchestration.insights import cached_insights_provider
 
-        insights_provider = cached_insights_provider(registry)
+        insights_provider = _traced_provider(cached_insights_provider(registry), "mira /insights", "insights")
 
         # /analyze: parallel multi-domain fan-out synthesized by the LLM into
         # grounded prose. One cached provider per analysis GROUP the registry's
@@ -348,7 +354,11 @@ def build_app(
             provider = providers.get(group or default_group)
             if provider is None:
                 return None  # unknown group -> 404 at the transport layer
-            return provider(subject, question, refresh)
+            from mira.model import otel
+            with otel.root_span("mira /analyze", op="analyze",
+                                attributes={"mira.subject": subject,
+                                            "mira.group": group or default_group}):
+                return provider(subject, question, refresh)
 
     # /playbook: the daily 0DTE SPX playbook. Fetches the deterministic scaffold
     # over the vantage.spx_playbook MCP tool and narrates it (templated draft +
@@ -362,9 +372,9 @@ def build_app(
         from mira.orchestration.mcp_bridge import registered_tools_from_mcp
         from mira.orchestration.playbook import cached_playbook_provider
 
-        playbook_provider = cached_playbook_provider(
+        playbook_provider = _traced_provider(cached_playbook_provider(
             registered_tools_from_mcp(playbook_tools),
-            llm=gateway.for_agent("playbook"))
+            llm=gateway.for_agent("playbook")), "mira /playbook", "playbook")
 
     # The service needs the /turn factory at construction time, but the factory
     # is a method of the App composed *around* the service — bind it through a

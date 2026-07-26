@@ -79,6 +79,32 @@ def extract_context(headers: dict[str, str] | None) -> Any:
 
 
 @contextmanager
+def root_span(name: str, *, op: str, correlation_id: str | None = None,
+              inbound_headers: dict[str, str] | None = None,
+              attributes: dict | None = None) -> Iterator[str]:
+    """The ONE entry-point tracing pattern — used identically by every entry
+    (HTTP /turn, /analyze, /insights, /playbook, and batch/CLI), so
+    user-initiated, system-initiated, and batch work all trace the same way.
+    Disparate per-entry tracing is the thing this exists to prevent.
+
+    Opens a root span that becomes a CHILD of an inbound W3C traceparent when
+    one is present (distributed trace) and a fresh trace-root otherwise (batch/
+    CLI, or no header). Mints a correlation_id (uuid4) when the caller passes
+    none, and stacks call_context(op, correlation_id) so every LLM call made
+    inside the block is tagged and joins this span. Yields the correlation_id.
+    Fail-open: with tracing off it's just the call_context tag + a fresh id.
+    """
+    import uuid
+
+    from mira.model.gateway import call_context
+    corr = correlation_id or str(uuid.uuid4())
+    ctx = extract_context(inbound_headers)
+    attrs = {"vantage.correlation_id": corr, **(attributes or {})}
+    with call_context(op, correlation_id=corr), span(name, context=ctx, attributes=attrs):
+        yield corr
+
+
+@contextmanager
 def span(name: str, *, context: Any = None, attributes: dict | None = None) -> Iterator[Any]:
     """A span context manager that's a no-op when tracing is disabled — callers
     use `with span(...)` unconditionally. Records exceptions, never raises."""

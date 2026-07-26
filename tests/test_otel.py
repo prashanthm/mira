@@ -38,3 +38,23 @@ def test_endpoint_set_but_sdk_absent_stays_noop(monkeypatch):
 def test_inbound_trace_headers_default_empty():
     from mira.core.service import inbound_trace_headers
     assert inbound_trace_headers() == {}
+
+
+def test_root_span_yields_corr_and_tags_call_context(monkeypatch):
+    """The shared entry-point helper mints a corr id (or honors a passed one),
+    tags call_context so LLM calls in the block join, and is no-op-safe when
+    tracing is off. This is the ONE pattern all entry points use."""
+    monkeypatch.delenv("OTEL_EXPORTER_OTLP_ENDPOINT", raising=False)
+    monkeypatch.delenv("OTLP_ENDPOINT", raising=False)
+    _reset()
+    from mira.model import gateway
+    with otel.root_span("turn", op="turn") as corr:
+        assert corr and len(corr) >= 8               # a uuid was minted
+        assert gateway._OP.get() == "turn"           # call_context is active inside
+        assert gateway._CORR.get() == corr
+    # passing a correlation_id is honored (e.g. the /turn path)
+    with otel.root_span("turn", op="turn", correlation_id="fixed-abc") as corr:
+        assert corr == "fixed-abc"
+    # batch/CLI: no inbound headers → fresh root, no raise
+    with otel.root_span("batch", op="insights_cli", inbound_headers=None) as corr:
+        assert corr
