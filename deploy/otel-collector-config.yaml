@@ -1,0 +1,34 @@
+# Collector config: receive OTLP from both stacks, batch, and export.
+# debug = watch traces live in the collector logs. Add langfuse/jaeger later
+# with zero app changes — the services just emit OTLP here.
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+processors:
+  batch: {}
+
+exporters:
+  # live view: every span printed to the collector's stdout (docker logs -f).
+  debug:
+    verbosity: detailed
+  # --- ship to Langfuse (uncomment when its stack is up) ---------------------
+  # otlphttp/langfuse:
+  #   endpoint: "http://host.docker.internal:3000/api/public/otel"
+  #   headers:
+  #     Authorization: "Basic ${LANGFUSE_AUTH_B64}"   # base64(pk:sk)
+  # --- or a standalone Jaeger all-in-one ------------------------------------
+  # otlp/jaeger:
+  #   endpoint: "host.docker.internal:4317"
+  #   tls: { insecure: true }
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [debug]        # add otlphttp/langfuse here to fan out

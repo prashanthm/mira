@@ -18,7 +18,7 @@ WORKDIR /app
 # Install dependencies first (separate layer) for build caching.
 COPY pyproject.toml README.md ./
 COPY src ./src
-RUN pip install ".[llm,mcp]"
+RUN pip install ".[llm,mcp,otel]"
 
 # Demo agent-card registry fixtures (handbook.md + ledger.csv): the __main__
 # entrypoint loads them ONLY when tests/fixtures/ exists relative to the cwd, so

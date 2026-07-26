@@ -1,0 +1,27 @@
+# Host-level OpenTelemetry Collector — the single trace sink for BOTH stacks.
+# Mira and Vantage share no docker network, so this runs as its own compose
+# project and both reach it via host.docker.internal:4318 (the same cross-stack
+# pattern Mira uses for Vantage-MCP). Bring it up:
+#
+#   docker compose -f deploy/otel-collector.yml up -d
+#
+# then set on BOTH stacks' .env:
+#   OTEL_EXPORTER_OTLP_ENDPOINT=http://host.docker.internal:4318
+# and restart them. Traces then flow SPA-traceparent → Vantage + Mira → here.
+#
+# Out of the box this exports to the collector's own debug log (so you can
+# `docker compose -f deploy/otel-collector.yml logs -f` and WATCH transactions
+# land in real time — no Langfuse required). To also ship to Langfuse (once its
+# stack is up), uncomment the otlphttp/langfuse exporter + its pipeline entry.
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.109.0
+    command: ["--config=/etc/otelcol/config.yaml"]
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otelcol/config.yaml:ro
+    ports:
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP  (the endpoint both stacks point at)
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
