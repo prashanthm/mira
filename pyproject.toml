@@ -37,7 +37,10 @@ llm = ["openai>=1.40"]
 # Remote MCP tool ingestion (Task 2): declared MCP server registry consumed by
 # langchain-mcp-adapters' MultiServerMCPClient over Streamable HTTP.
 # 0.2+ imports langchain_core.messages.content (langchain-core 1.x only).
-mcp = ["mcp>=1.23", "langchain-mcp-adapters>=0.1.14,<0.2"]
+# Pin mcp below 2.0: 2.0.0 removed `mcp.server.fastmcp`, which the MCP tool
+# loader imports — an unbounded `>=1.23` silently pulled 2.0.0 on rebuild and
+# left Mira with no tools (503 playbook_unavailable). Bump after a 2.x port.
+mcp = ["mcp>=1.23,<2", "langchain-mcp-adapters>=0.1.14,<0.2"]
 # OpenTelemetry tracing (observability). Vendor-neutral OTLP spans; a no-op
 # when the SDK is absent or no OTLP endpoint is set. Langfuse ingests OTLP, so
 # it's reached via the collector — no Langfuse-specific SDK needed here.

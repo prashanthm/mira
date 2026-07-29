@@ -54,19 +54,25 @@ def build_playbook_result(
 ) -> dict[str, Any]:
     """Fetch the SPX playbook scaffold via MCP and narrate it.
 
-    Returns ``{available, session, scaffold, narrative}``. Degrades to
-    ``{available: False, reason}`` when the tool is absent or no playbook has been
-    generated — never raises."""
+    Returns ``{available, session, scaffold, narrative}`` on success.
+
+    An ERROR (tool raised — e.g. the vantage tool now raises when the intraday
+    map is missing or stale-dated) is surfaced as ``{available: False, error:
+    <msg>}`` — NOT narrated. Mira must never paper over a stale/absent plan with
+    confident prose; the missing/stale intraday map is exactly the failure we
+    need loud. A benign "tool not wired" still degrades quietly (no error key)."""
     tool = _find_playbook_tool(tools)
     if tool is None:
         return {"available": False, "reason": "spx_playbook tool not available"}
     try:
         result = tool.handler({"date": date} if date else {})
-    except Exception as exc:  # noqa: BLE001 — a flaky tool degrades, never crashes
-        return {"available": False, "reason": f"tool_error: {exc}"}
+    except Exception as exc:  # tool raised → the plan is missing/stale. SURFACE it.
+        return {"available": False, "error": f"playbook_error: {exc}"}
 
     scaffold = _extract_scaffold(result)
     if scaffold is None:
+        # available:False with no scaffold from a non-raising tool = genuinely
+        # nothing generated yet (benign). A stale row would have RAISED above.
         return {"available": False, "reason": "no playbook generated yet"}
 
     narrative = synthesize_playbook(llm, scaffold, context=context)
@@ -95,7 +101,16 @@ def cached_playbook_provider(
     def provider(date: str | None = None, refresh: bool = False) -> dict[str, Any] | None:
         key = date or "latest"
         if refresh or key not in cache:
-            cache[key] = build_playbook_result(tools, llm=llm, date=date)
+            result = build_playbook_result(tools, llm=llm, date=date)
+            # Only cache a real, available playbook. Never freeze an error or an
+            # empty behind the no-TTL cache — a stale/missing map must be re-asked
+            # every request until it's genuinely fixed, or the poison sticks all
+            # day (and "latest" would pin yesterday across the session rollover).
+            if result.get("available"):
+                cache[key] = result
+            else:
+                cache.pop(key, None)
+                return result
         return cache[key]
 
     return provider

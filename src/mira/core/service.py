@@ -440,6 +440,11 @@ class WarmService:
         result = self._playbook_provider(date, refresh)
         if result is None:
             return self._json_response(start_response, 200, {"available": False})
+        # A surfaced playbook error (tool raised — intraday map missing/stale) is
+        # a 502, never a quiet 200. The plan is upstream in vantage; Mira reports
+        # it plainly instead of narrating around a stale/absent map.
+        if result.get("error"):
+            return self._json_response(start_response, 502, result)
         return self._json_response(start_response, 200, result)
 
     def _handle_explain(

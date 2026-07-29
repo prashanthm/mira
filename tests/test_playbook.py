@@ -173,3 +173,37 @@ def test_cached_provider_caches_and_refreshes():
     assert calls["n"] == 1
     provider(None, refresh=True)  # regenerate
     assert calls["n"] == 2
+
+
+class _RaisingTool:
+    """A tool that raises — models vantage raising PlaybookStale/Unavailable."""
+    name = "vantage.spx_playbook"
+
+    def __init__(self, calls):
+        self._calls = calls
+        class _C: pass
+        self.contract = _C(); self.contract.name = self.name
+
+    def handler(self, payload):
+        self._calls["n"] += 1
+        raise RuntimeError("stale: served '2026-07-27' expected '2026-07-28'")
+
+
+def test_provider_surfaces_tool_error_not_quiet_empty():
+    # a raising tool (stale/missing intraday map) must surface as `error`, NOT be
+    # narrated and NOT collapse into the benign `reason` degrade.
+    out = build_playbook_result([_RaisingTool({"n": 0})], llm=_CapturingLLM())
+    assert out["available"] is False
+    assert "error" in out and "stale" in out["error"]
+    assert "narrative" not in out          # never narrated around a stale plan
+    assert "reason" not in out             # not the benign "nothing yet" path
+
+
+def test_cache_never_freezes_an_error():
+    # the no-TTL cache must re-ask on every call while the tool is failing — a
+    # frozen error would poison the whole session until a manual refresh.
+    calls = {"n": 0}
+    provider = cached_playbook_provider([_RaisingTool(calls)], llm=None)
+    assert provider(None)["error"]
+    assert provider(None)["error"]         # NOT served from cache
+    assert calls["n"] == 2                 # re-fetched both times
